@@ -190,13 +190,17 @@ public class EchoUserSession implements EchoUserInterface {
         
         if( timeToLiveStr != null && timeToLiveStr.length() > 0 ) {
           timeToLive = Long.parseLong( timeToLiveStr ) * 60000;
+          if( timeToLive > 0 ) {
+            timeToLive = timeToLive * 60000;
+          }
         }
         
         Date date = new Date();
         if( log.isDebugEnabled() ) {
           log.debug( "cancelled item alive for (ms): " + ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ));
         }
-        if(( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) > timeToLive ) {
+
+        if( timeToLive > -1 && ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) > timeToLive ) {
           try {
             log.info( "Time to live has passed.  Deleting todo: " + todoItem.getText() );
             this.echoBase.deleteTodoItem( todoItem, this.getEchoUser() );
