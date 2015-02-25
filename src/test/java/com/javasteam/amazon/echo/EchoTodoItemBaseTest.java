@@ -40,6 +40,8 @@ public class EchoTodoItemBaseTest extends TestCase {
     assertEquals( null,             todoItem.getLastUpdatedDate() );
     assertEquals( null,             todoItem.getNbestItems() );
     assertEquals( null,             todoItem.getVersion() );
+    assertFalse( todoItem.isDeleted() );
+    assertFalse( todoItem.isComplete() );
     
     // constructor with itemId and text parameters
     todoItem = new EchoTodoItemBase( "ITEMID", "Test todo item" );
@@ -53,5 +55,17 @@ public class EchoTodoItemBaseTest extends TestCase {
     assertEquals( null,             todoItem.getLastUpdatedDate() );
     assertEquals( null,             todoItem.getNbestItems() );
     assertEquals( null,             todoItem.getVersion() );
+    assertFalse( todoItem.isDeleted() );
+    assertFalse( todoItem.isComplete() );
+    
+    todoItem.setText( "updated text" );
+    assertEquals( "updated text", todoItem.getText() );
+    
+    todoItem.setItemId( "NEW ITEM ID" );
+    assertEquals( "NEW ITEM ID", todoItem.getItemId() );
+    
+    todoItem.setType( "TASK" );
+    assertEquals( "TASK", todoItem.getType() );
+
   }
 }
