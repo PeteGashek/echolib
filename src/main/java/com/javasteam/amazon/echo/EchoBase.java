@@ -86,7 +86,7 @@ public class EchoBase {
     this.echoURL = echoURL;
   }
 
-  private String amazonEchoGet( String actionUrl, EchoUserInterface user ) throws ClientProtocolException, IOException {
+  private String amazonEchoGet( String actionUrl, EchoUser user ) throws ClientProtocolException, IOException {
     String retval = "";
     
     HttpGet httpGet = new HttpGet( getEchoURL() + actionUrl );
@@ -121,7 +121,7 @@ public class EchoBase {
     return retval;
   }
   
-  private String amazonEchoPut( String actionUrl, String jsonString, EchoUserInterface user ) throws ClientProtocolException, IOException {
+  private String amazonEchoPut( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
     String  retval  = "";
     HttpPut httpPut = new HttpPut( getEchoURL() + actionUrl );
     
@@ -176,7 +176,7 @@ public class EchoBase {
     return retval;
   }
   
-  private String amazonEchoPost( String actionUrl, String jsonString, EchoUserInterface user ) throws ClientProtocolException, IOException {
+  private String amazonEchoPost( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
     String  retval  = "";
     HttpPost httpPost = new HttpPost( getEchoURL() + actionUrl );
     
@@ -230,7 +230,7 @@ public class EchoBase {
     
     return retval;
   }
-  private void amazonEchoPost( String action, List <NameValuePair> formData, EchoUserInterface user ) throws AmazonLoginException, IOException {
+  private void amazonEchoPost( String action, List <NameValuePair> formData, EchoUser user ) throws AmazonLoginException, IOException {
     HttpPost httpPost = new HttpPost( action );
     httpPost.setHeader( HttpHeaders.USER_AGENT
                       , userAgent
@@ -262,7 +262,7 @@ public class EchoBase {
     }
   }
 
-  public synchronized boolean echoLogin( EchoUserInterface user) throws AmazonLoginException {
+  public synchronized boolean echoLogin( EchoUser user) throws AmazonLoginException {
     boolean retval = user.isLoggedIn();
     log.info( "user is logged in...." + user.isLoggedIn() );
     if( !retval ) {
@@ -312,7 +312,7 @@ public class EchoBase {
   }
   
 
-  public List<EchoTodoItem> getTodoItems( int size, EchoUserInterface user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItem> getTodoItems( int size, EchoUser user ) throws AmazonAPIAccessException {
     List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
     
     try {
@@ -356,7 +356,7 @@ public class EchoBase {
     return retval;
   }
   
-  private List<EchoTodoItem> updateTodoItem( EchoTodoItemBase item, EchoUserInterface user ) throws AmazonAPIAccessException {
+  private List<EchoTodoItem> updateTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
     List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
     
@@ -405,7 +405,7 @@ public class EchoBase {
     return retval;
   }
   
-  private List<EchoTodoItem> addTodoItem( EchoTodoItemBase item, EchoUserInterface user ) throws AmazonAPIAccessException {
+  private List<EchoTodoItem> addTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
     List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
     
@@ -443,28 +443,28 @@ public class EchoBase {
     return retval;
   }
   
-  public List<EchoTodoItem> setTodoItemDeletedStatus( EchoTodoItem item, boolean value, EchoUserInterface user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItem> setTodoItemDeletedStatus( EchoTodoItem item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
     log.info( "Setting todo '" + item.getText() + "' deleted status to " + value );
     item.setDeleted( value );
     return updateTodoItem( item, user );
   }
 
-  public List<EchoTodoItem> deleteTodoItem( EchoTodoItem item, EchoUserInterface user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItem> deleteTodoItem( EchoTodoItem item, EchoUser user ) throws AmazonAPIAccessException {
     return this.setTodoItemDeletedStatus( item, true, user );
   }
 
-  public List<EchoTodoItem> setTodoItemCompleteStatus( EchoTodoItem item, boolean value, EchoUserInterface user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItem> setTodoItemCompleteStatus( EchoTodoItem item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
     log.info( "Setting todo '" + item.getText() + "' complete status to " + value );
     item.setComplete( value );
     return updateTodoItem( item, user );
   }
   
-  public List<EchoTodoItem> completeTodoItem( EchoTodoItem item, EchoUserInterface user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItem> completeTodoItem( EchoTodoItem item, EchoUser user ) throws AmazonAPIAccessException {
     return setTodoItemCompleteStatus( item, true, user );
   }
 
-  public List<EchoTodoItem> addTodoItem( String text, EchoUserInterface user ) throws AmazonAPIAccessException {
-    EchoTodoItemBase item        = new EchoTodoItemBase( text );
+  public List<EchoTodoItem> addTodoItem( String text, EchoUser user ) throws AmazonAPIAccessException {
+    EchoTodoItemImpl item        = new EchoTodoItemImpl( text );
     Calendar         localUpdate = Calendar.getInstance();
     
     localUpdate.setTime( new Date() );

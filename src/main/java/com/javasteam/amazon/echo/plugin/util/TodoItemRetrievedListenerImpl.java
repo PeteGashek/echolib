@@ -1,13 +1,13 @@
 package com.javasteam.amazon.echo.plugin.util;
 
 
-public abstract class TodoItemRetrievedListenerBase implements TodoItemRetrievedListenerInterface {
+public abstract class TodoItemRetrievedListenerImpl implements TodoItemRetrievedListener {
 
   private String   name = null;
   private String   key = null;
   private String[] commands = null;
   
-  public TodoItemRetrievedListenerBase() {
+  public TodoItemRetrievedListenerImpl() {
     super();
   }
 

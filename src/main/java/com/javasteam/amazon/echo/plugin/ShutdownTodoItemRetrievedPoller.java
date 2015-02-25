@@ -6,11 +6,11 @@ import org.apache.commons.logging.LogFactory;
 import com.javasteam.amazon.echo.AmazonAPIAccessException;
 import com.javasteam.amazon.echo.EchoBase;
 import com.javasteam.amazon.echo.EchoTodoItem;
-import com.javasteam.amazon.echo.EchoUserInterface;
+import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerBase;
+import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
 
-public class ShutdownTodoItemRetrievedPoller extends TodoItemRetrievedListenerBase {
+public class ShutdownTodoItemRetrievedPoller extends TodoItemRetrievedListenerImpl {
   private final static Log          log = LogFactory.getLog( ShutdownTodoItemRetrievedPoller.class.getName() );
   
   public ShutdownTodoItemRetrievedPoller() {
@@ -21,7 +21,7 @@ public class ShutdownTodoItemRetrievedPoller extends TodoItemRetrievedListenerBa
   public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) {
     boolean retval = false;
 
-    EchoUserInterface echoUser = echoUserSession.getEchoUser();
+    EchoUser echoUser = echoUserSession.getEchoUser();
     EchoBase          echoBase = echoUserSession.getEchoBase();
     
     try {

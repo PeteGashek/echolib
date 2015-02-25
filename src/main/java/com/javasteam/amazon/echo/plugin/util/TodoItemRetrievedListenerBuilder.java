@@ -10,12 +10,12 @@ public class TodoItemRetrievedListenerBuilder extends EchoListener {
     super();
   }
   
-  public TodoItemRetrievedListenerInterface generate() {
-    TodoItemRetrievedListenerInterface retval = null;
+  public TodoItemRetrievedListener generate() {
+    TodoItemRetrievedListener retval = null;
     
     try {
       Class<?> theClass = Class.forName( this.getTheClassname() );
-      retval  = (TodoItemRetrievedListenerInterface) theClass.newInstance();
+      retval  = (TodoItemRetrievedListener) theClass.newInstance();
       retval.setKey( this.getKey() );
       retval.setCommands( this.getCommandArray() );
     }

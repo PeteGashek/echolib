@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class EchoTodoItemBase {
+public class EchoTodoItemImpl {
   public static String TASK_KEY              = "TASK";
     
   private String   itemId;
@@ -19,16 +19,16 @@ public class EchoTodoItemBase {
   private Integer  version;
   private String   utteranceId;
   
-  public EchoTodoItemBase( ) {
+  public EchoTodoItemImpl( ) {
     
   }
   
-  public EchoTodoItemBase( String text ) {
+  public EchoTodoItemImpl( String text ) {
     this();
     this.text = text;
   }
   
-  public EchoTodoItemBase( String itemId, String text ) {
+  public EchoTodoItemImpl( String itemId, String text ) {
     this( text );
     this.itemId = itemId;
   }

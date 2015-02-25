@@ -29,7 +29,7 @@ public class EchoTodoItemBaseTest extends TestCase {
    */
   public void testEchoTodoItemBase() throws Exception {
     // test constructor with text passed in as argument
-    EchoTodoItemBase todoItem = new EchoTodoItemBase( "Test todo item" );
+    EchoTodoItemImpl todoItem = new EchoTodoItemImpl( "Test todo item" );
     
     assertEquals( "Test todo item", todoItem.getText() );
     assertEquals( null,             todoItem.getItemId() );
@@ -44,7 +44,7 @@ public class EchoTodoItemBaseTest extends TestCase {
     assertFalse( todoItem.isComplete() );
     
     // constructor with itemId and text parameters
-    todoItem = new EchoTodoItemBase( "ITEMID", "Test todo item" );
+    todoItem = new EchoTodoItemImpl( "ITEMID", "Test todo item" );
     
     assertEquals( "Test todo item", todoItem.getText() );
     assertEquals( "ITEMID",         todoItem.getItemId() );

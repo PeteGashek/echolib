@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class EchoTodoItem extends EchoTodoItemBase {
+public class EchoTodoItem extends EchoTodoItemImpl {
  
   private String   customerId;
   private String   originalAudioId;

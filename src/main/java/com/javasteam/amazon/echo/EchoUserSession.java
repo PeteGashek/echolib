@@ -11,34 +11,34 @@ import org.apache.http.impl.client.BasicCookieStore;
 
 import com.javasteam.amazon.echo.plugin.util.ListenerPropertyParser;
 import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerBuilder;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerInterface;
+import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener;
 
-public class EchoUserSession implements EchoUserInterface {
+public class EchoUserSession implements EchoUser {
   private final static Log log = LogFactory.getLog( EchoUserSession.class.getName() );
   
-  private Vector<TodoItemRetrievedListenerInterface> todoListeners = new Vector<TodoItemRetrievedListenerInterface>();
+  private Vector<TodoItemRetrievedListener> todoListeners = new Vector<TodoItemRetrievedListener>();
   
   private TodoItemPoller    todoItemPoller = null;
   private Object            todoPollerLock = new Object();
   
   private Properties        properties = new Properties();
-  private EchoUserInterface echoUser;
+  private EchoUser          echoUser;
   private EchoBase          echoBase;
   
   public EchoUserSession() {
   }
   
-  public EchoUserSession( EchoUserInterface echoUser, EchoBase echoBase ) {
+  public EchoUserSession( EchoUser echoUser, EchoBase echoBase ) {
     this();
     this.echoUser = echoUser;
     this.echoBase = echoBase;
   }
 
-  public EchoUserInterface getEchoUser() {
+  public EchoUser getEchoUser() {
     return echoUser;
   }
 
-  public void setEchoUser( EchoUserInterface echoUser ) {
+  public void setEchoUser( EchoUser echoUser ) {
     this.echoUser = echoUser;
   }
 
@@ -155,7 +155,7 @@ public class EchoUserSession implements EchoUserInterface {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#addTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
    */
-  public boolean addTodoRetrievedListener( TodoItemRetrievedListenerInterface todoListener ) {
+  public boolean addTodoRetrievedListener( TodoItemRetrievedListener todoListener ) {
     boolean retval = false;
     
     if( todoListener != null &&  !this.todoListeners.contains( todoListener )) {
@@ -169,7 +169,7 @@ public class EchoUserSession implements EchoUserInterface {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#removeTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
    */
-  public boolean removeTodoRetrievedListener( TodoItemRetrievedListenerInterface todoListener ) {
+  public boolean removeTodoRetrievedListener( TodoItemRetrievedListener todoListener ) {
     boolean retval = false;
     
     if( todoListener != null &&  this.todoListeners.contains( todoListener )) {
@@ -211,7 +211,7 @@ public class EchoUserSession implements EchoUserInterface {
         }
       }
       
-      for( TodoItemRetrievedListenerInterface listener : this.todoListeners ) {
+      for( TodoItemRetrievedListener listener : this.todoListeners ) {
         
         if( !todoItem.isComplete() && !todoItem.isDeleted() ) {
           if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
@@ -315,7 +315,7 @@ public class EchoUserSession implements EchoUserInterface {
       EchoBase.getHttpClientPool().getMonitor().setIdleTimeoutInSeconds( 600 );
       
       EchoBase echoBase = new EchoBase();
-      EchoUser echoUser = new EchoUser( username, password );
+      EchoUserImpl echoUser = new EchoUserImpl( username, password );
     
       int i = 0;
       boolean halt = false;
@@ -323,7 +323,7 @@ public class EchoUserSession implements EchoUserInterface {
         String listenerString = echoUserSession.getProperty( "todoListener." + ++i );
         if( listenerString != null ) {
           TodoItemRetrievedListenerBuilder listenerBuilder = ListenerPropertyParser.getListenerBuilder( listenerString );
-          TodoItemRetrievedListenerInterface listener = listenerBuilder.generate();
+          TodoItemRetrievedListener listener = listenerBuilder.generate();
           echoUserSession.addTodoRetrievedListener( listener );
           log.info(  "Added " + listener.getClass().getName() + " as a listener for key: " + listener.getKey() );
         }

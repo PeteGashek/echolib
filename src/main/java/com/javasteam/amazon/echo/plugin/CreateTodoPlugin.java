@@ -6,10 +6,11 @@ import org.apache.commons.logging.LogFactory;
 import com.javasteam.amazon.echo.AmazonAPIAccessException;
 import com.javasteam.amazon.echo.EchoTodoItem;
 import com.javasteam.amazon.echo.EchoUserSession;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerBase;
+import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
 
-public class CreateTodoPlugin extends TodoItemRetrievedListenerBase {
-  private final static Log          log = LogFactory.getLog( ExecuteExternalProcessPlugin.class.getName() );
+
+public class CreateTodoPlugin extends TodoItemRetrievedListenerImpl {
+  private final static Log          log = LogFactory.getLog( ExecuteExternal.class.getName() );
   
   public CreateTodoPlugin() {
   }

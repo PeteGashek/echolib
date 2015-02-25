@@ -29,7 +29,7 @@ public class EchoUserTest extends TestCase {
    * 
    */
   public void testUser() throws Exception {
-    EchoUser user = new EchoUser( "bob", "syouruncle" );
+    EchoUserImpl user = new EchoUserImpl( "bob", "syouruncle" );
     
     assertEquals( "bob",        user.getUsername() );
     assertEquals( "syouruncle", user.getPassword() );

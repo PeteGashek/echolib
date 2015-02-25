@@ -10,7 +10,7 @@ import com.javasteam.amazon.echo.EchoUserSession;
  * @author ddamon
  *
  */
-public interface TodoItemRetrievedListenerInterface {
+public interface TodoItemRetrievedListener {
   public boolean  handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder );
   public void     setName( String name );
   public String   getName();
