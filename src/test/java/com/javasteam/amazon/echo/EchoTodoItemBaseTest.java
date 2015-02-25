@@ -4,7 +4,6 @@
 package com.javasteam.amazon.echo;
 
 import junit.framework.TestCase;
-import org.apache.http.impl.client.BasicCookieStore;
 
 /**
  * @author ddamon
