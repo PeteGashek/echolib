@@ -5,6 +5,10 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * @author ddamon
+ *
+ */
 public class TodoItemPoller extends Thread {
   private final static Log          log = LogFactory.getLog( TodoItemPoller.class.getName() );
   
@@ -17,48 +21,81 @@ public class TodoItemPoller extends Thread {
     super();
   }
 
+  /**
+   * @param echoUserSession
+   */
   public TodoItemPoller( EchoUserSession echoUserSession ) {
     this();
     this.echoUserSession = echoUserSession;
   }
 
+  /**
+   * @return
+   */
   public EchoUserSession getEchoUserSession() {
     return echoUserSession;
   }
 
+  /**
+   * @param echoUserSession
+   */
   public void setEchoUserSession( EchoUserSession echoUserSession ) {
     this.echoUserSession = echoUserSession;
   }
 
+  /**
+   * @return
+   */
   public int getIntervalInSeconds() {
     return intervalInSeconds;
   }
 
+  /**
+   * @param intervalInSeconds
+   */
   public void setIntervalInSeconds( int intervalInSeconds ) {
     this.intervalInSeconds = intervalInSeconds;
   }
 
+  /**
+   * @return
+   */
   public int getItemRetrievalCount() {
     return itemRetrievalCount;
   }
 
+  /**
+   * @param itemRetrievalCount
+   */
   public void setItemRetrievalCount( int itemRetrievalCount ) {
     this.itemRetrievalCount = itemRetrievalCount;
   }
 
+  /**
+   * @return
+   */
   public boolean isStopped() {
     return stopped;
   }
 
+  /**
+   * @param stopped
+   */
   public void setStopped( boolean stopped ) {
     this.stopped = stopped;
   }
 
+  /**
+   * 
+   */
   public synchronized void shutdown() {
     stopped = true;
     //this.interrupt();
   }
   
+  /* (non-Javadoc)
+   * @see java.lang.Thread#run()
+   */
   @Override
   public void run() {
     while( !stopped ) {

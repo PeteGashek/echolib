@@ -6,6 +6,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
+/**
+ * @author ddamon
+ *
+ */
 public final class HttpClientPool {
   //private final static Log log = LogFactory.getLog( HttpClientPool.class.getName() );
   
@@ -17,6 +21,10 @@ public final class HttpClientPool {
   private int maxConnectionsPerRoute;
   
   
+  /**
+   * @param totalConnections
+   * @param maxConnectionsPerRoute
+   */
   public HttpClientPool( int totalConnections, int maxConnectionsPerRoute ) {
     this.totalConnections       = totalConnections;
     this.maxConnectionsPerRoute = maxConnectionsPerRoute;
@@ -32,23 +40,39 @@ public final class HttpClientPool {
   }
   
  
+  /**
+   * @return
+   */
   public int getTotalConnections() {
     return totalConnections;
   }
 
+  /**
+   * @return
+   */
   public int getMaxConnectionsPerRoute() {
     return maxConnectionsPerRoute;
   }
 
 
+  /**
+   * @return
+   */
   public CloseableHttpClient getHttpClient() {
     return clientPool;
   }
    
+  /**
+   * @return
+   */
   public IdleConnectionMonitor getMonitor() {
     return monitor;
   }
   
+  /**
+   * @throws InterruptedException
+   * @throws IOException
+   */
   public void shutdown() throws InterruptedException, IOException {
     // Shutdown the monitor.
     getMonitor().shutdown();

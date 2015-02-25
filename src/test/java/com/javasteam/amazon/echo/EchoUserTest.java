@@ -26,7 +26,7 @@ public class EchoUserTest extends TestCase {
   }
 
   /**
-   * 
+   * @throws Exception
    */
   public void testUser() throws Exception {
     EchoUserImpl user = new EchoUserImpl( "bob", "syouruncle" );

@@ -4,6 +4,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 
+/**
+ * @author ddamon
+ *
+ */
+/**
+ * @author ddamon
+ *
+ */
+/**
+ * @author ddamon
+ *
+ */
 public class EchoTodoItemImpl {
   public static String TASK_KEY              = "TASK";
     
@@ -23,18 +35,28 @@ public class EchoTodoItemImpl {
     
   }
   
+  /**
+   * @param text
+   */
   public EchoTodoItemImpl( String text ) {
     this();
     this.text = text;
   }
   
+  /**
+   * @param itemId
+   * @param text
+   */
   public EchoTodoItemImpl( String itemId, String text ) {
     this( text );
     this.itemId = itemId;
   }
   
 
-
+  /**
+   * @param stringDate
+   * @return
+   */
   public Calendar stringToCalendarFromLong( String stringDate ) {
     Calendar calendar = null;
     if( stringDate != null ) {
@@ -47,112 +69,181 @@ public class EchoTodoItemImpl {
     return calendar;
   }
   
+  /**
+   * @return
+   */
   public boolean isComplete() {
     return complete;
   }
 
 
+  /**
+   * @param complete
+   */
   public void setComplete( boolean complete ) {
     this.complete = complete;
   }
 
 
+  /**
+   * @return
+   */
   public Calendar getCreatedDate() {
     return createdDate;
   }
 
 
+  /**
+   * @param createdDate
+   */
   public void setCreatedDate( Calendar createdDate ) {
     this.createdDate = createdDate;
   }
 
 
+  /**
+   * @return
+   */
   public Calendar getLastLocalUpdateDate() {
     return lastLocalUpdateDate;
   }
 
 
+  /**
+   * @param lastLocalUpdateDate
+   */
   public void setLastLocalUpdateDate( Calendar lastLocalUpdateDate ) {
     this.lastLocalUpdateDate = lastLocalUpdateDate;
   }
 
 
+  /**
+   * @return
+   */
   public Calendar getLastUpdatedDate() {
     return lastUpdatedDate;
   }
 
 
+  /**
+   * @param lastUpdatedDate
+   */
   public void setLastUpdatedDate( Calendar lastUpdatedDate ) {
     this.lastUpdatedDate = lastUpdatedDate;
   }
 
 
+  /**
+   * @return
+   */
   public boolean isDeleted() {
     return deleted;
   }
 
 
+  /**
+   * @param deleted
+   */
   public void setDeleted( boolean deleted ) {
     this.deleted = deleted;
   }
 
 
+  /**
+   * @return
+   */
   public String[] getNbestItems() {
     return nbestItems;
   }
 
 
+  /**
+   * @param nbestItems
+   */
   public void setNbestItems( String[] nbestItems ) {
     this.nbestItems = nbestItems;
   }
   
  
+  /**
+   * @return
+   */
   public String getType() {
     return type;
   }
 
 
+  /**
+   * @param type
+   */
   public void setType( String type ) {
     this.type = type;
   }
 
 
+  /**
+   * @return
+   */
   public Integer getVersion() {
     return version;
   }
 
 
+  /**
+   * @param version
+   */
   public void setVersion( Integer version ) {
     this.version = version;
   }
 
+  /**
+   * @return
+   */
   public String getItemId() {
     return itemId;
   }
 
 
+  /**
+   * @param itemId
+   */
   public void setItemId( String itemId ) {
     this.itemId = itemId;
   }
 
+  /**
+   * @return
+   */
   public String getText() {
     return text;
   }
 
 
+  /**
+   * @param text
+   */
   public void setText( String text ) {
     this.text = text;
   }
   
+  /**
+   * @return
+   */
   public String getUtteranceId() {
     return utteranceId;
   }
 
 
+  /**
+   * @param utteranceId
+   */
   public void setUtteranceId( String utteranceId ) {
     this.utteranceId = utteranceId;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
   public String toString() {
     StringBuffer buffer = new StringBuffer( "EchoTodoItem: " );
     

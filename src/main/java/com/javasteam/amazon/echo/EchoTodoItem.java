@@ -4,6 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 
+/**
+ * @author ddamon
+ *
+ */
 public class EchoTodoItem extends EchoTodoItemImpl {
  
   private String   customerId;
@@ -13,15 +17,25 @@ public class EchoTodoItem extends EchoTodoItemImpl {
   public EchoTodoItem( ) {
   }
   
+  /**
+   * @param itemId
+   * @param text
+   */
   public EchoTodoItem( String itemId, String text ) {
     super( itemId, text );
   }
   
+  /**
+   * @param text
+   */
   public EchoTodoItem( String text ) {
     super( text );
   }
 
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItemImpl#stringToCalendarFromLong(java.lang.String)
+   */
   public Calendar stringToCalendarFromLong( String stringDate ) {
     Calendar calendar = null;
     if( stringDate != null ) {
@@ -34,25 +48,39 @@ public class EchoTodoItem extends EchoTodoItemImpl {
     return calendar;
   }
   
+  /**
+   * @return
+   */
   public String getOriginalAudioId() {
     return originalAudioId;
   }
 
 
+  /**
+   * @param originalAudioId
+   */
   public void setOriginalAudioId( String originalAudioId ) {
     this.originalAudioId = originalAudioId;
   }
 
 
-
+  /**
+   * @return
+   */
   public String getCustomerId() {
     return customerId;
   }
 
+  /**
+   * @param customerId
+   */
   public void setCustomerId( String customerId ) {
     this.customerId = customerId;
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItemImpl#toString()
+   */
   public String toString() {
     StringBuffer buffer = new StringBuffer( super.toString() );
     

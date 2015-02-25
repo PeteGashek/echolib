@@ -10,14 +10,20 @@ import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
 import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
 
+/**
+ * @author ddamon
+ *
+ */
 public class ShutdownTodoItemRetrievedPoller extends TodoItemRetrievedListenerImpl {
   private final static Log          log = LogFactory.getLog( ShutdownTodoItemRetrievedPoller.class.getName() );
   
   public ShutdownTodoItemRetrievedPoller() {
   }
 
-
-  //@Override
+  
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem, com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
+   */
   public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) {
     boolean retval = false;
 

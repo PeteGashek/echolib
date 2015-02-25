@@ -25,7 +25,7 @@ public class EchoTodoItemBaseTest extends TestCase {
   }
 
   /**
-   * 
+   * @throws Exception
    */
   public void testEchoTodoItemBase() throws Exception {
     // test constructor with text passed in as argument

@@ -40,6 +40,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javasteam.restful.HttpClientPool;
 
 
+/**
+ * @author ddamon
+ *
+ */
 public class EchoBase {
   // static final vars
   private final static Log          log = LogFactory.getLog( EchoBase.class.getName() );
@@ -59,14 +63,24 @@ public class EchoBase {
   private String     echoURL    = DEFAULT_ECHO_URL;
   private String     userAgent  = DEFAULT_USER_AGENT;
   
+  /**
+   * @param httpClientPool
+   */
   public static void setHttpClientPool( HttpClientPool httpClientPool ) {
     EchoBase.httpClientPool = httpClientPool;
   }
   
+  /**
+   * @param totalPoolConnections
+   * @param maxPoolConnectionsPerRoute
+   */
   public static void setHttpClientPool( int totalPoolConnections, int maxPoolConnectionsPerRoute ) {
     setHttpClientPool( new HttpClientPool( totalPoolConnections, maxPoolConnectionsPerRoute ));
   }
   
+  /**
+   * @return
+   */
   public static HttpClientPool getHttpClientPool( ) {
     return EchoBase.httpClientPool;
   }
@@ -74,18 +88,34 @@ public class EchoBase {
   public EchoBase() {
   }
  
+  /**
+   * @param url
+   */
   public EchoBase( String url ) {
     this.echoURL  = url;
   }
 
+  /**
+   * @return
+   */
   public String getEchoURL() {
     return echoURL;
   }
 
+  /**
+   * @param echoURL
+   */
   public void setEchoURL( String echoURL ) {
     this.echoURL = echoURL;
   }
 
+  /**
+   * @param actionUrl
+   * @param user
+   * @return
+   * @throws ClientProtocolException
+   * @throws IOException
+   */
   private String amazonEchoGet( String actionUrl, EchoUser user ) throws ClientProtocolException, IOException {
     String retval = "";
     
@@ -121,6 +151,14 @@ public class EchoBase {
     return retval;
   }
   
+  /**
+   * @param actionUrl
+   * @param jsonString
+   * @param user
+   * @return
+   * @throws ClientProtocolException
+   * @throws IOException
+   */
   private String amazonEchoPut( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
     String  retval  = "";
     HttpPut httpPut = new HttpPut( getEchoURL() + actionUrl );
@@ -176,6 +214,14 @@ public class EchoBase {
     return retval;
   }
   
+  /**
+   * @param actionUrl
+   * @param jsonString
+   * @param user
+   * @return
+   * @throws ClientProtocolException
+   * @throws IOException
+   */
   private String amazonEchoPost( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
     String  retval  = "";
     HttpPost httpPost = new HttpPost( getEchoURL() + actionUrl );
@@ -230,6 +276,15 @@ public class EchoBase {
     
     return retval;
   }
+  
+  
+  /**
+   * @param action
+   * @param formData
+   * @param user
+   * @throws AmazonLoginException
+   * @throws IOException
+   */
   private void amazonEchoPost( String action, List <NameValuePair> formData, EchoUser user ) throws AmazonLoginException, IOException {
     HttpPost httpPost = new HttpPost( action );
     httpPost.setHeader( HttpHeaders.USER_AGENT
@@ -262,6 +317,11 @@ public class EchoBase {
     }
   }
 
+  /**
+   * @param user
+   * @return
+   * @throws AmazonLoginException
+   */
   public synchronized boolean echoLogin( EchoUser user) throws AmazonLoginException {
     boolean retval = user.isLoggedIn();
     log.info( "user is logged in...." + user.isLoggedIn() );
@@ -312,6 +372,12 @@ public class EchoBase {
   }
   
 
+  /**
+   * @param size
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   public List<EchoTodoItem> getTodoItems( int size, EchoUser user ) throws AmazonAPIAccessException {
     List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
     
@@ -356,6 +422,12 @@ public class EchoBase {
     return retval;
   }
   
+  /**
+   * @param item
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   private List<EchoTodoItem> updateTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
     List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
@@ -402,9 +474,16 @@ public class EchoBase {
       log.fatal( "Failure updating todo item", e );
       throw new AmazonAPIAccessException( "Failure updating todo item", e );
     }
+    
     return retval;
   }
   
+  /**
+   * @param item
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   private List<EchoTodoItem> addTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
     List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
@@ -443,26 +522,58 @@ public class EchoBase {
     return retval;
   }
   
+  /**
+   * @param item
+   * @param value
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   public List<EchoTodoItem> setTodoItemDeletedStatus( EchoTodoItem item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
     log.info( "Setting todo '" + item.getText() + "' deleted status to " + value );
     item.setDeleted( value );
     return updateTodoItem( item, user );
   }
 
+  /**
+   * @param item
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   public List<EchoTodoItem> deleteTodoItem( EchoTodoItem item, EchoUser user ) throws AmazonAPIAccessException {
     return this.setTodoItemDeletedStatus( item, true, user );
   }
 
+  /**
+   * @param item
+   * @param value
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   public List<EchoTodoItem> setTodoItemCompleteStatus( EchoTodoItem item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
     log.info( "Setting todo '" + item.getText() + "' complete status to " + value );
     item.setComplete( value );
     return updateTodoItem( item, user );
   }
   
+  /**
+   * @param item
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   public List<EchoTodoItem> completeTodoItem( EchoTodoItem item, EchoUser user ) throws AmazonAPIAccessException {
     return setTodoItemCompleteStatus( item, true, user );
   }
 
+  /**
+   * @param text
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
   public List<EchoTodoItem> addTodoItem( String text, EchoUser user ) throws AmazonAPIAccessException {
     EchoTodoItemImpl item        = new EchoTodoItemImpl( text );
     Calendar         localUpdate = Calendar.getInstance();

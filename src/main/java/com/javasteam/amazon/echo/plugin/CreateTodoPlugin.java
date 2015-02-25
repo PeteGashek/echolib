@@ -9,12 +9,19 @@ import com.javasteam.amazon.echo.EchoUserSession;
 import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
 
 
+/**
+ * @author ddamon
+ *
+ */
 public class CreateTodoPlugin extends TodoItemRetrievedListenerImpl {
   private final static Log          log = LogFactory.getLog( ExecuteExternal.class.getName() );
   
   public CreateTodoPlugin() {
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem, com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
+   */
   public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) {
     boolean retval = false;
     

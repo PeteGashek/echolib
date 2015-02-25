@@ -13,6 +13,10 @@ import com.javasteam.amazon.echo.plugin.util.ListenerPropertyParser;
 import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerBuilder;
 import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener;
 
+/**
+ * @author ddamon
+ *
+ */
 public class EchoUserSession implements EchoUser {
   private final static Log log = LogFactory.getLog( EchoUserSession.class.getName() );
   
@@ -28,40 +32,69 @@ public class EchoUserSession implements EchoUser {
   public EchoUserSession() {
   }
   
+  /**
+   * @param echoUser
+   * @param echoBase
+   */
   public EchoUserSession( EchoUser echoUser, EchoBase echoBase ) {
     this();
     this.echoUser = echoUser;
     this.echoBase = echoBase;
   }
 
+  /**
+   * @return
+   */
   public EchoUser getEchoUser() {
     return echoUser;
   }
 
+  /**
+   * @param echoUser
+   */
   public void setEchoUser( EchoUser echoUser ) {
     this.echoUser = echoUser;
   }
 
+  /**
+   * @return
+   */
   public EchoBase getEchoBase() {
     return echoBase;
   }
 
+  /**
+   * @param echoBase
+   */
   public void setEchoBase( EchoBase echoBase ) {
     this.echoBase = echoBase;
   }
   
+  /**
+   * @return
+   */
   public Properties getProperties() {
     return properties;
   }
 
+  /**
+   * @param properties
+   */
   public void setProperties( Properties properties ) {
     this.properties = properties;
   }
   
+  /**
+   * @param property
+   * @return
+   */
   public String getProperty( String property ) {
     return properties.getProperty( property );
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#getUsername()
+   */
   public String getUsername() {
     String retval = null;
     
@@ -72,12 +105,18 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#setUser(java.lang.String)
+   */
   public void setUser( String username ) {
     if( this.echoUser != null ) {
       echoUser.setUser( username );
     }
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#getPassword()
+   */
   public String getPassword() {
     String retval = null;
     
@@ -88,12 +127,18 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#setPassword(java.lang.String)
+   */
   public void setPassword( String password ) {
     if( this.echoUser != null ) {
       echoUser.setPassword( password );
     }
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#getCookieStore()
+   */
   public BasicCookieStore getCookieStore() {
     BasicCookieStore retval = null;
     
@@ -104,12 +149,18 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#setCookieStore(org.apache.http.impl.client.BasicCookieStore)
+   */
   public void setCookieStore( BasicCookieStore cookieStore ) {
     if( this.echoUser != null ) {
       echoUser.setCookieStore( cookieStore );
     }
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#getContext()
+   */
   public HttpClientContext getContext() {
     HttpClientContext retval = null;
     
@@ -120,6 +171,9 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#isLoggedIn()
+   */
   public boolean isLoggedIn() {
     boolean retval = false;
     
@@ -130,10 +184,17 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#setLoggedIn(boolean)
+   */
   public void setLoggedIn( boolean loggedIn ) {
     echoUser.setLoggedIn( loggedIn );
   }
 
+  /**
+   * @param filename
+   * @return
+   */
   private boolean loadProperties( String filename ) {
     boolean retval = false;
     
@@ -148,6 +209,9 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
   
+  /**
+   * @return
+   */
   public boolean hasTodoRetrievedListeners() {
     return this.todoListeners != null && !this.todoListeners.isEmpty();
   }
@@ -180,6 +244,9 @@ public class EchoUserSession implements EchoUser {
     return retval; 
   }
   
+  /**
+   * @param todoItem
+   */
   public void notifyTodoRetrievedListeners( EchoTodoItem todoItem ) {
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
       boolean handled = false;
@@ -233,6 +300,9 @@ public class EchoUserSession implements EchoUser {
     }
   }
   
+  /**
+   * @return
+   */
   public boolean startTodoItemPoller() {
     boolean retval = false;
     
@@ -248,14 +318,23 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
   
+  /**
+   * @param intervalInSeconds
+   */
   public void setTodoItemPollerIntervalInSeconds( int intervalInSeconds ) {
     this.todoItemPoller.setIntervalInSeconds( intervalInSeconds );
   }
   
+  /**
+   * @param itemRetrievalCount
+   */
   public void setTodoItemPollerItemRetrievalCount( int itemRetrievalCount ) {
     this.todoItemPoller.setItemRetrievalCount( itemRetrievalCount );
   }
   
+  /**
+   * @return
+   */
   public boolean shutdown() {
     boolean retval = false;
     
@@ -270,6 +349,9 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
   
+  /**
+   * @return
+   */
   public boolean isTodoPollerStopped() {
     boolean retval = true;
     
@@ -282,6 +364,9 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
   
+  /**
+   * @param args
+   */
   public static void main( String[] args ) {
     EchoUserSession echoUserSession = new EchoUserSession();
   

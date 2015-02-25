@@ -7,6 +7,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 
+/**
+ * @author ddamon
+ *
+ */
 public class IdleConnectionMonitor extends Thread {
   private final static Log          log    = LogFactory.getLog( IdleConnectionMonitor.class.getName() );
   
@@ -17,11 +21,17 @@ public class IdleConnectionMonitor extends Thread {
   private long    pollIntervalInSeconds = 10;
   private Object  setterSync            = new Object();
 
+  /**
+   * @param connectionManager
+   */
   public IdleConnectionMonitor( PoolingHttpClientConnectionManager connectionManager ) {
     super();
     this.connectionManager = connectionManager;
   }
   
+  /**
+   * @return
+   */
   public long getPollIntervalInSeconds() {
     long retval;
     
@@ -32,6 +42,10 @@ public class IdleConnectionMonitor extends Thread {
     return retval;
   }
   
+  /**
+   * @param pollIntervalInSeconds
+   * @return
+   */
   public long setPollIntervalInSeconds( long pollIntervalInSeconds ) {
    long retval;
     
@@ -43,6 +57,9 @@ public class IdleConnectionMonitor extends Thread {
     return retval;
   }
   
+  /**
+   * @return
+   */
   public long getIdleTimeoutInSeconds() {
     long retval;
     
@@ -53,6 +70,10 @@ public class IdleConnectionMonitor extends Thread {
     return retval;
   }
   
+  /**
+   * @param idleTimeoutInSeconds
+   * @return
+   */
   public long setIdleTimeoutInSeconds( long idleTimeoutInSeconds ) {
    long retval;
     
@@ -64,6 +85,9 @@ public class IdleConnectionMonitor extends Thread {
     return retval;
   }
   
+  /* (non-Javadoc)
+   * @see java.lang.Thread#run()
+   */
   @Override
   public void run() {
     while( !stopped ) {
@@ -79,6 +103,9 @@ public class IdleConnectionMonitor extends Thread {
     }
   }
 
+  /**
+   * 
+   */
   public void shutdown()  {
     log.trace( "Shutting down client pool" );
     synchronized( setterSync ) {

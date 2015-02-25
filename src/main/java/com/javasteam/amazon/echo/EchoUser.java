@@ -3,6 +3,10 @@ package com.javasteam.amazon.echo;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 
+/**
+ * @author ddamon
+ *
+ */
 public interface EchoUser {
   public abstract String            getUsername();
   public abstract void              setUser( String username );

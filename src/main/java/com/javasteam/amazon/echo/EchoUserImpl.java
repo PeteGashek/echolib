@@ -3,6 +3,10 @@ package com.javasteam.amazon.echo;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 
+/**
+ * @author ddamon
+ *
+ */
 public class EchoUserImpl implements EchoUser {
   private String            username    = null;
   private String            password    = null;
@@ -12,6 +16,10 @@ public class EchoUserImpl implements EchoUser {
   public EchoUserImpl() {
   }
   
+  /**
+   * @param user
+   * @param password
+   */
   public EchoUserImpl( String user, String password ) {
     this.username     = user;
     this.password = password;

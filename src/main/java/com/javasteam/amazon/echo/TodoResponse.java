@@ -1,5 +1,9 @@
 package com.javasteam.amazon.echo;
 
+/**
+ * @author ddamon
+ *
+ */
 public class TodoResponse {
   private EchoTodoItem[] values;
 
