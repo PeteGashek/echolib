@@ -100,6 +100,12 @@ public class EchoTodoItemImpl {
     this.createdDate = createdDate;
   }
 
+  public void setCreatedDateToNow() {
+    Calendar localUpdate = Calendar.getInstance();
+
+    localUpdate.setTime( new Date() );
+    setCreatedDate( localUpdate );
+  }
 
   /**
    * @return

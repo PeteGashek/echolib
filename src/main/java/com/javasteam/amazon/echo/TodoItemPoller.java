@@ -101,7 +101,7 @@ public class TodoItemPoller extends Thread {
     while( !stopped ) {
       if( !echoUserSession.getEchoUser().isLoggedIn() ) {
         try {
-          log.debug( "Logging in user: " + echoUserSession.getEchoUser().getUsername() );
+          log.info( "Logging in user: " + echoUserSession.getEchoUser().getUsername() );
           echoUserSession.getEchoBase().echoLogin( echoUserSession.getEchoUser() );
         }
         catch( AmazonLoginException e ) {
@@ -112,7 +112,9 @@ public class TodoItemPoller extends Thread {
       if( echoUserSession.getEchoUser().isLoggedIn() ) {
         try {
           List<EchoTodoItem> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
+          
           log.debug( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
+          
           if( todos != null ) {
             for( EchoTodoItem todoItem : todos ) {
               echoUserSession.notifyTodoRetrievedListeners( todoItem );

@@ -136,6 +136,14 @@ public class EchoUserSession implements EchoUser {
     }
   }
 
+  
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoUser#logCookies()
+   */
+  public void logCookies() {
+    echoUser.logCookies();
+  }
+
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#getCookieStore()
    */

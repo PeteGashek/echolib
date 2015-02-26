@@ -13,10 +13,10 @@ import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
  * @author ddamon
  *
  */
-public class CreateTodoPlugin extends TodoItemRetrievedListenerImpl {
+public class CreateTodo extends TodoItemRetrievedListenerImpl {
   private final static Log          log = LogFactory.getLog( ExecuteExternal.class.getName() );
   
-  public CreateTodoPlugin() {
+  public CreateTodo() {
   }
 
   /* (non-Javadoc)

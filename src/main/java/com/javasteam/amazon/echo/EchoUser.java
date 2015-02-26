@@ -17,4 +17,5 @@ public interface EchoUser {
   public abstract HttpClientContext getContext();
   public abstract boolean           isLoggedIn();
   public abstract void              setLoggedIn( boolean loggedIn );
+  public abstract void              logCookies();
 }

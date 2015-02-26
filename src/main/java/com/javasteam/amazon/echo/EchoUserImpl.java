@@ -1,6 +1,11 @@
 package com.javasteam.amazon.echo;
 
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 
 /**
@@ -8,6 +13,8 @@ import org.apache.http.impl.client.BasicCookieStore;
  *
  */
 public class EchoUserImpl implements EchoUser {
+  private final static Log log = LogFactory.getLog( EchoUserImpl.class.getName() );
+  
   private String            username    = null;
   private String            password    = null;
   private BasicCookieStore  cookieStore = new BasicCookieStore();
@@ -73,8 +80,10 @@ public class EchoUserImpl implements EchoUser {
    */
   public HttpClientContext getContext() {
     HttpClientContext context = HttpClientContext.create();
+    
     context.setCookieStore( cookieStore );
     //context.setUserToken( getPrincipal() );
+    
     return context;
   }
 
@@ -91,6 +100,16 @@ public class EchoUserImpl implements EchoUser {
    */
   public void setLoggedIn( boolean loggedIn ) {
     this.loggedIn = loggedIn;
+  }
+  
+  public void logCookies() {
+    if( log.isDebugEnabled() ) {
+      List<Cookie> cookies = getCookieStore().getCookies();
+      
+      for( Cookie cookie : cookies ) {
+        log.debug( "User Cookie: " + cookie.getName() + "==" + cookie.getValue() );
+      }
+    } 
   }
   
 }
