@@ -5,19 +5,19 @@ package com.javasteam.amazon.echo;
  *
  */
 public class TodoResponse {
-  private EchoTodoItem[] values;
+  private EchoTodoItemImpl[] values;
 
   /**
    * @return the values
    */
-  public EchoTodoItem[] getValues() {
+  public EchoTodoItemImpl[] getValues() {
     return values;
   }
 
   /**
    * @param values the values to set
    */
-  public void setValues( EchoTodoItem[] values ) {
+  public void setValues( EchoTodoItemImpl[] values ) {
     this.values = values;
   }
 }

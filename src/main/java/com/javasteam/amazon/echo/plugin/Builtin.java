@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.javasteam.amazon.echo.AmazonAPIAccessException;
 import com.javasteam.amazon.echo.EchoBase;
-import com.javasteam.amazon.echo.EchoTodoItem;
+import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
 
@@ -23,7 +23,7 @@ public class Builtin {
   public Builtin() {
   }
 
-  public boolean createTodo( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean createTodo( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     boolean retval = false;
     
     log.info(  "Processing create todo: " + todoItem.getText() );
@@ -48,7 +48,7 @@ public class Builtin {
     return retval;
   }
   
-  public boolean executeExternal( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean executeExternal( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     boolean retval = false;
     
     String command = todoItem.getText();
@@ -95,7 +95,7 @@ public class Builtin {
     return retval;
   }
   
-  public boolean shutdownTodoPoller( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean shutdownTodoPoller( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     boolean retval = false;
 
     EchoUser echoUser = echoUserSession.getEchoUser();

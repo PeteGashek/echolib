@@ -3,7 +3,7 @@ package com.javasteam.amazon.echo.plugin.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.javasteam.amazon.echo.EchoTodoItem;
+import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUserSession;
 
 
@@ -85,7 +85,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
     this.method = method;
   }
   
-  private Object  makeMethodCall( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  private Object  makeMethodCall( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Object[] args = { todoItem
                     , echoUserSession
                     , remainder
@@ -95,7 +95,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
     return getMethod().invoke( getExecutor(), args );
   }
   
-  public boolean  handle( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) {
+  public boolean  handle( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder ) {
     boolean retval = false;
     
     try {

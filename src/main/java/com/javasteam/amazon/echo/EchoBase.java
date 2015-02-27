@@ -294,8 +294,8 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItem> getTodoItems( int size, EchoUser user ) throws AmazonAPIAccessException {
-    List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
+  public List<EchoTodoItemImpl> getTodoItems( int size, EchoUser user ) throws AmazonAPIAccessException {
+    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
 
     user.logCookies();
     
@@ -311,7 +311,7 @@ public class EchoBase {
         TodoResponse items = mapper.readValue( tasks, TodoResponse.class );
 
         if( items != null && items.getValues() != null && items.getValues().length > 0 ) {
-          for( EchoTodoItem todoItem : items.getValues() ) {
+          for( EchoTodoItemImpl todoItem : items.getValues() ) {
             if( log.isDebugEnabled() ) {
               log.debug( "Item recv'd: " + mapper.writeValueAsString( todoItem ));
             }
@@ -344,8 +344,8 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  private List<EchoTodoItem> updateTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
-    List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
+  private List<EchoTodoItemImpl> updateTodoItem( EchoTodoItemBase item, EchoUser user ) throws AmazonAPIAccessException {
+    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
 
     try {
@@ -401,8 +401,8 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  private List<EchoTodoItem> addTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
-    List<EchoTodoItem> retval = new ArrayList<EchoTodoItem>();
+  private List<EchoTodoItemImpl> addTodoItem( EchoTodoItemBase item, EchoUser user ) throws AmazonAPIAccessException {
+    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
 
     try {
@@ -447,7 +447,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItem> setTodoItemDeletedStatus( EchoTodoItem item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> setTodoItemDeletedStatus( EchoTodoItemImpl item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
     log.info( "Setting todo '" + item.getText() + "' deleted status to " + value );
     
     item.setDeleted( value );
@@ -461,7 +461,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItem> deleteTodoItem( EchoTodoItem item, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> deleteTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
     return this.setTodoItemDeletedStatus( item, true, user );
   }
 
@@ -472,7 +472,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItem> setTodoItemCompleteStatus( EchoTodoItem item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> setTodoItemCompleteStatus( EchoTodoItemImpl item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
     log.info( "Setting todo '" + item.getText() + "' complete status to " + value );
     
     item.setComplete( value );
@@ -486,7 +486,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItem> completeTodoItem( EchoTodoItem item, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> completeTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
     return setTodoItemCompleteStatus( item, true, user );
   }
 
@@ -496,8 +496,8 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItem> addTodoItem( String text, EchoUser user ) throws AmazonAPIAccessException {
-    EchoTodoItemImpl item        = new EchoTodoItemImpl( text );
+  public List<EchoTodoItemImpl> addTodoItem( String text, EchoUser user ) throws AmazonAPIAccessException {
+    EchoTodoItemBase item        = new EchoTodoItemBase( text );
     
     item.setCreatedDateToNow();
     item.setType( "TASK" );

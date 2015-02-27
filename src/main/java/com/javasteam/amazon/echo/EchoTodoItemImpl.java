@@ -8,39 +8,13 @@ import java.util.Date;
  * @author ddamon
  *
  */
-/**
- * @author ddamon
- *
- */
-/**
- * @author ddamon
- *
- */
-public class EchoTodoItemImpl {
-  public static String TASK_KEY              = "TASK";
-    
-  private String   itemId;
-  private String   text;
-  private boolean  complete;
-  private Calendar createdDate;
-  private Calendar lastLocalUpdateDate;
-  private Calendar lastUpdatedDate;
-  private boolean  deleted;
-  private String[] nbestItems;
-  private String   type;
-  private Integer  version;
-  private String   utteranceId;
+public class EchoTodoItemImpl extends EchoTodoItemBase {
+ 
+  private String   customerId;
+  private String   originalAudioId;
+  
   
   public EchoTodoItemImpl( ) {
-    
-  }
-  
-  /**
-   * @param text
-   */
-  public EchoTodoItemImpl( String text ) {
-    this();
-    this.text = text;
   }
   
   /**
@@ -48,14 +22,19 @@ public class EchoTodoItemImpl {
    * @param text
    */
   public EchoTodoItemImpl( String itemId, String text ) {
-    this( text );
-    this.itemId = itemId;
+    super( itemId, text );
   }
   
-
   /**
-   * @param stringDate
-   * @return
+   * @param text
+   */
+  public EchoTodoItemImpl( String text ) {
+    super( text );
+  }
+
+
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItemImpl#stringToCalendarFromLong(java.lang.String)
    */
   public Calendar stringToCalendarFromLong( String stringDate ) {
     Calendar calendar = null;
@@ -72,205 +51,43 @@ public class EchoTodoItemImpl {
   /**
    * @return
    */
-  public boolean isComplete() {
-    return complete;
+  public String getOriginalAudioId() {
+    return originalAudioId;
   }
 
 
   /**
-   * @param complete
+   * @param originalAudioId
    */
-  public void setComplete( boolean complete ) {
-    this.complete = complete;
-  }
-
-
-  /**
-   * @return
-   */
-  public Calendar getCreatedDate() {
-    return createdDate;
-  }
-
-
-  /**
-   * @param createdDate
-   */
-  public void setCreatedDate( Calendar createdDate ) {
-    this.createdDate = createdDate;
-  }
-
-  public void setCreatedDateToNow() {
-    Calendar localUpdate = Calendar.getInstance();
-
-    localUpdate.setTime( new Date() );
-    setCreatedDate( localUpdate );
-  }
-
-  /**
-   * @return
-   */
-  public Calendar getLastLocalUpdateDate() {
-    return lastLocalUpdateDate;
-  }
-
-
-  /**
-   * @param lastLocalUpdateDate
-   */
-  public void setLastLocalUpdateDate( Calendar lastLocalUpdateDate ) {
-    this.lastLocalUpdateDate = lastLocalUpdateDate;
+  public void setOriginalAudioId( String originalAudioId ) {
+    this.originalAudioId = originalAudioId;
   }
 
 
   /**
    * @return
    */
-  public Calendar getLastUpdatedDate() {
-    return lastUpdatedDate;
-  }
-
-
-  /**
-   * @param lastUpdatedDate
-   */
-  public void setLastUpdatedDate( Calendar lastUpdatedDate ) {
-    this.lastUpdatedDate = lastUpdatedDate;
-  }
-
-
-  /**
-   * @return
-   */
-  public boolean isDeleted() {
-    return deleted;
-  }
-
-
-  /**
-   * @param deleted
-   */
-  public void setDeleted( boolean deleted ) {
-    this.deleted = deleted;
-  }
-
-
-  /**
-   * @return
-   */
-  public String[] getNbestItems() {
-    return nbestItems;
-  }
-
-
-  /**
-   * @param nbestItems
-   */
-  public void setNbestItems( String[] nbestItems ) {
-    this.nbestItems = nbestItems;
-  }
-  
- 
-  /**
-   * @return
-   */
-  public String getType() {
-    return type;
-  }
-
-
-  /**
-   * @param type
-   */
-  public void setType( String type ) {
-    this.type = type;
-  }
-
-
-  /**
-   * @return
-   */
-  public Integer getVersion() {
-    return version;
-  }
-
-
-  /**
-   * @param version
-   */
-  public void setVersion( Integer version ) {
-    this.version = version;
+  public String getCustomerId() {
+    return customerId;
   }
 
   /**
-   * @return
+   * @param customerId
    */
-  public String getItemId() {
-    return itemId;
-  }
-
-
-  /**
-   * @param itemId
-   */
-  public void setItemId( String itemId ) {
-    this.itemId = itemId;
-  }
-
-  /**
-   * @return
-   */
-  public String getText() {
-    return text;
-  }
-
-
-  /**
-   * @param text
-   */
-  public void setText( String text ) {
-    this.text = text;
-  }
-  
-  /**
-   * @return
-   */
-  public String getUtteranceId() {
-    return utteranceId;
-  }
-
-
-  /**
-   * @param utteranceId
-   */
-  public void setUtteranceId( String utteranceId ) {
-    this.utteranceId = utteranceId;
+  public void setCustomerId( String customerId ) {
+    this.customerId = customerId;
   }
 
   /* (non-Javadoc)
-   * @see java.lang.Object#toString()
+   * @see com.javasteam.amazon.echo.EchoTodoItemImpl#toString()
    */
   public String toString() {
-    StringBuffer buffer = new StringBuffer( "EchoTodoItem: " );
+    StringBuffer buffer = new StringBuffer( super.toString() );
     
-    buffer.append( "\n  ItemId:          " + this.getItemId() )
-          .append( "\n  text:            " + this.getText() )
-          .append( "\n  type:            " + this.getType() )
-          .append( "\n  complete:        " + this.isComplete() )
-          .append( "\n  deleted:         " + this.isDeleted() )
-          .append( "\n  createdDate:     " + ( this.getCreatedDate()         != null ? this.getCreatedDate().getTimeInMillis()         : "null" ))
-          .append( "\n  lastLocalUpdate: " + ( this.getLastLocalUpdateDate() != null ? this.getLastLocalUpdateDate().getTimeInMillis() : "null" ))
-          .append( "\n  lastUpdated:     " + ( this.getLastUpdatedDate()     != null ? this.getLastUpdatedDate().getTimeInMillis()     : "null" ))
-          .append( "\n  version:         " + this.getVersion() )
-          .append( "\n  utteranceId:     " + this.getUtteranceId() )
+    buffer.append( "\n  customerId:      " + this.getCustomerId() )
+          .append( "\n  originalAudioId: " + this.getOriginalAudioId() )
           ;
     
-    // if created in the web app there will be no NbestItems.....
-    if( this.getNbestItems() != null ) {
-      for( String item : this.getNbestItems() ) {
-        buffer.append( "\n      ->" + item );
-      }
-    }
     
     
     return buffer.toString();

@@ -11,7 +11,7 @@ import org.apache.commons.exec.Executor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.javasteam.amazon.echo.EchoTodoItem;
+import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUserSession;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerImpl;
 
@@ -29,7 +29,7 @@ public class ExecuteExternal extends EchoCommandHandlerImpl {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem, com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
-  public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean handleTodoItem( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     boolean retval = false;
     
     String command = todoItem.getText();

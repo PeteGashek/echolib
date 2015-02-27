@@ -5,7 +5,7 @@ package com.javasteam.amazon.echo.plugin.util;
 
 import java.lang.reflect.Method;
 
-import com.javasteam.amazon.echo.EchoTodoItem;
+import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUserSession;
 
 /**
@@ -19,7 +19,7 @@ public interface EchoCommandHandler {
    * @param remainder
    * @return
    */
-  public boolean  handle( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder );
+  public boolean  handle( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder );
   
   public void     setName( String name );
   public String   getName();

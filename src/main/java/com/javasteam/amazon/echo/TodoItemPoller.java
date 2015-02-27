@@ -111,12 +111,12 @@ public class TodoItemPoller extends Thread {
         
       if( echoUserSession.getEchoUser().isLoggedIn() ) {
         try {
-          List<EchoTodoItem> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
+          List<EchoTodoItemImpl> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
           
           log.debug( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
           
           if( todos != null ) {
-            for( EchoTodoItem todoItem : todos ) {
+            for( EchoTodoItemImpl todoItem : todos ) {
               echoUserSession.notifyTodoRetrievedListeners( todoItem );
             } 
           }

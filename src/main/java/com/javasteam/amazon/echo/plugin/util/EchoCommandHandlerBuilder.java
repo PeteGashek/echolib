@@ -3,7 +3,7 @@ package com.javasteam.amazon.echo.plugin.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.javasteam.amazon.echo.EchoTodoItem;
+import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUserSession;
 
 /**
@@ -14,7 +14,7 @@ public class EchoCommandHandlerBuilder extends EchoCommandHandlerDefinition {
   private final static Log log = LogFactory.getLog( EchoCommandHandlerBuilder.class.getName() );
   
   //TODO this is targed for todo items right now.... needs generalization
-  private static Class<?>[] methodSignature = new Class[] { EchoTodoItem.class
+  private static Class<?>[] methodSignature = new Class[] { EchoTodoItemImpl.class
                                                           , EchoUserSession.class
                                                           , String.class
                                                           , String[].class 

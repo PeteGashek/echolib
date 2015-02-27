@@ -10,7 +10,7 @@ public class MyTest {
     // TODO Auto-generated constructor stub
   }
   
-  public boolean handleCommand( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean handleCommand( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     System.out.println( "Called with: " + todoItem.getText() );
     
     if( commands != null ) {
@@ -52,7 +52,7 @@ public class MyTest {
     
     EchoCommandHandler handler = builder.generate();
 
-    EchoTodoItem todoItem = new EchoTodoItem();
+    EchoTodoItemImpl todoItem = new EchoTodoItemImpl();
     todoItem.setText( "This is a test todo item" );
     EchoUserSession echoUserSession = new EchoUserSession();
     String remainder = "extra stuff";

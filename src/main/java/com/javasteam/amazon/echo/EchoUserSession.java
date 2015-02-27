@@ -255,7 +255,7 @@ public class EchoUserSession implements EchoUser {
   /**
    * @param todoItem
    */
-  public void notifyTodoRetrievedListeners( EchoTodoItem todoItem ) {
+  public void notifyTodoRetrievedListeners( EchoTodoItemImpl todoItem ) {
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
       boolean handled = false;
       
