@@ -4,24 +4,29 @@ package com.javasteam.amazon.echo.plugin.util;
  * @author ddamon
  *
  */
-public class ListenerPropertyParser {
+public class EchoCommandHandlerDefinitionPropertyParser {
     
   /**
    * @param command
    * @return
    */
-  public static TodoItemRetrievedListenerBuilder getListenerBuilder( String command ) {
-    TodoItemRetrievedListenerBuilder builder = new TodoItemRetrievedListenerBuilder();
+  public static EchoCommandHandlerBuilder getCommandHandlerBuilder( String command ) {
+    EchoCommandHandlerBuilder builder = new EchoCommandHandlerBuilder();
     
     if( command != null ) {
       command = command.trim();
         
       if( command.length() > 0 ) {
-        String theClassname = command.split( "[\\s;]" )[0];
+        String   classnameAndMethodString = command.split( "[\\s;]" )[0];
+        String[] classnameAndMethodArray  = classnameAndMethodString.split( ":" );
+        String   theClassname             = classnameAndMethodArray[ 0 ];
+        String   theMethodName            = (classnameAndMethodArray.length > 1) ? classnameAndMethodArray[ 1 ]
+                                                                                 : "handleEchoItem"; 
         
         builder.setTheClassname( theClassname.trim() );
+        builder.setTheMethodName( theMethodName.trim() );
           
-        String   remainder = command.substring( theClassname.length() ).trim();
+        String   remainder = command.substring( classnameAndMethodString.length() ).trim();
         String[] args      = remainder.split( ",(?=(([^'\"]*['\"]){2})*[^'\"]*$)" );
         
         if( args.length > 0 ) {
@@ -53,7 +58,7 @@ public class ListenerPropertyParser {
   /**
    * 
    */
-  private ListenerPropertyParser() {
+  private EchoCommandHandlerDefinitionPropertyParser() {
   }
 
 }

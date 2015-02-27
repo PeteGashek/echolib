@@ -9,9 +9,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 
-import com.javasteam.amazon.echo.plugin.util.ListenerPropertyParser;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerBuilder;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 
 /**
  * @author ddamon
@@ -20,7 +20,7 @@ import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener;
 public class EchoUserSession implements EchoUser {
   private final static Log log = LogFactory.getLog( EchoUserSession.class.getName() );
   
-  private Vector<TodoItemRetrievedListener> todoListeners = new Vector<TodoItemRetrievedListener>();
+  private Vector<EchoCommandHandler> todoListeners = new Vector<EchoCommandHandler>();
   
   private TodoItemPoller    todoItemPoller = null;
   private Object            todoPollerLock = new Object();
@@ -227,7 +227,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#addTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
    */
-  public boolean addTodoRetrievedListener( TodoItemRetrievedListener todoListener ) {
+  public boolean addTodoRetrievedListener( EchoCommandHandler todoListener ) {
     boolean retval = false;
     
     if( todoListener != null &&  !this.todoListeners.contains( todoListener )) {
@@ -241,7 +241,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#removeTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
    */
-  public boolean removeTodoRetrievedListener( TodoItemRetrievedListener todoListener ) {
+  public boolean removeTodoRetrievedListener( EchoCommandHandler todoListener ) {
     boolean retval = false;
     
     if( todoListener != null &&  this.todoListeners.contains( todoListener )) {
@@ -286,13 +286,13 @@ public class EchoUserSession implements EchoUser {
         }
       }
       
-      for( TodoItemRetrievedListener listener : this.todoListeners ) {
+      for( EchoCommandHandler listener : this.todoListeners ) {
         
-        if( !todoItem.isComplete() && !todoItem.isDeleted() ) {
+        if( todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null ) {
           if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
             String remainder = todoItem.getText().substring( listener.getKey().length() );
             log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
-            handled = handled | listener.handleTodoItem( todoItem, this, remainder );
+            handled = handled | listener.handle( todoItem, this, remainder );
           }
         }
       }
@@ -415,8 +415,8 @@ public class EchoUserSession implements EchoUser {
       do {
         String listenerString = echoUserSession.getProperty( "todoListener." + ++i );
         if( listenerString != null ) {
-          TodoItemRetrievedListenerBuilder listenerBuilder = ListenerPropertyParser.getListenerBuilder( listenerString );
-          TodoItemRetrievedListener listener = listenerBuilder.generate();
+          EchoCommandHandlerBuilder listenerBuilder = EchoCommandHandlerDefinitionPropertyParser.getCommandHandlerBuilder( listenerString );
+          EchoCommandHandler        listener        = listenerBuilder.generate();
           echoUserSession.addTodoRetrievedListener( listener );
           log.info(  "Added " + listener.getClass().getName() + " as a listener for key: " + listener.getKey() );
         }

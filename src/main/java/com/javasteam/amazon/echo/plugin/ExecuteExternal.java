@@ -13,13 +13,14 @@ import org.apache.commons.logging.LogFactory;
 
 import com.javasteam.amazon.echo.EchoTodoItem;
 import com.javasteam.amazon.echo.EchoUserSession;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerImpl;
 
 /**
  * @author ddamon
  *
  */
-public class ExecuteExternal extends TodoItemRetrievedListenerImpl {
+@Deprecated
+public class ExecuteExternal extends EchoCommandHandlerImpl {
   private final static Log          log = LogFactory.getLog( ExecuteExternal.class.getName() );
   
   public ExecuteExternal() {
@@ -28,7 +29,7 @@ public class ExecuteExternal extends TodoItemRetrievedListenerImpl {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem, com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
-  public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) {
+  public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     boolean retval = false;
     
     String command = todoItem.getText();
@@ -37,12 +38,12 @@ public class ExecuteExternal extends TodoItemRetrievedListenerImpl {
       
     retval = true;
       
-    if( this.getCommands().length > 0 ) {
-      CommandLine commandLine = new CommandLine( this.getCommands()[ 0 ] );
+    if( commands.length > 0 ) {
+      CommandLine commandLine = new CommandLine( commands[ 0 ] );
       
       if( this.getCommands().length > 1 ) {
-        for( int i = 1; i < this.getCommands().length; ++i ) {
-          String theCommand = this.getCommands()[ i ].trim();
+        for( int i = 1; i < commands.length; ++i ) {
+          String theCommand = commands[ i ].trim();
           if( theCommand.equalsIgnoreCase( "%text%" )) {
             theCommand = remainder;
           }

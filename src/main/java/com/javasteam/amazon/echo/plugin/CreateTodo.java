@@ -6,15 +6,16 @@ import org.apache.commons.logging.LogFactory;
 import com.javasteam.amazon.echo.AmazonAPIAccessException;
 import com.javasteam.amazon.echo.EchoTodoItem;
 import com.javasteam.amazon.echo.EchoUserSession;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerImpl;
 
 
 /**
  * @author ddamon
  *
  */
-public class CreateTodo extends TodoItemRetrievedListenerImpl {
-  private final static Log          log = LogFactory.getLog( ExecuteExternal.class.getName() );
+@Deprecated
+public class CreateTodo extends EchoCommandHandlerImpl {
+  private final static Log          log = LogFactory.getLog( CreateTodo.class.getName() );
   
   public CreateTodo() {
   }
@@ -22,15 +23,15 @@ public class CreateTodo extends TodoItemRetrievedListenerImpl {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem, com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
-  public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) {
+  public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     boolean retval = false;
     
     log.info(  "Processing create todo: " + todoItem.getText() );
       
     retval = true;
       
-    if( this.getCommands().length > 0 ) {
-      for( String todo : this.getCommands() ) {
+    if( commands.length > 0 ) {
+      for( String todo : commands ) {
         try {
           todo = todo.replaceAll( "\"", "" );
           log.info( "Adding todo: " + todo );
