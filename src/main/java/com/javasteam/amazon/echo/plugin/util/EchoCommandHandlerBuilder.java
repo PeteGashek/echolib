@@ -21,9 +21,6 @@ public class EchoCommandHandlerBuilder extends EchoCommandHandlerDefinition {
                                                           };
   
   
-  /**
-   * 
-   */
   public EchoCommandHandlerBuilder() {
     super();
   }
@@ -41,9 +38,6 @@ public class EchoCommandHandlerBuilder extends EchoCommandHandlerDefinition {
     return retval;
   }
   
-  /**
-   * @return
-   */
   public EchoCommandHandler generate() {
     EchoCommandHandler retval = null;
     
