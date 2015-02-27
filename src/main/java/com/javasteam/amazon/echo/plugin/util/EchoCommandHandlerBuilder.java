@@ -14,11 +14,11 @@ public class EchoCommandHandlerBuilder extends EchoCommandHandlerDefinition {
   private final static Log log = LogFactory.getLog( EchoCommandHandlerBuilder.class.getName() );
   
   //TODO this is targed for todo items right now.... needs generalization
-  private static Class[] methodSignature = new Class[] { EchoTodoItem.class
-                                                       , EchoUserSession.class
-                                                       , String.class
-                                                       , String[].class 
-                                                       };
+  private static Class<?>[] methodSignature = new Class[] { EchoTodoItem.class
+                                                          , EchoUserSession.class
+                                                          , String.class
+                                                          , String[].class 
+                                                          };
   
   
   /**
