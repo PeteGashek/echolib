@@ -371,6 +371,24 @@ public class EchoUserSession implements EchoUser {
     
     return retval;
   }
+
+  public static void configureBaseFomProperties( EchoBase echoBase, EchoUserSession echoUserSession ) {
+    String loginForm         = echoUserSession.getProperty( "loginForm" );
+    String userNameField     = echoUserSession.getProperty( "userNameField" );
+    String userPasswordField = echoUserSession.getProperty( "userPasswordField" );
+    
+    if( loginForm != null && loginForm.trim().length() > 0 ) {
+      echoBase.setLoginFormName( loginForm.trim() );  
+    }
+
+    if( userNameField != null && userNameField.trim().length() > 0 ) {
+      echoBase.setUserFieldName( userNameField.trim() );  
+    }
+
+    if( userPasswordField != null && userPasswordField.trim().length() > 0 ) {
+      echoBase.setPasswordFieldName( userPasswordField.trim() );  
+    }
+  }
   
   /**
    * @param args
@@ -407,9 +425,11 @@ public class EchoUserSession implements EchoUser {
       EchoBase.getHttpClientPool().getMonitor().setPollIntervalInSeconds( 60 );
       EchoBase.getHttpClientPool().getMonitor().setIdleTimeoutInSeconds( 600 );
       
-      EchoBase echoBase = new EchoBase();
+      EchoBase     echoBase = new EchoBase();
       EchoUserImpl echoUser = new EchoUserImpl( username, password );
     
+      configureBaseFomProperties( echoBase, echoUserSession );
+
       int i = 0;
       boolean halt = false;
       do {

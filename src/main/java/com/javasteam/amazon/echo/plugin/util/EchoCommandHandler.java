@@ -13,12 +13,8 @@ import com.javasteam.amazon.echo.EchoUserSession;
  *
  */
 public interface EchoCommandHandler {
-  /**
-   * @param todoItem
-   * @param echoUserSession
-   * @param remainder
-   * @return
-   */
+ 
+  //TODO this is targeted for todo items right now.... needs generalization
   public boolean  handle( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder );
   
   public void     setName( String name );

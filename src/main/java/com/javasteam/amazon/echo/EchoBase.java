@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,6 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javasteam.amazon.echo.http.EchoHttpGet;
 import com.javasteam.amazon.echo.http.EchoHttpPost;
 import com.javasteam.amazon.echo.http.EchoHttpPut;
+import com.javasteam.http.Form;
+import com.javasteam.http.FormFieldMap;
+import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
 
 /**
@@ -50,6 +54,9 @@ public class EchoBase {
   // instance vars
   private String                    echoURL            = DEFAULT_ECHO_URL;
   private String                    userAgent          = DEFAULT_USER_AGENT;
+  private String                    loginFormName      = "ap_signin_form";
+  private String                    userFieldName      = "email";
+  private String                    passwordFieldName  = "password";
 
   /**
    * @param httpClientPool
@@ -95,6 +102,30 @@ public class EchoBase {
    */
   public void setEchoURL( String echoURL ) {
     this.echoURL = echoURL;
+  }
+
+  public String getLoginFormName() {
+    return loginFormName;
+  }
+
+  public void setLoginFormName( String loginFormName ) {
+    this.loginFormName = loginFormName;
+  }
+
+  public String getUserFieldName() {
+    return userFieldName;
+  }
+
+  public void setUserFieldName( String userFieldName ) {
+    this.userFieldName = userFieldName;
+  }
+
+  public String getPasswordFieldName() {
+    return passwordFieldName;
+  }
+
+  public void setPasswordFieldName( String passwordFieldName ) {
+    this.passwordFieldName = passwordFieldName;
   }
 
   private EchoHttpGet getEchoHttpGetForActionUrl( String actionUrl ) {
@@ -244,26 +275,23 @@ public class EchoBase {
     
     if( !retval ) {
       log.debug( "echo service login" );
-
+      
+      Form form = FormFieldMap.getHtmlFormFieldsByGet( getEchoURL(), loginFormName, user );
+      
       try {
-        String   output = amazonEchoGet( "", user );
-        Document doc    = Jsoup.parse( output );
-        Elements forms  = doc.select( "form" );
-        String   action = forms.attr( "action" );
-
-        if( !action.isEmpty() ) {
-          Elements            hidden   = doc.select( "input[type=hidden]" );
-          List<NameValuePair> formData = new ArrayList<NameValuePair>();
-
-          formData.add( new BasicNameValuePair( "email",    user.getUsername() ));
-          formData.add( new BasicNameValuePair( "password", user.getPassword() ));
-          formData.add( new BasicNameValuePair( "create",   "0"                ));
-
-          for( Element element : hidden ) {
-            formData.add( new BasicNameValuePair( element.attr( "name" ), element.attr( "value" )));
+        if( !form.getAction().isEmpty() ) {
+          form.getFields().put( userFieldName,    user.getUsername() );
+          
+          if( log.isDebugEnabled() ) {
+            log.debug( "FormAction: " + form.getAction() );
+            for( NameValuePair pair : form.generateFormData() ) {
+              log.debug( "  -- " + pair.getName() + "==" + pair.getValue() );
+            }
           }
-
-          amazonEchoPostForm( action, formData, user );
+          
+          form.getFields().put( passwordFieldName, user.getPassword() );
+          
+          amazonEchoPostForm( form.getAction(), form.generateFormData(), user );
 
           log.info( "Login successful" );
 
@@ -284,8 +312,6 @@ public class EchoBase {
     
     return retval;
   }
-
-
 
 
   /**

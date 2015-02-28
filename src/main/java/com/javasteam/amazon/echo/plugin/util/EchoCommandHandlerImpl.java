@@ -85,6 +85,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
     this.method = method;
   }
   
+  //TODO this is targeted for todo items right now.... needs generalization
   private Object  makeMethodCall( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Object[] args = { todoItem
                     , echoUserSession
