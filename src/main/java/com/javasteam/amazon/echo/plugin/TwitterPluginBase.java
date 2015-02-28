@@ -20,7 +20,7 @@ import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerImpl;
  * @author damon
  *
  */
-public class TwitterPluginBase extends EchoCommandHandlerImpl {
+public class TwitterPluginBase {
   //The factory instance is re-useable and thread safe.
   private static Twitter twitter;
   
@@ -50,7 +50,7 @@ public class TwitterPluginBase extends EchoCommandHandlerImpl {
    * #handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem,
    * com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
-  public boolean handleTodoItem( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder ) {
+  public boolean handleTodoItem( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     ResponseList<Status> statuses;
     
     try {
