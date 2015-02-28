@@ -12,15 +12,15 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import com.javasteam.amazon.echo.EchoTodoItem;
+import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUserSession;
-import com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListenerImpl;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerImpl;
 
 /**
  * @author damon
  *
  */
-public class TwitterPluginBase extends TodoItemRetrievedListenerImpl {
+public class TwitterPluginBase extends EchoCommandHandlerImpl {
   //The factory instance is re-useable and thread safe.
   private static Twitter twitter;
   
@@ -50,7 +50,7 @@ public class TwitterPluginBase extends TodoItemRetrievedListenerImpl {
    * #handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem,
    * com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
-  public boolean handleTodoItem( EchoTodoItem todoItem, EchoUserSession echoUserSession, String remainder ) {
+  public boolean handleTodoItem( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder ) {
     ResponseList<Status> statuses;
     
     try {
