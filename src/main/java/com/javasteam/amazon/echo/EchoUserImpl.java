@@ -1,13 +1,5 @@
 package com.javasteam.amazon.echo;
 
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-
 import com.javasteam.http.UserImpl;
 
 /**
@@ -15,9 +7,6 @@ import com.javasteam.http.UserImpl;
  *
  */
 public class EchoUserImpl extends UserImpl implements EchoUser {
-  private final static Log log = LogFactory.getLog( EchoUserImpl.class.getName() );
-  
-  
   private boolean           loggedIn    = false;
   
   public EchoUserImpl() {

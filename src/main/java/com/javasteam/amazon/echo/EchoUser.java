@@ -1,8 +1,5 @@
 package com.javasteam.amazon.echo;
 
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
-
 import com.javasteam.http.User;
 
 /**
