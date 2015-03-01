@@ -136,10 +136,11 @@ public class Twitter {
     String lowercaseText = text.toLowerCase();
     
     for( String key : hashKeys ) {
-      int startPoint = text.indexOf( key.toLowerCase() );
+      int startPoint = lowercaseText.indexOf( key.toLowerCase() );
       
       if( startPoint >= 0 ) {
         text = text.substring( 0, startPoint ) + "#" + text.substring( startPoint + key.length() );
+        lowercaseText = text.toLowerCase();
       }  
     }
     
