@@ -32,6 +32,8 @@ import com.javasteam.http.UserImpl;
 public class Twitter {
   private final static Log          log                = LogFactory.getLog( Twitter.class.getName() );
   
+  private static String[] hashKeys = { "hash tag ", "hashtag " };
+  
   public static String LOGIN_PAGE             = "https://twitter.com/login";
   public static String SESSION_PAGE           = "https://twitter.com/sessions";
   public static String CREATE_TWIT_PAGE       = "https://twitter.com/i/tweet/create";
@@ -129,7 +131,27 @@ public class Twitter {
     
     return user;
   }
+  
+  public String popluateHashtags( String text, String[] hashKeys ) {
+    String lowercaseText = text.toLowerCase();
+    
+    for( String key : hashKeys ) {
+      int startPoint = text.indexOf( key.toLowerCase() );
+      
+      if( startPoint >= 0 ) {
+        text = text.substring( 0, startPoint ) + "#" + text.substring( startPoint + key.length() );
+      }  
+    }
+    
+    return text;
+  }
+  
+  
 
+  public String popluateHashtags( String text ) {
+    return popluateHashtags( text, Twitter.hashKeys );
+  }
+  
   /*
    * (non-Javadoc)
    * 
@@ -151,7 +173,8 @@ public class Twitter {
       }
       
       if( authenticityToken != null ) {
-        sendTwit( echoUserSession.getEchoBase(), authenticityToken, remainder, user );
+        String hashTaggedRemainder = popluateHashtags( remainder );
+        sendTwit( echoUserSession.getEchoBase(), authenticityToken, hashTaggedRemainder, user );
         retval = true;
       }
       else {
