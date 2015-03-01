@@ -1,9 +1,12 @@
 Echolib
 =======
-Echolib is a tool for configuration driven automation of tasks driven by the Amazon Echo Todo list.
+Send tweets and start programs from your Amazon echo.
+
+Name change pending....
 
 Echolib Deeper Dive
 ===================
+Echolib is a tool for configuration driven automation of tasks driven by the Amazon Echo Todo list.
 At it's core Echolib provides a java library for interacting the Echo that can be leveraged in other applications.  Interacting with the Echo account at amazon is based on a User Session.  The UserSession object is executable and supports executable task plugins that can be triggered by the content of Amazon Echo Todo lists.  A few plugins are provided so that Echolib is useful right out of the box.  This is all configurable and new plugins can be added simply and easily.  It is written in Java and can be run on Linux, windows or Mac OS X.
 
 
