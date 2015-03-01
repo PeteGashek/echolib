@@ -25,6 +25,7 @@ import com.javasteam.amazon.echo.http.EchoHttpPost;
 import com.javasteam.amazon.echo.http.EchoHttpPut;
 import com.javasteam.http.Form;
 import com.javasteam.http.FormFieldMap;
+import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
 
 /**
@@ -139,6 +140,32 @@ public class EchoBase {
    * @return
    * @throws ClientProtocolException
    * @throws IOException
+   * @deprecated
+   */
+  public String httpGet( String actionUrl, User user ) throws ClientProtocolException, IOException {
+    String retval = "";
+
+    EchoHttpGet httpGet = getEchoHttpGetForActionUrl(  actionUrl );
+
+    httpGet.setUserAgentHeader( userAgent );
+    httpGet.setUserContext( user );
+
+    HttpResponse response = httpGet.execute( httpClientPool );
+
+    retval = httpGet.parseResponse( response );
+
+    user.logCookies();
+    httpGet.logHeaders();
+    
+    return retval;
+  }
+  
+  /**
+   * @param actionUrl
+   * @param user
+   * @return
+   * @throws ClientProtocolException
+   * @throws IOException
    */
   private String amazonEchoGet( String actionUrl, EchoUser user ) throws ClientProtocolException, IOException {
     String retval = "";
@@ -225,6 +252,30 @@ public class EchoBase {
     
     return retval;
   }
+  
+  public void postForm( Form form, User user ) throws AmazonLoginException, IOException {
+    EchoHttpPost httpPost = this.getEchoHttpPostForActionUrl( form.getAction() );
+    
+    httpPost.setUserAgentHeader( userAgent );
+    //httpPost.setRefererHeader( getEchoURL() );
+    httpPost.setUserContext( user );
+    httpPost.setEntity( new UrlEncodedFormEntity( form.generateFormData(), StandardCharsets.UTF_8.name() ));
+    
+    HttpResponse httpResponse = httpPost.execute( httpClientPool );
+    
+    log.debug( "Form response: " + httpResponse.toString() );
+    
+    user.logCookies();
+    
+    // process...
+    httpResponse.getEntity();
+    HttpEntity entity = httpResponse.getEntity();
+
+    if( entity != null ) {
+      EntityUtils.consume( entity );
+    }
+  }
+  
 
   /**
    * @param action
@@ -269,7 +320,7 @@ public class EchoBase {
     if( !retval ) {
       log.debug( "echo service login" );
       
-      Form form = FormFieldMap.getHtmlFormFieldsByGet( getEchoURL(), loginFormName, user );
+      Form form = FormFieldMap.getHtmlFormFieldsByFormName( getEchoURL(), loginFormName, user );
       
       try {
         if( !form.getAction().isEmpty() ) {

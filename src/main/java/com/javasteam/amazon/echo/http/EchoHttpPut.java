@@ -24,6 +24,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import com.javasteam.amazon.echo.EchoUser;
+import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
 
 /**
@@ -85,7 +86,7 @@ public class EchoHttpPut extends HttpPut {
     setEntity( input );
   }
   
-  public void setUserContext( EchoUser user ) {
+  public void setUserContext( User user ) {
     if( user != null ) {
       this.context = user.getContext();
       //log.debug( "Set User Context to: " + context );

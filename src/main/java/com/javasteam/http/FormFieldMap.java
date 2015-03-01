@@ -21,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.javasteam.restful.HttpClientPool;
 
@@ -99,15 +100,18 @@ public class FormFieldMap {
     return retval;
   }
 
+  public static Document getDocumentByUrl( String url, User user ) throws ClientProtocolException, IOException {
+    String   output  = httpGet( url, user );
+    return Jsoup.parse( output );
+  }
   
-  public static Form getHtmlFormFieldsByGet( String url, String formName, User user ) {
+  public static Form getHtmlFormFieldsByFormName( String url, String formName, User user ) {
     Form retval = new Form();
     
     retval.setFields( new HashMap<String,String>() );
     
     try {
-      String   output  = httpGet( url, user );
-      Document doc     = Jsoup.parse( output );
+      Document doc     = getDocumentByUrl( url, user );
       Element  element = doc.getElementById( formName );
       if( element != null ) {
         retval.setAction( element.attr( "action" ) );
@@ -129,4 +133,62 @@ public class FormFieldMap {
     return retval;    
   }
     
+  public static Form getHtmlFormFieldsByAction( String url, String action, User user ) {
+   Form retval = new Form();
+    
+    retval.setFields( new HashMap<String,String>() );
+    
+    try {
+      Document doc     = getDocumentByUrl( url, user );
+      Element  element = doc.getElementsByAttributeValueContaining( "action", action ).get( 0 );
+      
+      if( element != null ) {
+        retval.setAction( element.attr( "action" ) );
+        retval.getFields().putAll( mapElement( element ));
+      }
+      else {
+        log.error( "Can't find requested form with action: " + action );
+      }
+    }
+    catch( ClientProtocolException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IOException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    return retval;    
+  }
+
+  public static Form getHtmlFormFieldsByType( String url, String type, User user ) {
+    Form retval = new Form();
+     
+     retval.setFields( new HashMap<String,String>() );
+     
+     try {
+       Document doc     = getDocumentByUrl( url, user );
+       Elements elements = doc.getElementsByClass( type );
+       
+       if( elements != null ) {
+         for( Element element : elements ) {
+           retval.getFields().putAll( mapElement( element ));
+         }
+       }
+       else {
+         log.error( "Can't find elements of type: " + type );
+       }
+     }
+     catch( ClientProtocolException e ) {
+       // TODO Auto-generated catch block
+       e.printStackTrace();
+     }
+     catch( IOException e ) {
+       // TODO Auto-generated catch block
+       e.printStackTrace();
+     }
+     
+     return retval;    
+   }
 }

@@ -22,7 +22,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
-import com.javasteam.amazon.echo.EchoUser;
+import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
 
 public class EchoHttpPost extends HttpPost {
@@ -74,7 +74,7 @@ public class EchoHttpPost extends HttpPost {
     setEntity( input );
   }
   
-  public void setUserContext( EchoUser user ) {
+  public void setUserContext( User user ) {
     if( user != null ) {
       this.context = user.getContext();
       //log.debug( "Set User Context to: " + context );
@@ -89,7 +89,7 @@ public class EchoHttpPost extends HttpPost {
     return httpClientPool.getHttpClient().execute( this, getContext() );
   }
   
-  public void setEchoCsrfHeaderFromUserCookieStore( EchoUser user ) {
+  public void setEchoCsrfHeaderFromUserCookieStore( User user ) {
     //TODO see if this is needed
     List<Cookie> cookies = user.getCookieStore().getCookies();
     for( Cookie cookie: cookies ) {

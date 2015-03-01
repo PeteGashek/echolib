@@ -27,7 +27,7 @@ public class UserImpl implements User {
    * @param password
    */
   public UserImpl( String user, String password ) {
-    this.username     = user;
+    this.username = user;
     this.password = password;
   }
 
