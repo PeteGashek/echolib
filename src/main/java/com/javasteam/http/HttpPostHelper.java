@@ -1,9 +1,8 @@
-package com.javasteam.amazon.echo.http;
+package com.javasteam.http;
 
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,30 +14,28 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
-import com.javasteam.http.HttpPostHelper;
-import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
 
-public class EchoHttpPost extends HttpPostHelper {
-  private final static Log          log = LogFactory.getLog( EchoHttpPost.class.getName() );
+public class HttpPostHelper extends HttpPost {
+  private final static Log          log = LogFactory.getLog( HttpPostHelper.class.getName() );
   
   private HttpClientContext context;
   private boolean           postSuccessful = false;
   
-  public EchoHttpPost() {
+  public HttpPostHelper() {
   }
 
-  public EchoHttpPost( URI uri ) {
+  public HttpPostHelper( URI uri ) {
     super( uri );
   }
 
-  public EchoHttpPost( String uri ) {
+  public HttpPostHelper( String uri ) {
     super( uri );
   }
 
@@ -89,18 +86,6 @@ public class EchoHttpPost extends HttpPostHelper {
     return httpClientPool.getHttpClient().execute( this, getContext() );
   }
   
-  public void setEchoCsrfHeaderFromUserCookieStore( User user ) {
-    //TODO see if this is needed
-    List<Cookie> cookies = user.getCookieStore().getCookies();
-    for( Cookie cookie: cookies ) {
-      if( cookie.getName().equalsIgnoreCase( "csrf" )) {
-        setHeader( "csrf"
-                 , cookie.getValue()
-                 );
-      }
-    }
-  }
-  
   public void logHeaders() {
     if( log.isDebugEnabled() ) {
       for( Header header : getAllHeaders() ) {
@@ -125,12 +110,12 @@ public class EchoHttpPost extends HttpPostHelper {
       
       retval = new BasicResponseHandler().handleResponse( response );
       postSuccessful = true;
-      log.info( "Post successful" );
-      log.debug( "amazonEchoPost returns: " + retval );
+      //log.info( "Post successful" );
+      log.debug( "Post returns: " + retval );
     }
     else {
       retval = new BasicResponseHandler().handleResponse( response );
-      log.error( "amazonEchoPost returns Error(" + code + "): " + retval );
+      log.error( "Post returns Error(" + code + "): " + retval );
     }
     
     return retval;

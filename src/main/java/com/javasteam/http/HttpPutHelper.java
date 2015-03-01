@@ -1,44 +1,56 @@
-package com.javasteam.amazon.echo.http;
+/**
+ * 
+ */
+package com.javasteam.http;
 
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.util.EntityUtils;
 
-import com.javasteam.http.HttpPostHelper;
-import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
 
-public class EchoHttpPost extends HttpPostHelper {
-  private final static Log          log = LogFactory.getLog( EchoHttpPost.class.getName() );
+/**
+ * @author ddamon
+ *
+ */
+public class HttpPutHelper extends HttpPut {
+  private final static Log          log = LogFactory.getLog( HttpPutHelper.class.getName() );
   
   private HttpClientContext context;
-  private boolean           postSuccessful = false;
   
-  public EchoHttpPost() {
+
+  /**
+   * 
+   */
+  public HttpPutHelper() {
+    // TODO Auto-generated constructor stub
   }
 
-  public EchoHttpPost( URI uri ) {
+  /**
+   * @param uri
+   */
+  public HttpPutHelper( URI uri ) {
     super( uri );
   }
 
-  public EchoHttpPost( String uri ) {
+  /**
+   * @param uri
+   */
+  public HttpPutHelper( String uri ) {
     super( uri );
   }
 
@@ -54,15 +66,11 @@ public class EchoHttpPost extends HttpPostHelper {
     super.setHeader( HttpHeaders.USER_AGENT, userAgent );
   }
   
-  public void setRefererHeader( String refererUrl ) {
-    super.setHeader( HttpHeaders.REFERER, refererUrl );
-  }
-  
   public void setAcceptHeader( String acceptString ) {
     super.setHeader( "Accept", acceptString );
   }
 
-  public void setAcceptHeaderToApplicationJson( ) {
+  public void setAcceptHeaderToApplicationJson() {
     setAcceptHeader( "application/json, text/javascript, */*; q=0.01" );
   }
   
@@ -81,24 +89,8 @@ public class EchoHttpPost extends HttpPostHelper {
     }
   }
   
-  public boolean isPostSuccessful() {
-    return postSuccessful;
-  }
-
   public CloseableHttpResponse execute( HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
     return httpClientPool.getHttpClient().execute( this, getContext() );
-  }
-  
-  public void setEchoCsrfHeaderFromUserCookieStore( User user ) {
-    //TODO see if this is needed
-    List<Cookie> cookies = user.getCookieStore().getCookies();
-    for( Cookie cookie: cookies ) {
-      if( cookie.getName().equalsIgnoreCase( "csrf" )) {
-        setHeader( "csrf"
-                 , cookie.getValue()
-                 );
-      }
-    }
   }
   
   public void logHeaders() {
@@ -115,22 +107,13 @@ public class EchoHttpPost extends HttpPostHelper {
     String       retval   = "";
 
     if( code == 200 ) {
-      //response.getEntity();
-      
-      HttpEntity entity = response.getEntity();
-
-      if( entity != null ) {
-        EntityUtils.consume( entity );
-      }
-      
+      response.getEntity();
       retval = new BasicResponseHandler().handleResponse( response );
-      postSuccessful = true;
-      log.info( "Post successful" );
-      log.debug( "amazonEchoPost returns: " + retval );
+      log.debug( "amazonEchoPut returns: " + retval );
     }
     else {
       retval = new BasicResponseHandler().handleResponse( response );
-      log.error( "amazonEchoPost returns Error(" + code + "): " + retval );
+      log.error( "amazonEchoPut returns Error(" + code + "): " + retval );
     }
     
     return retval;

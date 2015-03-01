@@ -134,31 +134,6 @@ public class EchoBase {
     return new EchoHttpPost( actionUrl );
   }
 
-  /**
-   * @param actionUrl
-   * @param user
-   * @return
-   * @throws ClientProtocolException
-   * @throws IOException
-   * @deprecated
-   */
-  public String httpGet( String actionUrl, User user ) throws ClientProtocolException, IOException {
-    String retval = "";
-
-    EchoHttpGet httpGet = getEchoHttpGetForActionUrl(  actionUrl );
-
-    httpGet.setUserAgentHeader( userAgent );
-    httpGet.setUserContext( user );
-
-    HttpResponse response = httpGet.execute( httpClientPool );
-
-    retval = httpGet.parseResponse( response );
-
-    user.logCookies();
-    httpGet.logHeaders();
-    
-    return retval;
-  }
   
   /**
    * @param actionUrl
