@@ -45,7 +45,7 @@ public class Twitter {
   public static String PASSWORD_FIELD         = "session[password]";
   
   public static String TWIT_USER_KEY          = "twit.user";
-  public static String TWIT_PASSWORD_KEY      = "twit.user";
+  public static String TWIT_PASSWORD_KEY      = "twit.password";
   
   private User   user              = null;
   private String authenticityToken = null;

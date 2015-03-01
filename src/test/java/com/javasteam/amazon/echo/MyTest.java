@@ -2,13 +2,13 @@ package com.javasteam.amazon.echo;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import javax.swing.text.html.HTML;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.cookie.Cookie;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -20,6 +20,7 @@ import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
 import com.javasteam.http.Form;
 import com.javasteam.http.FormFieldMap;
+import com.javasteam.http.HttpGetHelper;
 import com.javasteam.http.User;
 import com.javasteam.http.UserImpl;
 
@@ -121,27 +122,14 @@ public class MyTest {
   public static void sendTwit( EchoBase base, String authenticityToken, String twitText, User user ) {
     Form               form = new Form( "https://twitter.com/i/tweet/create" );
     Map<String,String> fields = new HashMap<String,String>();
-    List<Cookie>       cookies = user.getCookieStore().getCookies();
-    String             authToken = "";
-    
     
     form.setFields( fields );
-    
-    /*
-    for( Cookie cookie : cookies ) {
-      if( cookie.getName().equalsIgnoreCase( "auth_token" )) {
-        authToken = cookie.getValue();
-      }
-    }
-    */
     
     fields.put( "status",             twitText );
     fields.put( "place_id",           "" );
     fields.put( "tagged_users",       "" );
     fields.put( "page_context",       "profile" );
     fields.put( "authenticity_token", authenticityToken );
-    
-    //fields.put( "authenticity_token", "13cc65a35f3c87ceec9059f8838fb4e8cd32b773" );
     
     printFormFields( form );
     
@@ -156,6 +144,10 @@ public class MyTest {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+  
+  public static void main_old1( String[] args ) {
+    System.out.println( HTML.Attribute.VALUE.toString() );
   }
   
   public static void main( String[] args ) {
@@ -174,7 +166,8 @@ public class MyTest {
     
     try {
       String authenticityToken = twitterLogin( user );
-      base.httpGet( "https://twitter.com/i/jot", user );
+      HttpGetHelper getHelper = new HttpGetHelper( "https://twitter.com/i/jot" );
+      getHelper.httpGet( EchoBase.getHttpClientPool(), user );
       sendTwit( base, authenticityToken, "This is a test twit_001", user );
     }
     catch( ClientProtocolException e ) {
