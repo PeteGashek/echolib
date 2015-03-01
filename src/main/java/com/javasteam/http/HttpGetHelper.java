@@ -19,7 +19,6 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
-import com.javasteam.amazon.echo.http.EchoHttpGet;
 import com.javasteam.restful.HttpClientPool;
 
 public class HttpGetHelper extends HttpGet {
