@@ -122,7 +122,7 @@ public class TodoItemPoller extends Thread {
           }
         }
         catch( AmazonAPIAccessException e ) {
-          log.error( "Fetching Todo items", e );
+          log.error( "Error fetching Todo items", e );
         }
       }
     }
