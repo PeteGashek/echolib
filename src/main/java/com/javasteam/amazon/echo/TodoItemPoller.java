@@ -98,7 +98,7 @@ public class TodoItemPoller extends Thread {
    */
   @Override
   public void run() {
-    while( !stopped ) {
+    while( !isStopped() ) {
       if( !echoUserSession.getEchoUser().isLoggedIn() ) {
         try {
           log.info( "Logging in user: " + echoUserSession.getEchoUser().getUsername() );
@@ -111,6 +111,7 @@ public class TodoItemPoller extends Thread {
         
       if( echoUserSession.getEchoUser().isLoggedIn() ) {
         try {
+          System.out.print( "." );
           List<EchoTodoItemImpl> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
           
           log.debug( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
@@ -120,19 +121,24 @@ public class TodoItemPoller extends Thread {
               echoUserSession.notifyTodoRetrievedListeners( todoItem );
             } 
           }
+          else {
+            log.info( "No todos to process" );
+          }
         }
         catch( AmazonAPIAccessException e ) {
           log.error( "Error fetching Todo items", e );
         }
       }
-    }
       
-    int loop = 0;
-    while( !isStopped() && loop++ < intervalInSeconds ) {
-      try {
-        Thread.sleep( 1000 );
+      int loop = 0;
+
+      while( !isStopped() && loop < intervalInSeconds ) {
+        try {
+          Thread.sleep( 1000 );
+        }
+        catch( InterruptedException e ) {}
+        ++loop;
       }
-      catch( InterruptedException e ) {}
     }
   }
 }
