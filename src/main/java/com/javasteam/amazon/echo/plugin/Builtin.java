@@ -16,6 +16,7 @@ import com.javasteam.amazon.echo.EchoBase;
 import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Builtin {
   private final static Log log = LogFactory.getLog( Builtin.class.getName() );
@@ -24,6 +25,10 @@ public class Builtin {
   }
 
   public boolean createTodo( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+    checkNotNull( todoItem,        "Can't process a null todo item" );
+    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    checkNotNull( commands,        "Command array can not be null" );
+    
     boolean retval = false;
     
     log.info(  "Processing create todo: " + todoItem.getText() );
@@ -49,6 +54,10 @@ public class Builtin {
   }
   
   public boolean executeExternal( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+    checkNotNull( todoItem,        "Can't process a null todo item" );
+    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    checkNotNull( commands,        "Command array can not be null" );
+
     boolean retval = false;
     
     String command = todoItem.getText();
@@ -96,6 +105,9 @@ public class Builtin {
   }
   
   public boolean shutdownTodoPoller( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+    checkNotNull( todoItem,        "Can't process a null todo item" );
+    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    
     boolean retval = false;
 
     EchoUser echoUser = echoUserSession.getEchoUser();

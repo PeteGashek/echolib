@@ -8,6 +8,8 @@ import org.apache.http.cookie.Cookie;
 import com.javasteam.http.HttpGetHelper;
 import com.javasteam.http.User;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class EchoHttpGet extends HttpGetHelper {
   //private final static Log          log = LogFactory.getLog( EchoHttpGet.class.getName() );
   
@@ -25,6 +27,9 @@ public class EchoHttpGet extends HttpGetHelper {
   
 
   public void setEchoCsrfHeaderFromUserCookieStore( User user ) {
+    checkNotNull( user );
+    checkNotNull( user.getCookieStore() );
+    
     //TODO see if this is needed
     List<Cookie> cookies = user.getCookieStore().getCookies();
     for( Cookie cookie: cookies ) {

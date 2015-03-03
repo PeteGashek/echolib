@@ -3,6 +3,8 @@
  */
 package com.javasteam.amazon.echo.plugin;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +61,9 @@ public class Twitter {
   }
   
   public boolean sendTwit( EchoBase base, String authenticityToken, String twitText, User user ) {
+    checkNotNull( user );
+    checkNotNull( twitText );
+    
     boolean            retval  = false;
     Form               form    = new Form( CREATE_TWIT_PAGE );
     Map<String,String> fields  = new HashMap<String,String>();
@@ -87,6 +92,9 @@ public class Twitter {
   
   
   public synchronized String twitterLogin( EchoBase base, User user ) throws ClientProtocolException, IOException {
+    checkNotNull( user );
+    checkNotNull( base );
+    
     Form     form            = FormFieldMap.getHtmlFormFieldsByAction( Twitter.LOGIN_PAGE
                                                                      , Twitter.SESSION_PAGE
                                                                      , user );
@@ -120,6 +128,8 @@ public class Twitter {
   }
   
   private synchronized User getUser( EchoUserSession echoUserSession ) {
+    checkNotNull( echoUserSession );
+    
     if( user == null ) {
       String username = echoUserSession.getProperty( TWIT_USER_KEY );
       String password = echoUserSession.getProperty( TWIT_PASSWORD_KEY );
@@ -162,6 +172,10 @@ public class Twitter {
    * com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
   public boolean sendTwit( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) throws ClientProtocolException, IOException {
+    checkNotNull( todoItem,        "Can't process a null todo item" );
+    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    checkNotNull( commands,        "Command array can not be null" );
+
     boolean retval = false;
     User    user   = getUser( echoUserSession );
     

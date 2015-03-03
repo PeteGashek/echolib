@@ -13,6 +13,8 @@ import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropert
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author ddamon
  *
@@ -38,6 +40,7 @@ public class EchoUserSession implements EchoUser {
    */
   public EchoUserSession( EchoUser echoUser, EchoBase echoBase ) {
     this();
+        
     this.echoUser = echoUser;
     this.echoBase = echoBase;
   }
@@ -148,48 +151,29 @@ public class EchoUserSession implements EchoUser {
    * @see com.javasteam.amazon.echo.EchoUser#getCookieStore()
    */
   public BasicCookieStore getCookieStore() {
-    BasicCookieStore retval = null;
-    
-    if( this.echoUser != null ) {
-      retval = echoUser.getCookieStore();
-    }
-    
-    return retval;
+    return echoUser != null ? echoUser.getCookieStore() : null;
   }
 
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#setCookieStore(org.apache.http.impl.client.BasicCookieStore)
    */
   public void setCookieStore( BasicCookieStore cookieStore ) {
-    if( this.echoUser != null ) {
-      echoUser.setCookieStore( cookieStore );
-    }
+    checkNotNull( echoUser );
+    echoUser.setCookieStore( cookieStore );
   }
 
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#getContext()
    */
   public HttpClientContext getContext() {
-    HttpClientContext retval = null;
-    
-    if( this.echoUser != null ) {
-      retval = echoUser.getContext();
-    }
-    
-    return retval;
+    return echoUser != null ? echoUser.getContext() : null;
   }
 
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#isLoggedIn()
    */
   public boolean isLoggedIn() {
-    boolean retval = false;
-    
-    if( this.echoUser != null ) {
-      retval = echoUser.isLoggedIn();
-    }
-    
-    return retval;
+    return echoUser != null ? echoUser.isLoggedIn() : false;
   }
 
   /* (non-Javadoc)
@@ -205,6 +189,8 @@ public class EchoUserSession implements EchoUser {
    */
   private boolean loadProperties( String filename ) {
     boolean retval = false;
+    
+    checkNotNull( filename );
     
     try {
       properties.load( EchoUserSession.class.getClassLoader().getResourceAsStream( filename ));
@@ -252,6 +238,10 @@ public class EchoUserSession implements EchoUser {
     return retval; 
   }
   
+  private boolean todoItemCanBeProcessed( EchoTodoItemImpl todoItem ) {
+    return todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null;
+  }
+  
   /**
    * @param todoItem
    */
@@ -287,8 +277,7 @@ public class EchoUserSession implements EchoUser {
       }
       
       for( EchoCommandHandler listener : this.todoListeners ) {
-        
-        if( todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null ) {
+        if( todoItemCanBeProcessed( todoItem )) {
           if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
             String remainder = todoItem.getText().substring( listener.getKey().length() );
             log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
@@ -315,7 +304,10 @@ public class EchoUserSession implements EchoUser {
     boolean retval = false;
     
     synchronized( this.todoPollerLock ) {
-      if( this.echoBase != null && this.echoUser != null && this.todoItemPoller == null ) {
+      checkNotNull( this.echoBase );
+      checkNotNull( this.echoUser );
+      
+      if( this.todoItemPoller == null ) {
         this.todoItemPoller = new TodoItemPoller( this );
         log.debug( "Starting todoItem poller" );
         this.todoItemPoller.start();
@@ -372,7 +364,7 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
-  public static void configureBaseFomProperties( EchoBase echoBase, EchoUserSession echoUserSession ) {
+  public static void configureBaseFromProperties( EchoBase echoBase, EchoUserSession echoUserSession ) {
     String loginForm         = echoUserSession.getProperty( "loginForm" );
     String userNameField     = echoUserSession.getProperty( "userNameField" );
     String userPasswordField = echoUserSession.getProperty( "userPasswordField" );
@@ -428,7 +420,7 @@ public class EchoUserSession implements EchoUser {
       EchoBase     echoBase = new EchoBase();
       EchoUserImpl echoUser = new EchoUserImpl( username, password );
     
-      configureBaseFomProperties( echoBase, echoUserSession );
+      configureBaseFromProperties( echoBase, echoUserSession );
 
       int i = 0;
       boolean halt = false;

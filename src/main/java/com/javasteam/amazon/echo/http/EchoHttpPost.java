@@ -24,6 +24,7 @@ import org.apache.http.util.EntityUtils;
 import com.javasteam.http.HttpPostHelper;
 import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EchoHttpPost extends HttpPostHelper {
   private final static Log          log = LogFactory.getLog( EchoHttpPost.class.getName() );
@@ -75,10 +76,9 @@ public class EchoHttpPost extends HttpPostHelper {
   }
   
   public void setUserContext( User user ) {
-    if( user != null ) {
-      this.context = user.getContext();
-      //log.debug( "Set User Context to: " + context );
-    }
+    checkNotNull( user );
+    
+    this.context = user.getContext();
   }
   
   public boolean isPostSuccessful() {
@@ -86,10 +86,15 @@ public class EchoHttpPost extends HttpPostHelper {
   }
 
   public CloseableHttpResponse execute( HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
+    checkNotNull( httpClientPool );
+    
     return httpClientPool.getHttpClient().execute( this, getContext() );
   }
   
   public void setEchoCsrfHeaderFromUserCookieStore( User user ) {
+    checkNotNull( user );
+    checkNotNull( user.getCookieStore() );
+    
     //TODO see if this is needed
     List<Cookie> cookies = user.getCookieStore().getCookies();
     for( Cookie cookie: cookies ) {
@@ -110,6 +115,8 @@ public class EchoHttpPost extends HttpPostHelper {
   }
   
   public String parseResponse( HttpResponse response ) throws HttpResponseException, IOException {
+    checkNotNull( response );
+    
     StatusLine   status   = response.getStatusLine();
     int          code     = status.getStatusCode();
     String       retval   = "";

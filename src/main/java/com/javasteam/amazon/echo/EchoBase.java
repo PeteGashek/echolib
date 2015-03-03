@@ -28,6 +28,8 @@ import com.javasteam.http.FormFieldMap;
 import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author ddamon
  *
@@ -143,6 +145,8 @@ public class EchoBase {
    * @throws IOException
    */
   private String amazonEchoGet( String actionUrl, EchoUser user ) throws ClientProtocolException, IOException {
+    checkNotNull( user );
+    
     String retval = "";
 
     EchoHttpGet httpGet = getEchoHttpGetForActionUrl( getEchoURL() + actionUrl );
@@ -170,6 +174,8 @@ public class EchoBase {
    * @throws IOException
    */
   private String amazonEchoPut( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
+    checkNotNull( user );
+    
     String retval = "";
     
     if( log.isDebugEnabled() ) {
@@ -204,6 +210,8 @@ public class EchoBase {
    * @throws IOException
    */
   private String amazonEchoPost( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
+    checkNotNull( user );
+    
     String       retval   = "";
     EchoHttpPost httpPost = getEchoHttpPostForActionUrl( actionUrl );
     
@@ -229,6 +237,8 @@ public class EchoBase {
   }
   
   public void postForm( Form form, User user ) throws AmazonLoginException, IOException {
+    checkNotNull( user );
+    
     EchoHttpPost httpPost = this.getEchoHttpPostForActionUrl( form.getAction() );
     
     httpPost.setUserAgentHeader( userAgent );
@@ -260,6 +270,8 @@ public class EchoBase {
    * @throws IOException
    */
   private void amazonEchoPostForm( String actionUrl, List<NameValuePair> formData, EchoUser user ) throws AmazonLoginException, IOException {
+    checkNotNull( user );
+    
     EchoHttpPost httpPost = this.getEchoHttpPostForActionUrl( actionUrl );
     
     httpPost.setUserAgentHeader( userAgent );
@@ -288,6 +300,8 @@ public class EchoBase {
    * @throws AmazonLoginException
    */
   public synchronized boolean echoLogin( EchoUser user ) throws AmazonLoginException {
+    checkNotNull( user );
+    
     boolean retval = user.isLoggedIn();
     
     log.debug( "Preparing to log in.  Current login status for user is: " + user.isLoggedIn() );
@@ -340,6 +354,7 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> getTodoItems( int size, EchoUser user ) throws AmazonAPIAccessException {
+    checkNotNull( user );
     List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
 
     user.logCookies();
@@ -390,15 +405,17 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   private List<EchoTodoItemImpl> updateTodoItem( EchoTodoItemBase item, EchoUser user ) throws AmazonAPIAccessException {
+    checkNotNull( user );
+    checkNotNull( item );
+    
     List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
-    StringBuffer       path   = new StringBuffer( "/api/todos" );
+    StringBuffer           path   = new StringBuffer( "/api/todos" );
 
     try {
       String itemId = item.getItemId();
 
       if( log.isDebugEnabled() ) {
         log.debug( "Putting Item: " + mapper.writeValueAsString( item ));
-        // log.debug( item.toString() );
       }
 
       // have to update the localUpdated time or Amazon will not update the
@@ -447,6 +464,9 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   private List<EchoTodoItemImpl> addTodoItem( EchoTodoItemBase item, EchoUser user ) throws AmazonAPIAccessException {
+    checkNotNull( user );
+    checkNotNull( item );
+    
     List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
 
@@ -493,6 +513,9 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> setTodoItemDeletedStatus( EchoTodoItemImpl item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
+    checkNotNull( user );
+    checkNotNull( item );
+    
     log.info( "Setting todo '" + item.getText() + "' deleted status to " + value );
     
     item.setDeleted( value );
@@ -518,6 +541,9 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> setTodoItemCompleteStatus( EchoTodoItemImpl item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
+    checkNotNull( user );
+    checkNotNull( item );
+    
     log.info( "Setting todo '" + item.getText() + "' complete status to " + value );
     
     item.setComplete( value );
@@ -542,6 +568,9 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> addTodoItem( String text, EchoUser user ) throws AmazonAPIAccessException {
+    checkNotNull( user );
+    checkNotNull( text );
+    
     EchoTodoItemBase item        = new EchoTodoItemBase( text );
     
     item.setCreatedDateToNow();
