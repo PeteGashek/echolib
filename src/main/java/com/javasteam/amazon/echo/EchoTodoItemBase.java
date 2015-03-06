@@ -3,6 +3,8 @@ package com.javasteam.amazon.echo;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 
 /**
  * @author ddamon
@@ -267,4 +269,30 @@ public class EchoTodoItemBase {
     
     return buffer.toString();
   }
+  
+  @Override
+  public boolean equals( Object otherObject ) {
+    boolean retval =  ( otherObject == null ) 
+                   && ( otherObject == this )
+                   && ( otherObject.getClass() != getClass() );
+    
+    if( retval ) {  
+      EchoTodoItemImpl comparisonObject = (EchoTodoItemImpl) otherObject;
+    
+      retval = new EqualsBuilder().appendSuper( super.equals( otherObject ))
+                                  .append( getItemId(),              comparisonObject.getItemId() )
+                                  .append( getText(),                comparisonObject.getText() )
+                                  .append( getType(),                comparisonObject.getType() )
+                                  .append( isComplete(),             comparisonObject.isComplete() )
+                                  .append( isDeleted(),              comparisonObject.isDeleted() )
+                                  .append( getCreatedDate(),         comparisonObject.getCreatedDate() )
+                                  .append( getLastLocalUpdateDate(), comparisonObject.getLastLocalUpdateDate() )
+                                  .append( getLastUpdatedDate(),     comparisonObject.getLastUpdatedDate() )
+                                  .append( getVersion(),             comparisonObject.getVersion() )
+                                  .append( getUtteranceId(),         comparisonObject.getUtteranceId() )
+                                  .isEquals();
+    }
+    
+    return retval;
+   }
 }

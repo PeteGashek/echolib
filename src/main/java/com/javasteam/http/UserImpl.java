@@ -2,11 +2,14 @@ package com.javasteam.http;
 
 import java.util.List;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
+
+import com.javasteam.amazon.echo.EchoTodoItemImpl;
 
 /**
  * @author ddamon
@@ -95,5 +98,24 @@ public class UserImpl implements User {
       }
     } 
   }
+  
+  @Override
+  public boolean equals( Object otherObject ) {
+    boolean retval =  ( otherObject == null ) 
+                   && ( otherObject == this )
+                   && ( otherObject.getClass() != getClass() );
+    
+    if( retval ) {  
+      UserImpl comparisonObject = (UserImpl) otherObject;
+    
+      retval = new EqualsBuilder().appendSuper( super.equals( otherObject ))
+                                  .append( getUsername(),    comparisonObject.getUsername() )
+                                  .append( getPassword(),    comparisonObject.getPassword() )
+                                  .append( getCookieStore(), comparisonObject.getCookieStore() )
+                                  .isEquals();
+    }
+    
+    return retval;
+   }  
   
 }

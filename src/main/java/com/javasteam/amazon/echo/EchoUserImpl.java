@@ -1,5 +1,7 @@
 package com.javasteam.amazon.echo;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import com.javasteam.http.UserImpl;
 
 /**
@@ -35,5 +37,22 @@ public class EchoUserImpl extends UserImpl implements EchoUser {
   public void setLoggedIn( boolean loggedIn ) {
     this.loggedIn = loggedIn;
   }
+  
+  @Override
+  public boolean equals( Object otherObject ) {
+    boolean retval =  ( otherObject == null ) 
+                   && ( otherObject == this )
+                   && ( otherObject.getClass() != getClass() );
+    
+    if( retval ) {  
+      EchoUserImpl comparisonObject = (EchoUserImpl) otherObject;
+    
+      retval = new EqualsBuilder().appendSuper( super.equals( otherObject ))
+                                  .append( isLoggedIn(), comparisonObject.isLoggedIn() )
+                                  .isEquals();
+    }
+    
+    return retval;
+   }
   
 }

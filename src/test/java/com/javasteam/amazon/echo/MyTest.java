@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.text.html.HTML;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.ClientProtocolException;
@@ -15,6 +13,10 @@ import org.apache.log4j.LogManager;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
@@ -24,14 +26,33 @@ import com.javasteam.http.HttpGetHelper;
 import com.javasteam.http.User;
 import com.javasteam.http.UserImpl;
 
+import static com.google.common.base.Preconditions.*;
+
 public class MyTest {
   private final static Log          log = LogFactory.getLog( MyTest.class.getName() );
-  
+  private String someValue = "something";
+  private String ccValue   = "more";
   
   public MyTest() {
     // TODO Auto-generated constructor stub
   }
   
+  public String getSomeValue() {
+    return someValue;
+  }
+
+  public void setSomeValue( String someValue ) {
+    this.someValue = someValue;
+  }
+
+  public String getCcValue() {
+    return ccValue;
+  }
+
+  public void setCcValue( String ccValue ) {
+    this.ccValue = ccValue;
+  }
+
   public boolean handleCommand( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     System.out.println( "Called with: " + todoItem.getText() );
     
@@ -42,6 +63,12 @@ public class MyTest {
     }
     
     return true;
+  }
+  
+  public Object testNonNull( Object retval ) {
+    checkNotNull( retval );
+    checkArgument( retval instanceof String, "Expected a String" );
+    return retval;
   }
   
   public static void parseIt( String theString ) {
@@ -146,11 +173,31 @@ public class MyTest {
     }
   }
   
-  public static void main_old1( String[] args ) {
-    System.out.println( HTML.Attribute.VALUE.toString() );
+  public static void main( String[] args ) {
+    //System.out.println( HTML.Attribute.VALUE.toString() );
+    MyTest mytest = new MyTest();
+    //mytest.testNonNull( new Integer( 3 ) );
+    
+    ObjectMapper mapper             = new ObjectMapper();
+    try {
+      String work = mapper.writeValueAsString( mytest );
+      System.out.println( work );
+      
+      work = "{\"someValue\":\"something\",\"ccValue\":\"more\"}";
+      MyTest mytestFromJson = mapper.readValue( work, MyTest.class );
+    }
+    catch( JsonProcessingException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IOException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
   }
   
-  public static void main( String[] args ) {
+  public static void main_old1( String[] args ) {
     BasicConfigurator.configure();
     EchoBase.setHttpClientPool( 1, 1 );
     
