@@ -9,8 +9,6 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 
-import com.javasteam.amazon.echo.EchoTodoItemImpl;
-
 /**
  * @author ddamon
  *
