@@ -23,14 +23,14 @@ public class EchoTodoItemImpl extends EchoTodoItemBase {
    * @param itemId
    * @param text
    */
-  public EchoTodoItemImpl( String itemId, String text ) {
+  public EchoTodoItemImpl( final String itemId, final String text ) {
     super( itemId, text );
   }
   
   /**
    * @param text
    */
-  public EchoTodoItemImpl( String text ) {
+  public EchoTodoItemImpl( final String text ) {
     super( text );
   }
 
@@ -38,7 +38,7 @@ public class EchoTodoItemImpl extends EchoTodoItemBase {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoTodoItemImpl#stringToCalendarFromLong(java.lang.String)
    */
-  public Calendar stringToCalendarFromLong( String stringDate ) {
+  public Calendar stringToCalendarFromLong( final String stringDate ) {
     Calendar calendar = null;
     if( stringDate != null ) {
       Date date = new Date( Long.parseLong( stringDate ));
@@ -61,7 +61,7 @@ public class EchoTodoItemImpl extends EchoTodoItemBase {
   /**
    * @param originalAudioId
    */
-  public void setOriginalAudioId( String originalAudioId ) {
+  public void setOriginalAudioId( final String originalAudioId ) {
     this.originalAudioId = originalAudioId;
   }
 
@@ -76,7 +76,7 @@ public class EchoTodoItemImpl extends EchoTodoItemBase {
   /**
    * @param customerId
    */
-  public void setCustomerId( String customerId ) {
+  public void setCustomerId( final String customerId ) {
     this.customerId = customerId;
   }
 
@@ -95,7 +95,7 @@ public class EchoTodoItemImpl extends EchoTodoItemBase {
     return buffer.toString();
   }
   
-  public boolean equals( Object otherObject ) {
+  public boolean equals( final Object otherObject ) {
     boolean retval =  ( otherObject == null ) 
                    && ( otherObject == this )
                    && ( otherObject.getClass() != getClass() );

@@ -17,7 +17,7 @@ public class TodoResponse {
   /**
    * @param values the values to set
    */
-  public void setValues( EchoTodoItemImpl[] values ) {
+  public void setValues( final EchoTodoItemImpl[] values ) {
     this.values = values;
   }
 }

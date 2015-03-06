@@ -24,7 +24,7 @@ public class Builtin {
   public Builtin() {
   }
 
-  public boolean createTodo( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean createTodo( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
     checkNotNull( todoItem,        "Can't process a null todo item" );
     checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     checkNotNull( commands,        "Command array can not be null" );
@@ -53,7 +53,7 @@ public class Builtin {
     return retval;
   }
   
-  public boolean executeExternal( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean executeExternal( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
     checkNotNull( todoItem,        "Can't process a null todo item" );
     checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     checkNotNull( commands,        "Command array can not be null" );
@@ -104,7 +104,7 @@ public class Builtin {
     return retval;
   }
   
-  public boolean shutdownTodoPoller( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean shutdownTodoPoller( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
     checkNotNull( todoItem,        "Can't process a null todo item" );
     checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     

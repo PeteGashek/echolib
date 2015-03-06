@@ -23,14 +23,14 @@ public class AmazonLoginException extends Exception {
   /**
    * @param message
    */
-  public AmazonLoginException( String message ) {
+  public AmazonLoginException( final String message ) {
     super( message );
   }
 
   /**
    * @param cause
    */
-  public AmazonLoginException( Throwable cause ) {
+  public AmazonLoginException( final Throwable cause ) {
     super( cause );
   }
 
@@ -38,7 +38,7 @@ public class AmazonLoginException extends Exception {
    * @param message
    * @param cause
    */
-  public AmazonLoginException( String message, Throwable cause ) {
+  public AmazonLoginException( final String message, final Throwable cause ) {
     super( message, cause );
   }
 
@@ -48,8 +48,7 @@ public class AmazonLoginException extends Exception {
    * @param enableSuppression
    * @param writableStackTrace
    */
-  public AmazonLoginException( String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace ) {
+  public AmazonLoginException( final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace ) {
     super( message, cause, enableSuppression, writableStackTrace );
   }
-
 }

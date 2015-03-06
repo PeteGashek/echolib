@@ -17,16 +17,16 @@ public class EchoHttpGet extends HttpGetHelper {
   public EchoHttpGet() {
   }
 
-  public EchoHttpGet( URI uri ) {
+  public EchoHttpGet( final URI uri ) {
     super( uri );
   }
 
-  public EchoHttpGet( String uri ) {
+  public EchoHttpGet( final String uri ) {
     super( uri );
   }
   
 
-  public void setEchoCsrfHeaderFromUserCookieStore( User user ) {
+  public void setEchoCsrfHeaderFromUserCookieStore( final User user ) {
     checkNotNull( user );
     checkNotNull( user.getCookieStore() );
     

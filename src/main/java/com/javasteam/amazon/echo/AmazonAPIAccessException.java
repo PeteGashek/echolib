@@ -23,7 +23,7 @@ public class AmazonAPIAccessException extends Exception {
   /**
    * @param message
    */
-  public AmazonAPIAccessException( String message ) {
+  public AmazonAPIAccessException( final String message ) {
     super( message );
   }
 
@@ -38,7 +38,7 @@ public class AmazonAPIAccessException extends Exception {
    * @param message
    * @param cause
    */
-  public AmazonAPIAccessException( String message, Throwable cause ) {
+  public AmazonAPIAccessException( final String message, final Throwable cause ) {
     super( message, cause );
   }
 
@@ -48,7 +48,7 @@ public class AmazonAPIAccessException extends Exception {
    * @param enableSuppression
    * @param writableStackTrace
    */
-  public AmazonAPIAccessException( String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace ) {
+  public AmazonAPIAccessException( final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace ) {
     super( message, cause, enableSuppression, writableStackTrace );
   }
 

@@ -27,7 +27,7 @@ public class UserImpl implements User {
    * @param user
    * @param password
    */
-  public UserImpl( String user, String password ) {
+  public UserImpl( final String user, final String password ) {
     this.username = user;
     this.password = password;
   }
@@ -42,7 +42,7 @@ public class UserImpl implements User {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#setUser(java.lang.String)
    */
-  public void setUser( String username ) {
+  public void setUser( final String username ) {
     this.username = username;
   }
 
@@ -57,7 +57,7 @@ public class UserImpl implements User {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#setPassword(java.lang.String)
    */
-  public void setPassword( String password ) {
+  public void setPassword( final String password ) {
     this.password = password;
   }
 
@@ -71,7 +71,7 @@ public class UserImpl implements User {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#setCookieStore(org.apache.http.impl.client.BasicCookieStore)
    */
-  public void setCookieStore( BasicCookieStore cookieStore ) {
+  public void setCookieStore( final BasicCookieStore cookieStore ) {
     this.cookieStore = cookieStore;
   }
   
@@ -98,7 +98,7 @@ public class UserImpl implements User {
   }
   
   @Override
-  public boolean equals( Object otherObject ) {
+  public boolean equals( final Object otherObject ) {
     boolean retval =  ( otherObject == null ) 
                    && ( otherObject == this )
                    && ( otherObject.getClass() != getClass() );

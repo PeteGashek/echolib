@@ -38,7 +38,7 @@ public class EchoUserSession implements EchoUser {
    * @param echoUser
    * @param echoBase
    */
-  public EchoUserSession( EchoUser echoUser, EchoBase echoBase ) {
+  public EchoUserSession( final EchoUser echoUser, final EchoBase echoBase ) {
     this();
         
     this.echoUser = echoUser;
@@ -55,7 +55,7 @@ public class EchoUserSession implements EchoUser {
   /**
    * @param echoUser
    */
-  public void setEchoUser( EchoUser echoUser ) {
+  public void setEchoUser( final EchoUser echoUser ) {
     this.echoUser = echoUser;
   }
 
@@ -69,7 +69,7 @@ public class EchoUserSession implements EchoUser {
   /**
    * @param echoBase
    */
-  public void setEchoBase( EchoBase echoBase ) {
+  public void setEchoBase( final EchoBase echoBase ) {
     this.echoBase = echoBase;
   }
   
@@ -83,7 +83,7 @@ public class EchoUserSession implements EchoUser {
   /**
    * @param properties
    */
-  public void setProperties( Properties properties ) {
+  public void setProperties( final Properties properties ) {
     this.properties = properties;
   }
   
@@ -91,7 +91,7 @@ public class EchoUserSession implements EchoUser {
    * @param property
    * @return
    */
-  public String getProperty( String property ) {
+  public String getProperty( final String property ) {
     return properties.getProperty( property );
   }
 
@@ -111,7 +111,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#setUser(java.lang.String)
    */
-  public void setUser( String username ) {
+  public void setUser( final String username ) {
     if( this.echoUser != null ) {
       echoUser.setUser( username );
     }
@@ -133,7 +133,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#setPassword(java.lang.String)
    */
-  public void setPassword( String password ) {
+  public void setPassword( final String password ) {
     if( this.echoUser != null ) {
       echoUser.setPassword( password );
     }
@@ -157,7 +157,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#setCookieStore(org.apache.http.impl.client.BasicCookieStore)
    */
-  public void setCookieStore( BasicCookieStore cookieStore ) {
+  public void setCookieStore( final BasicCookieStore cookieStore ) {
     checkNotNull( echoUser );
     echoUser.setCookieStore( cookieStore );
   }
@@ -179,7 +179,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUser#setLoggedIn(boolean)
    */
-  public void setLoggedIn( boolean loggedIn ) {
+  public void setLoggedIn( final boolean loggedIn ) {
     echoUser.setLoggedIn( loggedIn );
   }
 
@@ -187,7 +187,7 @@ public class EchoUserSession implements EchoUser {
    * @param filename
    * @return
    */
-  private boolean loadProperties( String filename ) {
+  private boolean loadProperties( final String filename ) {
     boolean retval = false;
     
     checkNotNull( filename );
@@ -213,7 +213,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#addTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
    */
-  public boolean addTodoRetrievedListener( EchoCommandHandler todoListener ) {
+  public boolean addTodoRetrievedListener( final EchoCommandHandler todoListener ) {
     boolean retval = false;
     
     if( todoListener != null &&  !this.todoListeners.contains( todoListener )) {
@@ -227,7 +227,7 @@ public class EchoUserSession implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#removeTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
    */
-  public boolean removeTodoRetrievedListener( EchoCommandHandler todoListener ) {
+  public boolean removeTodoRetrievedListener( final EchoCommandHandler todoListener ) {
     boolean retval = false;
     
     if( todoListener != null &&  this.todoListeners.contains( todoListener )) {
@@ -238,14 +238,14 @@ public class EchoUserSession implements EchoUser {
     return retval; 
   }
   
-  private boolean todoItemCanBeProcessed( EchoTodoItemImpl todoItem ) {
+  private boolean todoItemCanBeProcessed( final EchoTodoItemImpl todoItem ) {
     return todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null;
   }
   
   /**
    * @param todoItem
    */
-  public void notifyTodoRetrievedListeners( EchoTodoItemImpl todoItem ) {
+  public void notifyTodoRetrievedListeners( final EchoTodoItemImpl todoItem ) {
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
       boolean handled = false;
       
@@ -321,14 +321,14 @@ public class EchoUserSession implements EchoUser {
   /**
    * @param intervalInSeconds
    */
-  public void setTodoItemPollerIntervalInSeconds( int intervalInSeconds ) {
+  public void setTodoItemPollerIntervalInSeconds( final int intervalInSeconds ) {
     this.todoItemPoller.setIntervalInSeconds( intervalInSeconds );
   }
   
   /**
    * @param itemRetrievalCount
    */
-  public void setTodoItemPollerItemRetrievalCount( int itemRetrievalCount ) {
+  public void setTodoItemPollerItemRetrievalCount( final int itemRetrievalCount ) {
     this.todoItemPoller.setItemRetrievalCount( itemRetrievalCount );
   }
   
@@ -364,7 +364,7 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
-  public static void configureBaseFromProperties( EchoBase echoBase, EchoUserSession echoUserSession ) {
+  public static void configureBaseFromProperties( final EchoBase echoBase, final EchoUserSession echoUserSession ) {
     String loginForm         = echoUserSession.getProperty( "loginForm" );
     String userNameField     = echoUserSession.getProperty( "userNameField" );
     String userPasswordField = echoUserSession.getProperty( "userPasswordField" );
@@ -385,7 +385,7 @@ public class EchoUserSession implements EchoUser {
   /**
    * @param args
    */
-  public static void main( String[] args ) {
+  public static void main( final String[] args ) {
     EchoUserSession echoUserSession = new EchoUserSession();
   
     if( echoUserSession.loadProperties( "echo.properties" )) {

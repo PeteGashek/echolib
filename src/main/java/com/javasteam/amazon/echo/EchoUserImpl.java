@@ -18,7 +18,7 @@ public class EchoUserImpl extends UserImpl implements EchoUser {
    * @param user
    * @param password
    */
-  public EchoUserImpl( String user, String password ) {
+  public EchoUserImpl( final String user, final String password ) {
     super( user, password );
   }
 
@@ -34,12 +34,12 @@ public class EchoUserImpl extends UserImpl implements EchoUser {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.EchoUserInterface#setLoggedIn(boolean)
    */
-  public void setLoggedIn( boolean loggedIn ) {
+  public void setLoggedIn( final boolean loggedIn ) {
     this.loggedIn = loggedIn;
   }
   
   @Override
-  public boolean equals( Object otherObject ) {
+  public boolean equals( final Object otherObject ) {
     boolean retval =  ( otherObject == null ) 
                    && ( otherObject == this )
                    && ( otherObject.getClass() != getClass() );

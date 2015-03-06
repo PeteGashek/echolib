@@ -31,19 +31,19 @@ public class EchoHttpPut extends HttpPutHelper {
   /**
    * @param uri
    */
-  public EchoHttpPut( URI uri ) {
+  public EchoHttpPut( final URI uri ) {
     super( uri );
   }
 
   /**
    * @param uri
    */
-  public EchoHttpPut( String uri ) {
+  public EchoHttpPut( final String uri ) {
     super( uri );
   }
 
 
-  public void setEchoCsrfHeaderFromUserCookieStore( EchoUser user ) {
+  public void setEchoCsrfHeaderFromUserCookieStore( final EchoUser user ) {
     checkNotNull( user );
     checkNotNull( user.getCookieStore() );
     

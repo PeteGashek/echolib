@@ -32,7 +32,7 @@ public class EchoTodoItemBase {
   /**
    * @param text
    */
-  public EchoTodoItemBase( String text ) {
+  public EchoTodoItemBase( final String text ) {
     this();
     this.text = text;
   }
@@ -41,7 +41,7 @@ public class EchoTodoItemBase {
    * @param itemId
    * @param text
    */
-  public EchoTodoItemBase( String itemId, String text ) {
+  public EchoTodoItemBase( final String itemId, final String text ) {
     this( text );
     this.itemId = itemId;
   }
@@ -51,7 +51,7 @@ public class EchoTodoItemBase {
    * @param stringDate
    * @return
    */
-  public Calendar stringToCalendarFromLong( String stringDate ) {
+  public Calendar stringToCalendarFromLong( final String stringDate ) {
     Calendar calendar = null;
     if( stringDate != null ) {
       Date date = new Date( Long.parseLong( stringDate ));
@@ -74,7 +74,7 @@ public class EchoTodoItemBase {
   /**
    * @param complete
    */
-  public void setComplete( boolean complete ) {
+  public void setComplete( final boolean complete ) {
     this.complete = complete;
   }
 
@@ -90,7 +90,7 @@ public class EchoTodoItemBase {
   /**
    * @param createdDate
    */
-  public void setCreatedDate( Calendar createdDate ) {
+  public void setCreatedDate(final  Calendar createdDate ) {
     this.createdDate = createdDate;
   }
 
@@ -112,7 +112,7 @@ public class EchoTodoItemBase {
   /**
    * @param lastLocalUpdateDate
    */
-  public void setLastLocalUpdateDate( Calendar lastLocalUpdateDate ) {
+  public void setLastLocalUpdateDate( final Calendar lastLocalUpdateDate ) {
     this.lastLocalUpdateDate = lastLocalUpdateDate;
   }
 
@@ -128,7 +128,7 @@ public class EchoTodoItemBase {
   /**
    * @param lastUpdatedDate
    */
-  public void setLastUpdatedDate( Calendar lastUpdatedDate ) {
+  public void setLastUpdatedDate( final Calendar lastUpdatedDate ) {
     this.lastUpdatedDate = lastUpdatedDate;
   }
 
@@ -144,7 +144,7 @@ public class EchoTodoItemBase {
   /**
    * @param deleted
    */
-  public void setDeleted( boolean deleted ) {
+  public void setDeleted( final boolean deleted ) {
     this.deleted = deleted;
   }
 
@@ -160,7 +160,7 @@ public class EchoTodoItemBase {
   /**
    * @param nbestItems
    */
-  public void setNbestItems( String[] nbestItems ) {
+  public void setNbestItems( final String[] nbestItems ) {
     this.nbestItems = nbestItems;
   }
   
@@ -176,7 +176,7 @@ public class EchoTodoItemBase {
   /**
    * @param type
    */
-  public void setType( String type ) {
+  public void setType( final String type ) {
     this.type = type;
   }
 
@@ -192,7 +192,7 @@ public class EchoTodoItemBase {
   /**
    * @param version
    */
-  public void setVersion( Integer version ) {
+  public void setVersion( final Integer version ) {
     this.version = version;
   }
 
@@ -207,7 +207,7 @@ public class EchoTodoItemBase {
   /**
    * @param itemId
    */
-  public void setItemId( String itemId ) {
+  public void setItemId( final String itemId ) {
     this.itemId = itemId;
   }
 
@@ -222,7 +222,7 @@ public class EchoTodoItemBase {
   /**
    * @param text
    */
-  public void setText( String text ) {
+  public void setText( final String text ) {
     this.text = text;
   }
   
@@ -237,7 +237,7 @@ public class EchoTodoItemBase {
   /**
    * @param utteranceId
    */
-  public void setUtteranceId( String utteranceId ) {
+  public void setUtteranceId( final String utteranceId ) {
     this.utteranceId = utteranceId;
   }
 
@@ -271,7 +271,7 @@ public class EchoTodoItemBase {
   }
   
   @Override
-  public boolean equals( Object otherObject ) {
+  public boolean equals( final Object otherObject ) {
     boolean retval =  ( otherObject == null ) 
                    && ( otherObject == this )
                    && ( otherObject.getClass() != getClass() );

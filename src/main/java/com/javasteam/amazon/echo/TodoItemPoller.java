@@ -24,7 +24,7 @@ public class TodoItemPoller extends Thread {
   /**
    * @param echoUserSession
    */
-  public TodoItemPoller( EchoUserSession echoUserSession ) {
+  public TodoItemPoller( final EchoUserSession echoUserSession ) {
     this();
     this.echoUserSession = echoUserSession;
   }
@@ -39,7 +39,7 @@ public class TodoItemPoller extends Thread {
   /**
    * @param echoUserSession
    */
-  public void setEchoUserSession( EchoUserSession echoUserSession ) {
+  public void setEchoUserSession( final EchoUserSession echoUserSession ) {
     this.echoUserSession = echoUserSession;
   }
 
@@ -53,7 +53,7 @@ public class TodoItemPoller extends Thread {
   /**
    * @param intervalInSeconds
    */
-  public void setIntervalInSeconds( int intervalInSeconds ) {
+  public void setIntervalInSeconds( final int intervalInSeconds ) {
     this.intervalInSeconds = intervalInSeconds;
   }
 
@@ -67,7 +67,7 @@ public class TodoItemPoller extends Thread {
   /**
    * @param itemRetrievalCount
    */
-  public void setItemRetrievalCount( int itemRetrievalCount ) {
+  public void setItemRetrievalCount( final int itemRetrievalCount ) {
     this.itemRetrievalCount = itemRetrievalCount;
   }
 
@@ -81,7 +81,7 @@ public class TodoItemPoller extends Thread {
   /**
    * @param stopped
    */
-  public void setStopped( boolean stopped ) {
+  public void setStopped( final boolean stopped ) {
     this.stopped = stopped;
   }
 

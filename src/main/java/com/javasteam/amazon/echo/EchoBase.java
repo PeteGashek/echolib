@@ -57,7 +57,7 @@ public class EchoBase {
   /**
    * @param httpClientPool
    */
-  public static void setHttpClientPool( HttpClientPool httpClientPool ) {
+  public static void setHttpClientPool( final HttpClientPool httpClientPool ) {
     EchoBase.httpClientPool = httpClientPool;
   }
 
@@ -65,7 +65,7 @@ public class EchoBase {
    * @param totalPoolConnections
    * @param maxPoolConnectionsPerRoute
    */
-  public static void setHttpClientPool( int totalPoolConnections, int maxPoolConnectionsPerRoute ) {
+  public static void setHttpClientPool( final int totalPoolConnections, final int maxPoolConnectionsPerRoute ) {
     setHttpClientPool( new HttpClientPool( totalPoolConnections, maxPoolConnectionsPerRoute ));
   }
 
@@ -82,7 +82,7 @@ public class EchoBase {
   /**
    * @param url
    */
-  public EchoBase( String url ) {
+  public EchoBase( final String url ) {
     this.echoURL = url;
   }
 
@@ -96,7 +96,7 @@ public class EchoBase {
   /**
    * @param echoURL
    */
-  public void setEchoURL( String echoURL ) {
+  public void setEchoURL( final String echoURL ) {
     this.echoURL = echoURL;
   }
 
@@ -104,7 +104,7 @@ public class EchoBase {
     return loginFormName;
   }
 
-  public void setLoginFormName( String loginFormName ) {
+  public void setLoginFormName( final String loginFormName ) {
     this.loginFormName = loginFormName;
   }
 
@@ -112,7 +112,7 @@ public class EchoBase {
     return userFieldName;
   }
 
-  public void setUserFieldName( String userFieldName ) {
+  public void setUserFieldName( final String userFieldName ) {
     this.userFieldName = userFieldName;
   }
 
@@ -120,19 +120,19 @@ public class EchoBase {
     return passwordFieldName;
   }
 
-  public void setPasswordFieldName( String passwordFieldName ) {
+  public void setPasswordFieldName( final String passwordFieldName ) {
     this.passwordFieldName = passwordFieldName;
   }
 
-  private EchoHttpGet getEchoHttpGetForActionUrl( String actionUrl ) {
+  private EchoHttpGet getEchoHttpGetForActionUrl( final String actionUrl ) {
     return new EchoHttpGet( actionUrl );
   }
 
-  private EchoHttpPut getEchoHttpPutForActionUrl( String actionUrl ) {
+  private EchoHttpPut getEchoHttpPutForActionUrl( final String actionUrl ) {
     return new EchoHttpPut( actionUrl );
   }
 
-  private EchoHttpPost getEchoHttpPostForActionUrl( String actionUrl ) {
+  private EchoHttpPost getEchoHttpPostForActionUrl( final String actionUrl ) {
     return new EchoHttpPost( actionUrl );
   }
 
@@ -144,7 +144,7 @@ public class EchoBase {
    * @throws ClientProtocolException
    * @throws IOException
    */
-  private String amazonEchoGet( String actionUrl, EchoUser user ) throws ClientProtocolException, IOException {
+  private String amazonEchoGet( final String actionUrl, final EchoUser user ) throws ClientProtocolException, IOException {
     checkNotNull( user );
     
     String retval = "";
@@ -173,7 +173,7 @@ public class EchoBase {
    * @throws ClientProtocolException
    * @throws IOException
    */
-  private String amazonEchoPut( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
+  private String amazonEchoPut( final String actionUrl, final String jsonString, final EchoUser user ) throws ClientProtocolException, IOException {
     checkNotNull( user );
     
     String retval = "";
@@ -209,7 +209,7 @@ public class EchoBase {
    * @throws ClientProtocolException
    * @throws IOException
    */
-  private String amazonEchoPost( String actionUrl, String jsonString, EchoUser user ) throws ClientProtocolException, IOException {
+  private String amazonEchoPost( final String actionUrl, final String jsonString, final EchoUser user ) throws ClientProtocolException, IOException {
     checkNotNull( user );
     
     String       retval   = "";
@@ -236,7 +236,7 @@ public class EchoBase {
     return retval;
   }
   
-  public void postForm( Form form, User user ) throws AmazonLoginException, IOException {
+  public void postForm( final Form form, final User user ) throws AmazonLoginException, IOException {
     checkNotNull( user );
     
     EchoHttpPost httpPost = this.getEchoHttpPostForActionUrl( form.getAction() );
@@ -269,7 +269,7 @@ public class EchoBase {
    * @throws AmazonLoginException
    * @throws IOException
    */
-  private void amazonEchoPostForm( String actionUrl, List<NameValuePair> formData, EchoUser user ) throws AmazonLoginException, IOException {
+  private void amazonEchoPostForm( final String actionUrl, final List<NameValuePair> formData, final EchoUser user ) throws AmazonLoginException, IOException {
     checkNotNull( user );
     
     EchoHttpPost httpPost = this.getEchoHttpPostForActionUrl( actionUrl );
@@ -299,7 +299,7 @@ public class EchoBase {
    * @return
    * @throws AmazonLoginException
    */
-  public synchronized boolean echoLogin( EchoUser user ) throws AmazonLoginException {
+  public synchronized boolean echoLogin( final EchoUser user ) throws AmazonLoginException {
     checkNotNull( user );
     
     boolean retval = user.isLoggedIn();
@@ -353,7 +353,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> getTodoItems( int size, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> getTodoItems( final int size, final EchoUser user ) throws AmazonAPIAccessException {
     checkNotNull( user );
     List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
 
@@ -404,7 +404,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  private List<EchoTodoItemImpl> updateTodoItem( EchoTodoItemBase item, EchoUser user ) throws AmazonAPIAccessException {
+  private List<EchoTodoItemImpl> updateTodoItem( final EchoTodoItemBase item, final EchoUser user ) throws AmazonAPIAccessException {
     checkNotNull( user );
     checkNotNull( item );
     
@@ -463,7 +463,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  private List<EchoTodoItemImpl> addTodoItem( EchoTodoItemBase item, EchoUser user ) throws AmazonAPIAccessException {
+  private List<EchoTodoItemImpl> addTodoItem( final EchoTodoItemBase item, final EchoUser user ) throws AmazonAPIAccessException {
     checkNotNull( user );
     checkNotNull( item );
     
@@ -512,7 +512,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> setTodoItemDeletedStatus( EchoTodoItemImpl item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> setTodoItemDeletedStatus( final EchoTodoItemImpl item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
     checkNotNull( user );
     checkNotNull( item );
     
@@ -529,7 +529,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> deleteTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> deleteTodoItem( final EchoTodoItemImpl item, final EchoUser user ) throws AmazonAPIAccessException {
     return this.setTodoItemDeletedStatus( item, true, user );
   }
 
@@ -540,7 +540,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> setTodoItemCompleteStatus( EchoTodoItemImpl item, boolean value, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> setTodoItemCompleteStatus( final EchoTodoItemImpl item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
     checkNotNull( user );
     checkNotNull( item );
     
@@ -557,7 +557,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> completeTodoItem( EchoTodoItemImpl item, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> completeTodoItem( final EchoTodoItemImpl item, final EchoUser user ) throws AmazonAPIAccessException {
     return setTodoItemCompleteStatus( item, true, user );
   }
 
@@ -567,7 +567,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> addTodoItem( String text, EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemImpl> addTodoItem( final String text, final EchoUser user ) throws AmazonAPIAccessException {
     checkNotNull( user );
     checkNotNull( text );
     

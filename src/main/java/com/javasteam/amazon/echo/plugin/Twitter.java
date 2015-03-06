@@ -60,7 +60,7 @@ public class Twitter {
   public Twitter() {  
   }
   
-  public boolean sendTwit( EchoBase base, String authenticityToken, String twitText, User user ) {
+  public boolean sendTwit( final EchoBase base, final String authenticityToken, final String twitText, final User user ) {
     checkNotNull( user );
     checkNotNull( twitText );
     
@@ -91,7 +91,7 @@ public class Twitter {
   }
   
   
-  public synchronized String twitterLogin( EchoBase base, User user ) throws ClientProtocolException, IOException {
+  public synchronized String twitterLogin( final EchoBase base, final User user ) throws ClientProtocolException, IOException {
     checkNotNull( user );
     checkNotNull( base );
     
@@ -127,7 +127,7 @@ public class Twitter {
     return authenticityToken;
   }
   
-  private synchronized User getUser( EchoUserSession echoUserSession ) {
+  private synchronized User getUser( final EchoUserSession echoUserSession ) {
     checkNotNull( echoUserSession );
     
     if( user == null ) {
@@ -142,24 +142,25 @@ public class Twitter {
     return user;
   }
   
-  public String popluateHashtags( String text, String[] hashKeys ) {
+  public String popluateHashtags( final String text, final String[] hashKeys ) {
     String lowercaseText = text.toLowerCase();
+    String retval        = text;
     
     for( String key : hashKeys ) {
       int startPoint = lowercaseText.indexOf( key.toLowerCase() );
       
       if( startPoint >= 0 ) {
-        text = text.substring( 0, startPoint ) + "#" + text.substring( startPoint + key.length() );
-        lowercaseText = text.toLowerCase();
+        retval = retval.substring( 0, startPoint ) + "#" + retval.substring( startPoint + key.length() );
+        lowercaseText = retval.toLowerCase();
       }  
     }
     
-    return text;
+    return retval;
   }
   
   
 
-  public String popluateHashtags( String text ) {
+  public String popluateHashtags( final String text ) {
     return popluateHashtags( text, Twitter.hashKeys );
   }
   
@@ -171,7 +172,7 @@ public class Twitter {
    * #handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem,
    * com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
-  public boolean sendTwit( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) throws ClientProtocolException, IOException {
+  public boolean sendTwit( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) throws ClientProtocolException, IOException {
     checkNotNull( todoItem,        "Can't process a null todo item" );
     checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     checkNotNull( commands,        "Command array can not be null" );

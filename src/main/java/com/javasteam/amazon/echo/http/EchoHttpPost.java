@@ -35,11 +35,11 @@ public class EchoHttpPost extends HttpPostHelper {
   public EchoHttpPost() {
   }
 
-  public EchoHttpPost( URI uri ) {
+  public EchoHttpPost( final URI uri ) {
     super( uri );
   }
 
-  public EchoHttpPost( String uri ) {
+  public EchoHttpPost( final String uri ) {
     super( uri );
   }
 
@@ -47,15 +47,15 @@ public class EchoHttpPost extends HttpPostHelper {
     return context;
   }
 
-  public void setContext( HttpClientContext context ) {
+  public void setContext( final HttpClientContext context ) {
     this.context = context;
   }
 
-  public void setUserAgentHeader( String userAgent ) {
+  public void setUserAgentHeader( final String userAgent ) {
     super.setHeader( HttpHeaders.USER_AGENT, userAgent );
   }
   
-  public void setRefererHeader( String refererUrl ) {
+  public void setRefererHeader( final String refererUrl ) {
     super.setHeader( HttpHeaders.REFERER, refererUrl );
   }
   
@@ -67,7 +67,7 @@ public class EchoHttpPost extends HttpPostHelper {
     setAcceptHeader( "application/json, text/javascript, */*; q=0.01" );
   }
   
-  public void setApplicationJsonEntity( String jsonString ) {
+  public void setApplicationJsonEntity( final String jsonString ) {
     StringEntity input = new StringEntity( jsonString, StandardCharsets.UTF_8.name() );
       
     input.setContentType( "application/json" );
@@ -75,7 +75,7 @@ public class EchoHttpPost extends HttpPostHelper {
     setEntity( input );
   }
   
-  public void setUserContext( User user ) {
+  public void setUserContext( final User user ) {
     checkNotNull( user );
     
     this.context = user.getContext();
@@ -85,13 +85,13 @@ public class EchoHttpPost extends HttpPostHelper {
     return postSuccessful;
   }
 
-  public CloseableHttpResponse execute( HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
+  public CloseableHttpResponse execute( final HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
     checkNotNull( httpClientPool );
     
     return httpClientPool.getHttpClient().execute( this, getContext() );
   }
   
-  public void setEchoCsrfHeaderFromUserCookieStore( User user ) {
+  public void setEchoCsrfHeaderFromUserCookieStore( final User user ) {
     checkNotNull( user );
     checkNotNull( user.getCookieStore() );
     
@@ -114,7 +114,7 @@ public class EchoHttpPost extends HttpPostHelper {
     } 
   }
   
-  public String parseResponse( HttpResponse response ) throws HttpResponseException, IOException {
+  public String parseResponse( final HttpResponse response ) throws HttpResponseException, IOException {
     checkNotNull( response );
     
     StatusLine   status   = response.getStatusLine();
