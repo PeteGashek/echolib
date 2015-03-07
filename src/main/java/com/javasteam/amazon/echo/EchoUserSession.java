@@ -26,8 +26,7 @@ public class EchoUserSession implements EchoUser {
   
   private TodoItemPoller    todoItemPoller = null;
   private Object            todoPollerLock = new Object();
-  
-  private Properties        properties = new Properties();
+  private Properties        properties     = new Properties();
   private EchoUser          echoUser;
   private EchoBase          echoBase;
   
@@ -40,7 +39,10 @@ public class EchoUserSession implements EchoUser {
    */
   public EchoUserSession( final EchoUser echoUser, final EchoBase echoBase ) {
     this();
-        
+    
+    Preconditions.checkNotNull( echoUser  );
+    Preconditions.checkNotNull( echoBase  );
+    
     this.echoUser = echoUser;
     this.echoBase = echoBase;
   }
@@ -57,6 +59,8 @@ public class EchoUserSession implements EchoUser {
    */
   public void setEchoUser( final EchoUser echoUser ) {
     this.echoUser = echoUser;
+    
+    Preconditions.checkNotNull( echoUser );
   }
 
   /**
@@ -70,6 +74,7 @@ public class EchoUserSession implements EchoUser {
    * @param echoBase
    */
   public void setEchoBase( final EchoBase echoBase ) {
+    Preconditions.checkNotNull( echoBase );
     this.echoBase = echoBase;
   }
   
@@ -84,6 +89,8 @@ public class EchoUserSession implements EchoUser {
    * @param properties
    */
   public void setProperties( final Properties properties ) {
+    Preconditions.checkNotNull( properties );
+    
     this.properties = properties;
   }
   
@@ -92,6 +99,8 @@ public class EchoUserSession implements EchoUser {
    * @return
    */
   public String getProperty( final String property ) {
+    Preconditions.checkNotNull( properties );
+    
     return properties.getProperty( property );
   }
 
@@ -112,9 +121,10 @@ public class EchoUserSession implements EchoUser {
    * @see com.javasteam.amazon.echo.EchoUser#setUser(java.lang.String)
    */
   public void setUser( final String username ) {
-    if( this.echoUser != null ) {
-      echoUser.setUser( username );
-    }
+    Preconditions.checkNotNull( username );
+    Preconditions.checkNotNull( this.echoUser );
+    
+    echoUser.setUser( username );
   }
 
   /* (non-Javadoc)
@@ -144,6 +154,8 @@ public class EchoUserSession implements EchoUser {
    * @see com.javasteam.amazon.echo.EchoUser#logCookies()
    */
   public void logCookies() {
+    Preconditions.checkNotNull( echoUser );
+    
     echoUser.logCookies();
   }
 
@@ -159,6 +171,7 @@ public class EchoUserSession implements EchoUser {
    */
   public void setCookieStore( final BasicCookieStore cookieStore ) {
     Preconditions.checkNotNull( echoUser );
+    
     echoUser.setCookieStore( cookieStore );
   }
 
@@ -256,6 +269,8 @@ public class EchoUserSession implements EchoUser {
   }
   
   private void deleteTodoItemIfExpired( final long timeToLive, final EchoTodoItemImpl todoItem ) {
+    Preconditions.checkNotNull( todoItem );
+    
     Date date = new Date();
     
     if( log.isDebugEnabled() ) {
@@ -293,6 +308,8 @@ public class EchoUserSession implements EchoUser {
    * @param todoItem
    */
   public void notifyTodoRetrievedListeners( final EchoTodoItemImpl todoItem ) {
+    Preconditions.checkNotNull( todoItem );
+    
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
       if( todoItem.isComplete() ) {
         deleteTodoItemIfExpired( parseTimeToLiveString( this.getProperty( "cancelledMinutesToLive" ))
@@ -310,6 +327,12 @@ public class EchoUserSession implements EchoUser {
     }
   }
   
+  private synchronized void verifyTodoItemPoller() {
+    if( this.todoItemPoller == null || this.todoItemPoller.isStopped() ) {
+      this.todoItemPoller = new TodoItemPoller( this );
+    }
+  }
+  
   /**
    * @return
    */
@@ -320,8 +343,9 @@ public class EchoUserSession implements EchoUser {
       Preconditions.checkNotNull( this.echoBase );
       Preconditions.checkNotNull( this.echoUser );
       
-      if( this.todoItemPoller == null ) {
-        this.todoItemPoller = new TodoItemPoller( this );
+      verifyTodoItemPoller();
+      
+      if( !this.todoItemPoller.isAlive() ) {
         log.debug( "Starting todoItem poller" );
         this.todoItemPoller.start();
         retval = true;
@@ -335,6 +359,8 @@ public class EchoUserSession implements EchoUser {
    * @param intervalInSeconds
    */
   public void setTodoItemPollerIntervalInSeconds( final int intervalInSeconds ) {
+    verifyTodoItemPoller();
+    
     this.todoItemPoller.setIntervalInSeconds( intervalInSeconds );
   }
   
@@ -342,6 +368,8 @@ public class EchoUserSession implements EchoUser {
    * @param itemRetrievalCount
    */
   public void setTodoItemPollerItemRetrievalCount( final int itemRetrievalCount ) {
+    verifyTodoItemPoller();
+    
     this.todoItemPoller.setItemRetrievalCount( itemRetrievalCount );
   }
   
@@ -352,7 +380,7 @@ public class EchoUserSession implements EchoUser {
     boolean retval = false;
     
     synchronized( this.todoPollerLock ) {
-      if( this.todoItemPoller != null ) {
+      if( this.todoItemPoller != null && this.todoItemPoller.isAlive() ) {
         this.todoItemPoller.shutdown();
         this.todoItemPoller = null;
         retval = true;

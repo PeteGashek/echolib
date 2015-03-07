@@ -37,6 +37,9 @@ public class EchoTodoItemBase {
    */
   public EchoTodoItemBase( final String text ) {
     this();
+    
+    Preconditions.checkNotNull( text  );
+    
     this.text = text;
   }
   
@@ -46,6 +49,9 @@ public class EchoTodoItemBase {
    */
   public EchoTodoItemBase( final String itemId, final String text ) {
     this( text );
+    
+    Preconditions.checkNotNull( itemId  );
+    
     this.itemId = itemId;
   }
   

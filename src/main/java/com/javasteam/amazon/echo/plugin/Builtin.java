@@ -52,6 +52,22 @@ public class Builtin {
     return retval;
   }
   
+  private CommandLine buildCommandLine( final String[] commands, final String remainder ) {
+    CommandLine commandLine = new CommandLine( commands[ 0 ] );
+    
+    if( commands.length > 1 ) {
+      for( int i = 1; i < commands.length; ++i ) {
+        String theCommand = commands[ i ].trim();
+        if( theCommand.equalsIgnoreCase( "%text%" )) {
+          theCommand = remainder;
+        }
+        commandLine.addArgument( theCommand );            
+      }
+    }
+    
+    return commandLine;
+  }
+  
   public boolean executeExternal( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
     Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
@@ -65,17 +81,7 @@ public class Builtin {
     retval = true;
       
     if( commands != null && commands.length > 0 ) {
-      CommandLine commandLine = new CommandLine( commands[ 0 ] );
-      
-      if( commands.length > 1 ) {
-        for( int i = 1; i < commands.length; ++i ) {
-          String theCommand = commands[ i ].trim();
-          if( theCommand.equalsIgnoreCase( "%text%" )) {
-            theCommand = remainder;
-          }
-          commandLine.addArgument( theCommand );            
-        }
-      }
+      CommandLine commandLine = buildCommandLine( commands, remainder );
         
       DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 

@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.common.base.Preconditions;
+
 /**
  * @author ddamon
  *
@@ -26,6 +28,9 @@ public class TodoItemPoller extends Thread {
    */
   public TodoItemPoller( final EchoUserSession echoUserSession ) {
     this();
+    
+    Preconditions.checkNotNull( echoUserSession );
+    
     this.echoUserSession = echoUserSession;
   }
 
@@ -40,6 +45,8 @@ public class TodoItemPoller extends Thread {
    * @param echoUserSession
    */
   public void setEchoUserSession( final EchoUserSession echoUserSession ) {
+    Preconditions.checkNotNull( echoUserSession );
+    
     this.echoUserSession = echoUserSession;
   }
 
@@ -94,6 +101,7 @@ public class TodoItemPoller extends Thread {
   }
   
   private void handleUsersTodoItems() throws AmazonAPIAccessException {
+    Preconditions.checkNotNull( echoUserSession );
     //System.out.print( "." );
     
     List<EchoTodoItemImpl> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
@@ -123,6 +131,8 @@ public class TodoItemPoller extends Thread {
   }
   
   private void loginUserIfNecessary() {
+    Preconditions.checkNotNull( echoUserSession );
+    
     if( !echoUserSession.getEchoUser().isLoggedIn() ) {
       try {
         log.info( "Logging in user: " + echoUserSession.getEchoUser().getUsername() );
@@ -140,6 +150,8 @@ public class TodoItemPoller extends Thread {
   @Override
   public void run() {
     while( !isStopped() ) {
+      Preconditions.checkNotNull( echoUserSession );
+      
       loginUserIfNecessary();
         
       if( echoUserSession.getEchoUser().isLoggedIn() ) {
