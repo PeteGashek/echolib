@@ -34,11 +34,11 @@ public class FormFieldMap {
   private FormFieldMap( String uri) {
   }
 
-  private static CloseableHttpResponse execute( HttpClientPool httpClientPool, HttpGet httpGet, HttpClientContext context ) throws ClientProtocolException, IOException {
+  private static CloseableHttpResponse execute( final HttpClientPool httpClientPool, final HttpGet httpGet, final HttpClientContext context ) throws ClientProtocolException, IOException {
     return httpClientPool.getHttpClient().execute( httpGet, context );
   }
   
-  private static String parseResponse( HttpResponse response ) throws HttpResponseException, IOException {
+  private static String parseResponse( final HttpResponse response ) throws HttpResponseException, IOException {
     String     retval = "";
     StatusLine status = response.getStatusLine();
     int        code   = status.getStatusCode();
@@ -57,7 +57,7 @@ public class FormFieldMap {
     return retval;
   }
   
-  public static String httpGet( String url, User user ) throws ClientProtocolException, IOException {
+  public static String httpGet( final String url, final User user ) throws ClientProtocolException, IOException {
     String retval = null;
     
     HttpGet httpGet = new HttpGet( url );
@@ -73,7 +73,7 @@ public class FormFieldMap {
     return retval;
   }
   
-  private static Map<String, String>  mapAttributes( Element element ) {
+  private static Map<String, String>  mapAttributes( final Element element ) {
     Map<String, String> retval = new HashMap<String,String>();
     String              name   = element.attr( "name" );
     
@@ -84,7 +84,7 @@ public class FormFieldMap {
     return retval;
   }
   
-  private static  Map<String, String> mapElement( Element element ) {
+  private static  Map<String, String> mapElement( final Element element ) {
     Map<String, String> retval = new HashMap<String,String>();
     
     if( element.nodeName().equalsIgnoreCase( "input" )) {
@@ -100,12 +100,12 @@ public class FormFieldMap {
     return retval;
   }
 
-  public static Document getDocumentByUrl( String url, User user ) throws ClientProtocolException, IOException {
+  public static Document getDocumentByUrl( final String url, final User user ) throws ClientProtocolException, IOException {
     String   output  = httpGet( url, user );
     return Jsoup.parse( output );
   }
   
-  public static Form getHtmlFormFieldsByFormName( String url, String formName, User user ) {
+  public static Form getHtmlFormFieldsByFormName( final String url, final String formName, final User user ) {
     Form retval = new Form();
     
     retval.setFields( new HashMap<String,String>() );
@@ -133,7 +133,7 @@ public class FormFieldMap {
     return retval;    
   }
     
-  public static Form getHtmlFormFieldsByAction( String url, String action, User user ) {
+  public static Form getHtmlFormFieldsByAction( final String url, final String action, final User user ) {
    Form retval = new Form();
     
     retval.setFields( new HashMap<String,String>() );
@@ -162,7 +162,7 @@ public class FormFieldMap {
     return retval;    
   }
 
-  public static Form getHtmlFormFieldsByType( String url, String type, User user ) {
+  public static Form getHtmlFormFieldsByType( final String url, final String type, final User user ) {
     Form retval = new Form();
      
      retval.setFields( new HashMap<String,String>() );

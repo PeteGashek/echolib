@@ -34,11 +34,11 @@ public class DumpForms {
   public DumpForms() {
   }
   
-  public CloseableHttpResponse execute( HttpClientPool httpClientPool, HttpGet httpGet, HttpClientContext context ) throws ClientProtocolException, IOException {
+  public CloseableHttpResponse execute( final HttpClientPool httpClientPool, final HttpGet httpGet, final HttpClientContext context ) throws ClientProtocolException, IOException {
     return httpClientPool.getHttpClient().execute( httpGet, context );
   }
   
-  public String parseResponse( HttpResponse response ) throws HttpResponseException, IOException {
+  public String parseResponse( final HttpResponse response ) throws HttpResponseException, IOException {
     String     retval = "";
     StatusLine status = response.getStatusLine();
     int        code   = status.getStatusCode();
@@ -56,7 +56,7 @@ public class DumpForms {
     return retval;
   }
   
-  public String httpGet( String url, User user ) throws ClientProtocolException, IOException {
+  public String httpGet( final String url, final User user ) throws ClientProtocolException, IOException {
     String retval = null;
     
     HttpGet httpGet = new HttpGet( url );
@@ -72,13 +72,13 @@ public class DumpForms {
     return retval;
   }
   
-  private void printAttributes( Element element, String lineIndent ) {
+  private void printAttributes( final Element element, final String lineIndent ) {
     for( Attribute attribute : element.attributes() ) {
       System.out.println( lineIndent + "Attribute: " + attribute.getKey() + " :: " + attribute.getValue() );
     }
   }
   
-  private void printElement( Element element, String lineIndent ) {
+  private void printElement( final Element element, final String lineIndent ) {
     System.out.println( lineIndent + "Element: " + element.id() + " :: " + element.nodeName() );
     printAttributes( element, lineIndent + " -" );
     
@@ -89,7 +89,7 @@ public class DumpForms {
     }
   }
   
-  public void dumpElementById( String url, String id ) {
+  public void dumpElementById( final String url, final String id ) {
    User user = new UserImpl();
     
     try {
@@ -108,7 +108,7 @@ public class DumpForms {
     }    
   }
   
-  public void dump( String url ) {
+  public void dump( final String url ) {
     User user = new UserImpl();
     
     try {
@@ -131,7 +131,7 @@ public class DumpForms {
     } 
   }
   
-  private Map<String, String>  mapAttributes( Element element ) {
+  private Map<String, String>  mapAttributes( final Element element ) {
     Map<String, String> retval = new HashMap<String,String>();
     String              name   = element.attr( "name" );
     
@@ -142,7 +142,7 @@ public class DumpForms {
     return retval;
   }
   
-  private Map<String, String> mapElement( Element element ) {
+  private Map<String, String> mapElement( final Element element ) {
     Map<String, String> retval = new HashMap<String,String>();
     
     if( element.nodeName().equalsIgnoreCase( "input" )) {
@@ -159,7 +159,7 @@ public class DumpForms {
   }
 
   
-  public Map<String, String> getHtmlFormFieldsByGet( String url, String formName ) {
+  public Map<String, String> getHtmlFormFieldsByGet( final String url, final String formName ) {
     Map<String,String> retval = null;
     User               user   = new UserImpl();
     

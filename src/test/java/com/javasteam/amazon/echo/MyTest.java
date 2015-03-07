@@ -1,5 +1,8 @@
 package com.javasteam.amazon.echo;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +17,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
@@ -25,8 +26,6 @@ import com.javasteam.http.FormFieldMap;
 import com.javasteam.http.HttpGetHelper;
 import com.javasteam.http.User;
 import com.javasteam.http.UserImpl;
-
-import static com.google.common.base.Preconditions.*;
 
 public class MyTest {
   private final static Log          log = LogFactory.getLog( MyTest.class.getName() );

@@ -10,14 +10,15 @@ public class EchoCommandHandlerDefinitionPropertyParser {
    * @param command
    * @return
    */
-  public static EchoCommandHandlerBuilder getCommandHandlerBuilder( String command ) {
+  public static EchoCommandHandlerBuilder getCommandHandlerBuilder( final String command ) {
     EchoCommandHandlerBuilder builder = new EchoCommandHandlerBuilder();
+    String commandTrimmed = command.trim();
     
     if( command != null ) {
-      command = command.trim();
+      commandTrimmed = command.trim();
         
-      if( command.length() > 0 ) {
-        String   classnameAndMethodString = command.split( "[\\s;]" )[0];
+      if( commandTrimmed.length() > 0 ) {
+        String   classnameAndMethodString = commandTrimmed.split( "[\\s;]" )[0];
         String[] classnameAndMethodArray  = classnameAndMethodString.split( ":" );
         String   theClassname             = classnameAndMethodArray[ 0 ];
         String   theMethodName            = (classnameAndMethodArray.length > 1) ? classnameAndMethodArray[ 1 ]
@@ -26,7 +27,7 @@ public class EchoCommandHandlerDefinitionPropertyParser {
         builder.setTheClassname( theClassname.trim() );
         builder.setTheMethodName( theMethodName.trim() );
           
-        String   remainder = command.substring( classnameAndMethodString.length() ).trim();
+        String   remainder = commandTrimmed.substring( classnameAndMethodString.length() ).trim();
         String[] args      = remainder.split( ",(?=(([^'\"]*['\"]){2})*[^'\"]*$)" );
         
         if( args.length > 0 ) {

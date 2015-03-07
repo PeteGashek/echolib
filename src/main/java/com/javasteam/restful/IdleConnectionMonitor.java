@@ -24,7 +24,7 @@ public class IdleConnectionMonitor extends Thread {
   /**
    * @param connectionManager
    */
-  public IdleConnectionMonitor( PoolingHttpClientConnectionManager connectionManager ) {
+  public IdleConnectionMonitor( final PoolingHttpClientConnectionManager connectionManager ) {
     super();
     this.connectionManager = connectionManager;
   }
@@ -46,7 +46,7 @@ public class IdleConnectionMonitor extends Thread {
    * @param pollIntervalInSeconds
    * @return
    */
-  public long setPollIntervalInSeconds( long pollIntervalInSeconds ) {
+  public long setPollIntervalInSeconds( final long pollIntervalInSeconds ) {
    long retval;
     
     synchronized( setterSync ) {
@@ -74,7 +74,7 @@ public class IdleConnectionMonitor extends Thread {
    * @param idleTimeoutInSeconds
    * @return
    */
-  public long setIdleTimeoutInSeconds( long idleTimeoutInSeconds ) {
+  public long setIdleTimeoutInSeconds( final long idleTimeoutInSeconds ) {
    long retval;
     
     synchronized( setterSync ) {

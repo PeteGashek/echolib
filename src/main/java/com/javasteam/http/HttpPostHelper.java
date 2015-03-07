@@ -43,19 +43,19 @@ public class HttpPostHelper extends HttpPost {
     return context;
   }
 
-  public void setContext( HttpClientContext context ) {
+  public void setContext( final HttpClientContext context ) {
     this.context = context;
   }
 
-  public void setUserAgentHeader( String userAgent ) {
+  public void setUserAgentHeader( final String userAgent ) {
     super.setHeader( HttpHeaders.USER_AGENT, userAgent );
   }
   
-  public void setRefererHeader( String refererUrl ) {
+  public void setRefererHeader( final String refererUrl ) {
     super.setHeader( HttpHeaders.REFERER, refererUrl );
   }
   
-  public void setAcceptHeader( String acceptString ) {
+  public void setAcceptHeader( final String acceptString ) {
     super.setHeader( "Accept", acceptString );
   }
 
@@ -71,7 +71,7 @@ public class HttpPostHelper extends HttpPost {
     setEntity( input );
   }
   
-  public void setUserContext( User user ) {
+  public void setUserContext( final User user ) {
     if( user != null ) {
       this.context = user.getContext();
       //log.debug( "Set User Context to: " + context );
@@ -82,7 +82,7 @@ public class HttpPostHelper extends HttpPost {
     return postSuccessful;
   }
 
-  public CloseableHttpResponse execute( HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
+  public CloseableHttpResponse execute( final HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
     return httpClientPool.getHttpClient().execute( this, getContext() );
   }
   
@@ -94,7 +94,7 @@ public class HttpPostHelper extends HttpPost {
     } 
   }
   
-  public String parseResponse( HttpResponse response ) throws HttpResponseException, IOException {
+  public String parseResponse( final HttpResponse response ) throws HttpResponseException, IOException {
     StatusLine   status   = response.getStatusLine();
     int          code     = status.getStatusCode();
     String       retval   = "";

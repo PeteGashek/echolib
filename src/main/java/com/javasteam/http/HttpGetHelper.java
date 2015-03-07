@@ -31,11 +31,11 @@ public class HttpGetHelper extends HttpGet {
   public HttpGetHelper() {
   }
 
-  public HttpGetHelper( URI uri ) {
+  public HttpGetHelper( final URI uri ) {
     super( uri );
   }
 
-  public HttpGetHelper( String uri ) {
+  public HttpGetHelper( final String uri ) {
     super( uri );
   }
   
@@ -43,15 +43,15 @@ public class HttpGetHelper extends HttpGet {
     return context;
   }
   
-  public void setContext( HttpClientContext context ) {
+  public void setContext( final HttpClientContext context ) {
     this.context = context;
   }
 
-  public void setUserAgentHeader( String userAgent ) {
+  public void setUserAgentHeader( final String userAgent ) {
     super.setHeader( HttpHeaders.USER_AGENT, userAgent );
   }
   
-  public void setAcceptHeader( String acceptString ) {
+  public void setAcceptHeader( final String acceptString ) {
     super.setHeader( "Accept", acceptString );
   }
 
@@ -59,11 +59,11 @@ public class HttpGetHelper extends HttpGet {
     setAcceptHeader( "application/json, text/javascript, */*; q=0.01" );
   }
   
-  public CloseableHttpResponse execute( HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
+  public CloseableHttpResponse execute( final HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
     return httpClientPool.getHttpClient().execute( this, getContext() );
   }
   
-  public void setUserContext( User user ) {
+  public void setUserContext( final User user ) {
     if( user != null ) {
       this.context = user.getContext();
       //log.debug( "Set User Context to: " + context );
@@ -78,7 +78,7 @@ public class HttpGetHelper extends HttpGet {
     } 
   }
   
-  public String parseResponse( HttpResponse response ) throws HttpResponseException, IOException {
+  public String parseResponse( final HttpResponse response ) throws HttpResponseException, IOException {
     String     retval = "";
     StatusLine status = response.getStatusLine();
     int        code   = status.getStatusCode();
@@ -103,7 +103,7 @@ public class HttpGetHelper extends HttpGet {
    * @throws ClientProtocolException
    * @throws IOException
    */
-  public String httpGet( HttpClientPool httpClientPool, User user ) throws ClientProtocolException, IOException {
+  public String httpGet( final HttpClientPool httpClientPool, final User user ) throws ClientProtocolException, IOException {
     String retval = "";
     
     setUserAgentHeader( DEFAULT_USER_AGENT );

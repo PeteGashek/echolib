@@ -18,7 +18,7 @@ public class EchoCommandHandlerDefinition {
     return theClassname;
   }
 
-  public void setTheMethodName( String theMethodName ) {
+  public void setTheMethodName( final String theMethodName ) {
     this.theMethodName = theMethodName;
   }
   
@@ -26,7 +26,7 @@ public class EchoCommandHandlerDefinition {
     return theMethodName;
   }
 
-  public void setTheClassname( String theClassname ) {
+  public void setTheClassname( final String theClassname ) {
     this.theClassname = theClassname;
   }
 
@@ -34,7 +34,7 @@ public class EchoCommandHandlerDefinition {
     return key;
   }
 
-  public void setKey( String key ) {
+  public void setKey( final String key ) {
     this.key = key;
   }
 
@@ -42,7 +42,7 @@ public class EchoCommandHandlerDefinition {
     return commandArray;
   }
 
-  public void setCommandArray( String[] commandArray ) {
+  public void setCommandArray( final String[] commandArray ) {
     this.commandArray = commandArray;
   }
 }

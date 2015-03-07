@@ -15,7 +15,7 @@ public class Form {
     
   }
   
-  public Form( String action ) {
+  public Form( final String action ) {
     this.action = action;
   }
   
@@ -23,7 +23,7 @@ public class Form {
     return action;
   }
 
-  public void setAction( String action ) {
+  public void setAction( final String action ) {
     this.action = action;
   }
 
@@ -31,7 +31,7 @@ public class Form {
     return fields;
   }
 
-  public void setFields( Map<String, String> fields ) {
+  public void setFields( final Map<String, String> fields ) {
     this.fields = fields;
   }
 

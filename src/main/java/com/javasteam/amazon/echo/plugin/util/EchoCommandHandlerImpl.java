@@ -30,7 +30,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#setName(java.lang.String)
    */
-  public void setName( String name ) {
+  public void setName( final String name ) {
     this.name = name;
   }
 
@@ -44,7 +44,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#setKey(java.lang.String)
    */
-  public void setKey( String key ) {
+  public void setKey( final String key ) {
     this.key = key;
   }
 
@@ -58,7 +58,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
   /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#setCommands(java.lang.String[])
    */
-  public void setCommands( String[] commands ) {
+  public void setCommands( final String[] commands ) {
     this.commands = commands;
   }
 
@@ -73,7 +73,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
     return executor;
   }
   
-  public void     setExecutor( Object executor ) {
+  public void     setExecutor( final Object executor ) {
     this.executor = executor;
   }
 
@@ -81,12 +81,12 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
     return method;
   }
   
-  public void     setMethod( Method method ) {
+  public void     setMethod( final Method method ) {
     this.method = method;
   }
   
   //TODO this is targeted for todo items right now.... needs generalization
-  private Object  makeMethodCall( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  private Object  makeMethodCall( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Object[] args = { todoItem
                     , echoUserSession
                     , remainder
@@ -96,7 +96,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
     return getMethod().invoke( getExecutor(), args );
   }
   
-  public boolean  handle( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder ) {
+  public boolean  handle( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder ) {
     boolean retval = false;
     
     try {

@@ -43,14 +43,14 @@ public class HttpPutHelper extends HttpPut {
   /**
    * @param uri
    */
-  public HttpPutHelper( URI uri ) {
+  public HttpPutHelper( final URI uri ) {
     super( uri );
   }
 
   /**
    * @param uri
    */
-  public HttpPutHelper( String uri ) {
+  public HttpPutHelper( final String uri ) {
     super( uri );
   }
 
@@ -58,15 +58,15 @@ public class HttpPutHelper extends HttpPut {
     return context;
   }
 
-  public void setContext( HttpClientContext context ) {
+  public void setContext( final HttpClientContext context ) {
     this.context = context;
   }
 
-  public void setUserAgentHeader( String userAgent ) {
+  public void setUserAgentHeader( final String userAgent ) {
     super.setHeader( HttpHeaders.USER_AGENT, userAgent );
   }
   
-  public void setAcceptHeader( String acceptString ) {
+  public void setAcceptHeader( final String acceptString ) {
     super.setHeader( "Accept", acceptString );
   }
 
@@ -74,7 +74,7 @@ public class HttpPutHelper extends HttpPut {
     setAcceptHeader( "application/json, text/javascript, */*; q=0.01" );
   }
   
-  public void setApplicationJsonEntity( String jsonString ) {
+  public void setApplicationJsonEntity( final String jsonString ) {
     StringEntity input = new StringEntity( jsonString, StandardCharsets.UTF_8.name() );
       
     input.setContentType( "application/json" );
@@ -82,14 +82,14 @@ public class HttpPutHelper extends HttpPut {
     setEntity( input );
   }
   
-  public void setUserContext( User user ) {
+  public void setUserContext( final User user ) {
     if( user != null ) {
       this.context = user.getContext();
       //log.debug( "Set User Context to: " + context );
     }
   }
   
-  public CloseableHttpResponse execute( HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
+  public CloseableHttpResponse execute( final HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
     return httpClientPool.getHttpClient().execute( this, getContext() );
   }
   
@@ -101,7 +101,7 @@ public class HttpPutHelper extends HttpPut {
     } 
   }
   
-  public String parseResponse( HttpResponse response ) throws HttpResponseException, IOException {
+  public String parseResponse( final HttpResponse response ) throws HttpResponseException, IOException {
     StatusLine   status   = response.getStatusLine();
     int          code     = status.getStatusCode();
     String       retval   = "";

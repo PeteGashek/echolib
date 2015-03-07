@@ -25,7 +25,7 @@ public final class HttpClientPool {
    * @param totalConnections
    * @param maxConnectionsPerRoute
    */
-  public HttpClientPool( int totalConnections, int maxConnectionsPerRoute ) {
+  public HttpClientPool( final int totalConnections, final int maxConnectionsPerRoute ) {
     this.totalConnections       = totalConnections;
     this.maxConnectionsPerRoute = maxConnectionsPerRoute;
     
