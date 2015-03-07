@@ -67,4 +67,33 @@ public class EchoCommandHandlerBuilder extends EchoCommandHandlerDefinition {
     
     return retval;
   }
+  
+  public void checkStringForKeyOption( final String theString ) {
+    if( theString.toLowerCase().startsWith( "key=" )) {
+      setKey( theString.substring( "key=".length() ).trim() );
+    }
+  }
+  
+  public void checkStringForCommandOption( final String theString ) {
+    if( theString.toLowerCase().startsWith( "command=" )) {
+      String   temp         = theString.substring( "command=".length() );
+      String[] commandArray = cleanupCommandArray( temp.split( " (?=(([^'\"]*['\"]){2})*[^'\"]*$)" ));
+      
+      if( commandArray.length > 0 ) {
+        setCommandArray( commandArray );
+      }
+    }
+  }
+  
+  public String[] cleanupCommandArray( final String[] commandArray ) {
+    String[] retval = new String[ commandArray.length ];
+    
+    if( commandArray != null && commandArray.length > 0 ) {
+      for( int y = 0; y < commandArray.length; ++y ) {
+        retval[ y ] = commandArray[ y ].trim();
+      }
+    }
+    
+    return retval;
+  }
 }

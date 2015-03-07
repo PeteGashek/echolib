@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.javasteam.amazon.echo;
 
 import junit.framework.TestCase;
@@ -10,6 +7,7 @@ import junit.framework.TestCase;
  *
  */
 public class EchoTodoItemBaseTest extends TestCase {
+  private static final String TEST_TODO_ITEM = "Test todo item";
 
   /**
    * 
@@ -29,9 +27,9 @@ public class EchoTodoItemBaseTest extends TestCase {
    */
   public void testEchoTodoItemBase() throws Exception {
     // test constructor with text passed in as argument
-    EchoTodoItemBase todoItem = new EchoTodoItemBase( "Test todo item" );
+    EchoTodoItemBase todoItem = new EchoTodoItemBase( TEST_TODO_ITEM );
     
-    assertEquals( "Test todo item", todoItem.getText() );
+    assertEquals( TEST_TODO_ITEM, todoItem.getText() );
     assertEquals( null,             todoItem.getItemId() );
     assertEquals( null,             todoItem.getType() );
     assertEquals( null,             todoItem.getUtteranceId() );
@@ -44,9 +42,9 @@ public class EchoTodoItemBaseTest extends TestCase {
     assertFalse( todoItem.isComplete() );
     
     // constructor with itemId and text parameters
-    todoItem = new EchoTodoItemBase( "ITEMID", "Test todo item" );
+    todoItem = new EchoTodoItemBase( "ITEMID", TEST_TODO_ITEM );
     
-    assertEquals( "Test todo item", todoItem.getText() );
+    assertEquals( TEST_TODO_ITEM, todoItem.getText() );
     assertEquals( "ITEMID",         todoItem.getItemId() );
     assertEquals( null,             todoItem.getType() );
     assertEquals( null,             todoItem.getUtteranceId() );

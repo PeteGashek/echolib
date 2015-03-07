@@ -3,7 +3,7 @@
  */
 package com.javasteam.amazon.echo.plugin;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -61,8 +61,8 @@ public class Twitter {
   }
   
   public boolean sendTwit( final EchoBase base, final String authenticityToken, final String twitText, final User user ) {
-    checkNotNull( user );
-    checkNotNull( twitText );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( twitText );
     
     boolean            retval  = false;
     Form               form    = new Form( CREATE_TWIT_PAGE );
@@ -92,8 +92,8 @@ public class Twitter {
   
   
   public synchronized String twitterLogin( final EchoBase base, final User user ) throws ClientProtocolException, IOException {
-    checkNotNull( user );
-    checkNotNull( base );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( base );
     
     Form     form            = FormFieldMap.getHtmlFormFieldsByAction( Twitter.LOGIN_PAGE
                                                                      , Twitter.SESSION_PAGE
@@ -128,7 +128,7 @@ public class Twitter {
   }
   
   private synchronized User getUser( final EchoUserSession echoUserSession ) {
-    checkNotNull( echoUserSession );
+    Preconditions.checkNotNull( echoUserSession );
     
     if( user == null ) {
       String username = echoUserSession.getProperty( TWIT_USER_KEY );
@@ -173,9 +173,9 @@ public class Twitter {
    * com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
   public boolean sendTwit( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) throws ClientProtocolException, IOException {
-    checkNotNull( todoItem,        "Can't process a null todo item" );
-    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
-    checkNotNull( commands,        "Command array can not be null" );
+    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+    Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    Preconditions.checkNotNull( commands,        "Command array can not be null" );
 
     boolean retval = false;
     User    user   = getUser( echoUserSession );

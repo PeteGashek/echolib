@@ -1,8 +1,5 @@
 package com.javasteam.amazon.echo;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +15,7 @@ import org.jsoup.select.Elements;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
@@ -65,8 +63,8 @@ public class MyTest {
   }
   
   public Object testNonNull( Object retval ) {
-    checkNotNull( retval );
-    checkArgument( retval instanceof String, "Expected a String" );
+    Preconditions.checkNotNull( retval );
+    Preconditions.checkArgument( retval instanceof String, "Expected a String" );
     return retval;
   }
   
@@ -184,6 +182,7 @@ public class MyTest {
       
       work = "{\"someValue\":\"something\",\"ccValue\":\"more\"}";
       MyTest mytestFromJson = mapper.readValue( work, MyTest.class );
+      if( mytestFromJson.ccValue.equals( "more" )) {}; // just to get rid of the warning.
     }
     catch( JsonProcessingException e ) {
       // TODO Auto-generated catch block

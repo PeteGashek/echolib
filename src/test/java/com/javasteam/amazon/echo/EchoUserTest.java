@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.javasteam.amazon.echo;
 
 import junit.framework.TestCase;

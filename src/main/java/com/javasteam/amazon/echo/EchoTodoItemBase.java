@@ -1,9 +1,12 @@
 package com.javasteam.amazon.echo;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.time.DateUtils;
 
 
 /**
@@ -51,16 +54,13 @@ public class EchoTodoItemBase {
    * @param stringDate
    * @return
    */
-  public Calendar stringToCalendarFromLong( final String stringDate ) {
-    Calendar calendar = null;
-    if( stringDate != null ) {
-      Date date = new Date( Long.parseLong( stringDate ));
-      
-      calendar = Calendar.getInstance();
-      calendar.setTime( date );
-    }
+  public Calendar generateCalendarFromLongAsString( final String stringDate ) {
+    Preconditions.checkNotNull( stringDate );
     
-    return calendar;
+    Long milliseconds = Long.parseLong( stringDate );
+    Date date         = new Date( milliseconds );
+      
+    return DateUtils.toCalendar( date );
   }
   
   /**
@@ -245,29 +245,29 @@ public class EchoTodoItemBase {
    * @see java.lang.Object#toString()
    */
   public String toString() {
-    StringBuffer buffer = new StringBuffer( "EchoTodoItem: " );
+    StringBuilder builder = new StringBuilder( 250 );
     
-    buffer.append( "\n  ItemId:          " + this.getItemId() )
-          .append( "\n  text:            " + this.getText() )
-          .append( "\n  type:            " + this.getType() )
-          .append( "\n  complete:        " + this.isComplete() )
-          .append( "\n  deleted:         " + this.isDeleted() )
-          .append( "\n  createdDate:     " + ( this.getCreatedDate()         != null ? this.getCreatedDate().getTimeInMillis()         : "null" ))
-          .append( "\n  lastLocalUpdate: " + ( this.getLastLocalUpdateDate() != null ? this.getLastLocalUpdateDate().getTimeInMillis() : "null" ))
-          .append( "\n  lastUpdated:     " + ( this.getLastUpdatedDate()     != null ? this.getLastUpdatedDate().getTimeInMillis()     : "null" ))
-          .append( "\n  version:         " + this.getVersion() )
-          .append( "\n  utteranceId:     " + this.getUtteranceId() )
-          ;
+    builder.append( "EchoTodoItem: \n  ItemId:          " ).append( this.getItemId() )
+           .append( "\n  text:            " ).append( this.getText() )
+           .append( "\n  type:            " ).append( this.getType() )
+           .append( "\n  complete:        " ).append( this.isComplete() )
+           .append( "\n  deleted:         " ).append( this.isDeleted() )
+           .append( "\n  createdDate:     " ).append( ( this.getCreatedDate()         != null ? this.getCreatedDate().getTimeInMillis()         : "null" ))
+           .append( "\n  lastLocalUpdate: " ).append( ( this.getLastLocalUpdateDate() != null ? this.getLastLocalUpdateDate().getTimeInMillis() : "null" ))
+           .append( "\n  lastUpdated:     " ).append( ( this.getLastUpdatedDate()     != null ? this.getLastUpdatedDate().getTimeInMillis()     : "null" ))
+           .append( "\n  version:         " ).append( this.getVersion() )
+           .append( "\n  utteranceId:     " ).append( this.getUtteranceId() )
+           ;
     
     // if created in the web app there will be no NbestItems.....
     if( this.getNbestItems() != null ) {
       for( String item : this.getNbestItems() ) {
-        buffer.append( "\n      ->" + item );
+        builder.append( "\n      ->" ).append( item );
       }
     }
     
     
-    return buffer.toString();
+    return builder.toString();
   }
   
   @Override

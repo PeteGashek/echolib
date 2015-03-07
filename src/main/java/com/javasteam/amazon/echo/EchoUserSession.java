@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -12,8 +13,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions;
 
 /**
  * @author ddamon
@@ -158,7 +158,7 @@ public class EchoUserSession implements EchoUser {
    * @see com.javasteam.amazon.echo.EchoUser#setCookieStore(org.apache.http.impl.client.BasicCookieStore)
    */
   public void setCookieStore( final BasicCookieStore cookieStore ) {
-    checkNotNull( echoUser );
+    Preconditions.checkNotNull( echoUser );
     echoUser.setCookieStore( cookieStore );
   }
 
@@ -190,7 +190,7 @@ public class EchoUserSession implements EchoUser {
   private boolean loadProperties( final String filename ) {
     boolean retval = false;
     
-    checkNotNull( filename );
+    Preconditions.checkNotNull( filename );
     
     try {
       properties.load( EchoUserSession.class.getClassLoader().getResourceAsStream( filename ));
@@ -242,51 +242,64 @@ public class EchoUserSession implements EchoUser {
     return todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null;
   }
   
+  private long parseTimeToLiveString( String timeToLiveStr ) {
+    long   timeToLive    = 60 * 60000; // 60 minutes
+    
+    if( StringUtils.isNotBlank( timeToLiveStr ) ) {
+      timeToLive = Long.parseLong( timeToLiveStr ) * 60000;
+      if( timeToLive > 0 ) {
+        timeToLive = timeToLive * 60000;
+      }
+    }
+    
+    return timeToLive;
+  }
+  
+  private void deleteTodoItemIfExpired( final long timeToLive, final EchoTodoItemImpl todoItem ) {
+    Date date = new Date();
+    
+    if( log.isDebugEnabled() ) {
+      log.debug( "cancelled item alive for (ms): " + ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ));
+    }
+
+    if( timeToLive > -1 && ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) > timeToLive ) {
+      try {
+        log.info( "Time to live has passed.  Deleting todo: " + todoItem.getText() );
+        this.echoBase.deleteTodoItem( todoItem, this.getEchoUser() );
+      }
+      catch( AmazonAPIAccessException e ) {
+        log.error( "Failed deleting todo item", e );
+      }
+    }
+  }
+  
+  private boolean sendTodoNotifications( final EchoTodoItemImpl todoItem ) {
+    boolean handled = false;
+    
+    for( EchoCommandHandler listener : this.todoListeners ) {
+      if( todoItemCanBeProcessed( todoItem )) {
+        if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
+          String remainder = todoItem.getText().substring( listener.getKey().length() );
+          log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
+          handled = handled | listener.handle( todoItem, this, remainder );
+        }
+      }
+    }
+    
+    return handled;
+  }
+  
   /**
    * @param todoItem
    */
   public void notifyTodoRetrievedListeners( final EchoTodoItemImpl todoItem ) {
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
-      boolean handled = false;
-      
       if( todoItem.isComplete() ) {
-        String timeToLiveStr = this.getProperty( "cancelledMinutesToLive" );
-        long   timeToLive    = 60 * 60000; // 60 minutes
-        
-        if( timeToLiveStr != null && timeToLiveStr.length() > 0 ) {
-          timeToLive = Long.parseLong( timeToLiveStr ) * 60000;
-          if( timeToLive > 0 ) {
-            timeToLive = timeToLive * 60000;
-          }
-        }
-        
-        Date date = new Date();
-        if( log.isDebugEnabled() ) {
-          log.debug( "cancelled item alive for (ms): " + ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ));
-        }
-
-        if( timeToLive > -1 && ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) > timeToLive ) {
-          try {
-            log.info( "Time to live has passed.  Deleting todo: " + todoItem.getText() );
-            this.echoBase.deleteTodoItem( todoItem, this.getEchoUser() );
-          }
-          catch( AmazonAPIAccessException e ) {
-            log.error( "Failed deleting todo item", e );
-          }
-        }
+        deleteTodoItemIfExpired( parseTimeToLiveString( this.getProperty( "cancelledMinutesToLive" ))
+                               , todoItem );
       }
       
-      for( EchoCommandHandler listener : this.todoListeners ) {
-        if( todoItemCanBeProcessed( todoItem )) {
-          if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
-            String remainder = todoItem.getText().substring( listener.getKey().length() );
-            log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
-            handled = handled | listener.handle( todoItem, this, remainder );
-          }
-        }
-      }
-      
-      if( handled ) {
+      if( sendTodoNotifications( todoItem )) {
         try {
           this.getEchoBase().completeTodoItem( todoItem, this.getEchoUser() );
         }
@@ -304,8 +317,8 @@ public class EchoUserSession implements EchoUser {
     boolean retval = false;
     
     synchronized( this.todoPollerLock ) {
-      checkNotNull( this.echoBase );
-      checkNotNull( this.echoUser );
+      Preconditions.checkNotNull( this.echoBase );
+      Preconditions.checkNotNull( this.echoUser );
       
       if( this.todoItemPoller == null ) {
         this.todoItemPoller = new TodoItemPoller( this );
@@ -369,15 +382,15 @@ public class EchoUserSession implements EchoUser {
     String userNameField     = echoUserSession.getProperty( "userNameField" );
     String userPasswordField = echoUserSession.getProperty( "userPasswordField" );
     
-    if( loginForm != null && loginForm.trim().length() > 0 ) {
+    if( StringUtils.isNotBlank( loginForm )) {
       echoBase.setLoginFormName( loginForm.trim() );  
     }
 
-    if( userNameField != null && userNameField.trim().length() > 0 ) {
+    if( StringUtils.isNotBlank( userNameField )) {
       echoBase.setUserFieldName( userNameField.trim() );  
     }
 
-    if( userPasswordField != null && userPasswordField.trim().length() > 0 ) {
+    if( StringUtils.isNotBlank( userPasswordField )) {
       echoBase.setPasswordFieldName( userPasswordField.trim() );  
     }
   }

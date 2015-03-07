@@ -1,8 +1,5 @@
 package com.javasteam.amazon.echo;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 
@@ -35,21 +32,6 @@ public class EchoTodoItemImpl extends EchoTodoItemBase {
   }
 
 
-  /* (non-Javadoc)
-   * @see com.javasteam.amazon.echo.EchoTodoItemImpl#stringToCalendarFromLong(java.lang.String)
-   */
-  public Calendar stringToCalendarFromLong( final String stringDate ) {
-    Calendar calendar = null;
-    if( stringDate != null ) {
-      Date date = new Date( Long.parseLong( stringDate ));
-      
-      calendar = Calendar.getInstance();
-      calendar.setTime( date );
-    }
-    
-    return calendar;
-  }
-  
   /**
    * @return
    */
@@ -84,15 +66,15 @@ public class EchoTodoItemImpl extends EchoTodoItemBase {
    * @see com.javasteam.amazon.echo.EchoTodoItemImpl#toString()
    */
   public String toString() {
-    StringBuffer buffer = new StringBuffer( super.toString() );
+    StringBuilder builder = new StringBuilder( 50 );
     
-    buffer.append( "\n  customerId:      " + this.getCustomerId() )
-          .append( "\n  originalAudioId: " + this.getOriginalAudioId() )
-          ;
+    builder.append( "\n  customerId:      " ).append( this.getCustomerId() )
+           .append( "\n  originalAudioId: " ).append( this.getOriginalAudioId() )
+           ;
     
     
     
-    return buffer.toString();
+    return builder.toString();
   }
   
   public boolean equals( final Object otherObject ) {

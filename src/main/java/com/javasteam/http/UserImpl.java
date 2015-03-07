@@ -9,6 +9,8 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 
+import com.google.common.base.Preconditions;
+
 /**
  * @author ddamon
  *
@@ -28,6 +30,8 @@ public class UserImpl implements User {
    * @param password
    */
   public UserImpl( final String user, final String password ) {
+    Preconditions.checkNotNull( user );
+    
     this.username = user;
     this.password = password;
   }

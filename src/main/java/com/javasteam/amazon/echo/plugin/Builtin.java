@@ -16,7 +16,7 @@ import com.javasteam.amazon.echo.EchoBase;
 import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions;
 
 public class Builtin {
   private final static Log log = LogFactory.getLog( Builtin.class.getName() );
@@ -25,9 +25,9 @@ public class Builtin {
   }
 
   public boolean createTodo( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
-    checkNotNull( todoItem,        "Can't process a null todo item" );
-    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
-    checkNotNull( commands,        "Command array can not be null" );
+    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+    Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    Preconditions.checkNotNull( commands,        "Command array can not be null" );
     
     boolean retval = false;
     
@@ -54,9 +54,9 @@ public class Builtin {
   }
   
   public boolean executeExternal( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
-    checkNotNull( todoItem,        "Can't process a null todo item" );
-    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
-    checkNotNull( commands,        "Command array can not be null" );
+    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+    Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    Preconditions.checkNotNull( commands,        "Command array can not be null" );
 
     boolean retval = false;
     
@@ -105,8 +105,8 @@ public class Builtin {
   }
   
   public boolean shutdownTodoPoller( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
-    checkNotNull( todoItem,        "Can't process a null todo item" );
-    checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+    Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     
     boolean retval = false;
 

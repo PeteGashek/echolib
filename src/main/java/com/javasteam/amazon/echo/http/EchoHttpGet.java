@@ -5,10 +5,9 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 
+import com.google.common.base.Preconditions;
 import com.javasteam.http.HttpGetHelper;
 import com.javasteam.http.User;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EchoHttpGet extends HttpGetHelper {
   //private final static Log          log = LogFactory.getLog( EchoHttpGet.class.getName() );
@@ -27,8 +26,8 @@ public class EchoHttpGet extends HttpGetHelper {
   
 
   public void setEchoCsrfHeaderFromUserCookieStore( final User user ) {
-    checkNotNull( user );
-    checkNotNull( user.getCookieStore() );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( user.getCookieStore() );
     
     //TODO see if this is needed
     List<Cookie> cookies = user.getCookieStore().getCookies();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -77,7 +78,7 @@ public class FormFieldMap {
     Map<String, String> retval = new HashMap<String,String>();
     String              name   = element.attr( "name" );
     
-    if( name != null && name.trim().length() > 0 ) {
+    if( StringUtils.isNotBlank( name )) {
       retval.put( name, element.attr( "value" ) );
     }
     

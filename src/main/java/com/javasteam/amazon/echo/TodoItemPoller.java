@@ -93,52 +93,65 @@ public class TodoItemPoller extends Thread {
     //this.interrupt();
   }
   
+  private void handleUsersTodoItems() throws AmazonAPIAccessException {
+    //System.out.print( "." );
+    
+    List<EchoTodoItemImpl> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
+    
+    log.debug( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
+    
+    if( todos != null ) {
+      for( EchoTodoItemImpl todoItem : todos ) {
+        echoUserSession.notifyTodoRetrievedListeners( todoItem );
+      } 
+    }
+    else {
+      log.info( "No todos to process" );
+    }
+  }
+  
+  private void doSleep( long intervalInSeconds ) {
+    int loop = 0;
+
+    while( !isStopped() && loop < intervalInSeconds ) {
+      try {
+        Thread.sleep( 1000 );
+      }
+      catch( InterruptedException e ) {}
+      ++loop;
+    }
+  }
+  
+  private void loginUserIfNecessary() {
+    if( !echoUserSession.getEchoUser().isLoggedIn() ) {
+      try {
+        log.info( "Logging in user: " + echoUserSession.getEchoUser().getUsername() );
+        echoUserSession.getEchoBase().echoLogin( echoUserSession.getEchoUser() );
+      }
+      catch( AmazonLoginException e ) {
+        log.error( "Logging in echoUser", e  );
+      }
+    }
+  }
+  
   /* (non-Javadoc)
    * @see java.lang.Thread#run()
    */
   @Override
   public void run() {
     while( !isStopped() ) {
-      if( !echoUserSession.getEchoUser().isLoggedIn() ) {
-        try {
-          log.info( "Logging in user: " + echoUserSession.getEchoUser().getUsername() );
-          echoUserSession.getEchoBase().echoLogin( echoUserSession.getEchoUser() );
-        }
-        catch( AmazonLoginException e ) {
-          log.error( "Logging in echoUser", e  );
-        }
-      }
+      loginUserIfNecessary();
         
       if( echoUserSession.getEchoUser().isLoggedIn() ) {
         try {
-          System.out.print( "." );
-          List<EchoTodoItemImpl> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
-          
-          log.debug( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
-          
-          if( todos != null ) {
-            for( EchoTodoItemImpl todoItem : todos ) {
-              echoUserSession.notifyTodoRetrievedListeners( todoItem );
-            } 
-          }
-          else {
-            log.info( "No todos to process" );
-          }
+          handleUsersTodoItems();
         }
         catch( AmazonAPIAccessException e ) {
           log.error( "Error fetching Todo items", e );
         }
       }
       
-      int loop = 0;
-
-      while( !isStopped() && loop < intervalInSeconds ) {
-        try {
-          Thread.sleep( 1000 );
-        }
-        catch( InterruptedException e ) {}
-        ++loop;
-      }
+      doSleep( intervalInSeconds );
     }
   }
 }

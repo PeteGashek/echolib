@@ -11,7 +11,7 @@ import org.apache.http.cookie.Cookie;
 import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.http.HttpPutHelper;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions;
 
 /**
  * @author ddamon
@@ -44,8 +44,8 @@ public class EchoHttpPut extends HttpPutHelper {
 
 
   public void setEchoCsrfHeaderFromUserCookieStore( final EchoUser user ) {
-    checkNotNull( user );
-    checkNotNull( user.getCookieStore() );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( user.getCookieStore() );
     
     //TODO see if this is needed
     List<Cookie> cookies = user.getCookieStore().getCookies();

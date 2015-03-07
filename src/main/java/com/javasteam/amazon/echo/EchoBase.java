@@ -27,16 +27,16 @@ import com.javasteam.http.Form;
 import com.javasteam.http.FormFieldMap;
 import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions;
 
 /**
  * @author ddamon
  *
  */
 public class EchoBase {
-  private final static Log          log                = LogFactory.getLog( EchoBase.class.getName() );
-  private final static ObjectMapper mapper             = new ObjectMapper();
+  private static final String       FAILURE_UPDATING_TODO_ITEM = "Failure updating todo item";
+  private static final Log          log                        = LogFactory.getLog( EchoBase.class.getName() );
+  private static final ObjectMapper mapper                     = new ObjectMapper();
 
   static {
     mapper.disable( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
@@ -145,7 +145,7 @@ public class EchoBase {
    * @throws IOException
    */
   private String amazonEchoGet( final String actionUrl, final EchoUser user ) throws ClientProtocolException, IOException {
-    checkNotNull( user );
+    Preconditions.checkNotNull( user );
     
     String retval = "";
 
@@ -174,7 +174,7 @@ public class EchoBase {
    * @throws IOException
    */
   private String amazonEchoPut( final String actionUrl, final String jsonString, final EchoUser user ) throws ClientProtocolException, IOException {
-    checkNotNull( user );
+    Preconditions.checkNotNull( user );
     
     String retval = "";
     
@@ -210,7 +210,7 @@ public class EchoBase {
    * @throws IOException
    */
   private String amazonEchoPost( final String actionUrl, final String jsonString, final EchoUser user ) throws ClientProtocolException, IOException {
-    checkNotNull( user );
+    Preconditions.checkNotNull( user );
     
     String       retval   = "";
     EchoHttpPost httpPost = getEchoHttpPostForActionUrl( actionUrl );
@@ -237,7 +237,7 @@ public class EchoBase {
   }
   
   public void postForm( final Form form, final User user ) throws AmazonLoginException, IOException {
-    checkNotNull( user );
+    Preconditions.checkNotNull( user );
     
     EchoHttpPost httpPost = this.getEchoHttpPostForActionUrl( form.getAction() );
     
@@ -270,7 +270,7 @@ public class EchoBase {
    * @throws IOException
    */
   private void amazonEchoPostForm( final String actionUrl, final List<NameValuePair> formData, final EchoUser user ) throws AmazonLoginException, IOException {
-    checkNotNull( user );
+    Preconditions.checkNotNull( user );
     
     EchoHttpPost httpPost = this.getEchoHttpPostForActionUrl( actionUrl );
     
@@ -300,7 +300,7 @@ public class EchoBase {
    * @throws AmazonLoginException
    */
   public synchronized boolean echoLogin( final EchoUser user ) throws AmazonLoginException {
-    checkNotNull( user );
+    Preconditions.checkNotNull( user );
     
     boolean retval = user.isLoggedIn();
     
@@ -346,6 +346,25 @@ public class EchoBase {
     return retval;
   }
 
+  
+  private List<EchoTodoItemImpl> getTodoItemsFromResponse( TodoResponse items ) throws JsonProcessingException {
+    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
+    Preconditions.checkNotNull( items );
+
+    if( items != null && items.getValues() != null && items.getValues().length > 0 ) {
+      for( EchoTodoItemImpl todoItem : items.getValues() ) {
+        if( log.isDebugEnabled() ) {
+          log.debug( "Item recv'd: " + mapper.writeValueAsString( todoItem ));
+        }
+
+        if( todoItem != null && todoItem.getItemId() != null && todoItem.getText() != null ) {
+          retval.add( todoItem );
+        }
+      }
+    }
+
+    return retval;
+  }
 
   /**
    * @param size
@@ -354,7 +373,7 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> getTodoItems( final int size, final EchoUser user ) throws AmazonAPIAccessException {
-    checkNotNull( user );
+    Preconditions.checkNotNull( user );
     List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
 
     user.logCookies();
@@ -370,17 +389,7 @@ public class EchoBase {
       if( tasks != null && tasks.length() > 0 ) {
         TodoResponse items = mapper.readValue( tasks, TodoResponse.class );
 
-        if( items != null && items.getValues() != null && items.getValues().length > 0 ) {
-          for( EchoTodoItemImpl todoItem : items.getValues() ) {
-            if( log.isDebugEnabled() ) {
-              log.debug( "Item recv'd: " + mapper.writeValueAsString( todoItem ));
-            }
-
-            if( todoItem != null && todoItem.getItemId() != null && todoItem.getText() != null ) {
-              retval.add( todoItem );
-            }
-          }
-        }
+        retval = getTodoItemsFromResponse( items );
       }
       else {
         log.error( "Amazon returned empty task list" );
@@ -405,11 +414,11 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   private List<EchoTodoItemImpl> updateTodoItem( final EchoTodoItemBase item, final EchoUser user ) throws AmazonAPIAccessException {
-    checkNotNull( user );
-    checkNotNull( item );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( item );
     
     List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
-    StringBuffer           path   = new StringBuffer( "/api/todos" );
+    StringBuilder           path   = new StringBuilder( "/api/todos" );
 
     try {
       String itemId = item.getItemId();
@@ -425,7 +434,7 @@ public class EchoBase {
 
       if( itemId != null ) {
         item.setLastLocalUpdateDate( localUpdate );
-        path.append( "/" ).append( itemId );
+        path.append( '/' ).append( itemId );
       }
 
       String tasks = amazonEchoPut( path.toString(), mapper.writeValueAsString( item ), user );
@@ -435,7 +444,7 @@ public class EchoBase {
       }
     }
     catch( ClientProtocolException e ) {
-      log.fatal( "Failure updating todo item", e );
+      log.fatal( FAILURE_UPDATING_TODO_ITEM, e );
       log.error( "Path: " + path.toString() );
       
       try {
@@ -446,12 +455,12 @@ public class EchoBase {
         e1.printStackTrace();
       }
       
-      throw new AmazonAPIAccessException( "Failure updating todo item", e );
+      throw new AmazonAPIAccessException( FAILURE_UPDATING_TODO_ITEM, e );
     }
     catch( IOException e ) {
-      log.fatal( "Failure updating todo item", e );
+      log.fatal( FAILURE_UPDATING_TODO_ITEM, e );
       
-      throw new AmazonAPIAccessException( "Failure updating todo item", e );
+      throw new AmazonAPIAccessException( FAILURE_UPDATING_TODO_ITEM, e );
     }
 
     return retval;
@@ -464,8 +473,8 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   private List<EchoTodoItemImpl> addTodoItem( final EchoTodoItemBase item, final EchoUser user ) throws AmazonAPIAccessException {
-    checkNotNull( user );
-    checkNotNull( item );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( item );
     
     List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
     StringBuffer       path   = new StringBuffer( "/api/todos" );
@@ -485,7 +494,7 @@ public class EchoBase {
       }
     }
     catch( ClientProtocolException e ) {
-      log.fatal( "Failure updating todo item", e );
+      log.fatal(       FAILURE_UPDATING_TODO_ITEM, e );
       log.fatal( "Path: " + path.toString() );
       
       try {
@@ -495,12 +504,12 @@ public class EchoBase {
         e1.printStackTrace();
       }
       
-      throw new AmazonAPIAccessException( "Failure updating todo item", e );
+      throw new AmazonAPIAccessException(       FAILURE_UPDATING_TODO_ITEM, e );
     }
     catch( IOException e ) {
-      log.fatal( "Failure updating todo item", e );
+      log.fatal(       FAILURE_UPDATING_TODO_ITEM, e );
       
-      throw new AmazonAPIAccessException( "Failure updating todo item", e );
+      throw new AmazonAPIAccessException(       FAILURE_UPDATING_TODO_ITEM, e );
     }
     return retval;
   }
@@ -513,8 +522,8 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> setTodoItemDeletedStatus( final EchoTodoItemImpl item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
-    checkNotNull( user );
-    checkNotNull( item );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( item );
     
     log.info( "Setting todo '" + item.getText() + "' deleted status to " + value );
     
@@ -541,8 +550,8 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> setTodoItemCompleteStatus( final EchoTodoItemImpl item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
-    checkNotNull( user );
-    checkNotNull( item );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( item );
     
     log.info( "Setting todo '" + item.getText() + "' complete status to " + value );
     
@@ -568,8 +577,8 @@ public class EchoBase {
    * @throws AmazonAPIAccessException
    */
   public List<EchoTodoItemImpl> addTodoItem( final String text, final EchoUser user ) throws AmazonAPIAccessException {
-    checkNotNull( user );
-    checkNotNull( text );
+    Preconditions.checkNotNull( user );
+    Preconditions.checkNotNull( text );
     
     EchoTodoItemBase item        = new EchoTodoItemBase( text );
     

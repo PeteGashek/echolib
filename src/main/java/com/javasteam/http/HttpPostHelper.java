@@ -78,12 +78,12 @@ public class HttpPostHelper extends HttpPost {
     }
   }
   
-  public boolean isPostSuccessful() {
-    return postSuccessful;
-  }
-
   public CloseableHttpResponse execute( final HttpClientPool httpClientPool ) throws ClientProtocolException, IOException {
     return httpClientPool.getHttpClient().execute( this, getContext() );
+  }
+
+  public boolean isPostSuccessful() {
+    return postSuccessful;
   }
   
   public void logHeaders() {

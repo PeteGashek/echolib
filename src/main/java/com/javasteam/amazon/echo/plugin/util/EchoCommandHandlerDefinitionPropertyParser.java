@@ -32,22 +32,10 @@ public class EchoCommandHandlerDefinitionPropertyParser {
         
         if( args.length > 0 ) {
           for( int i = 0; i < args.length; ++i ) {
-            args[ i ] = args[ i ].trim();
+            String trimmedArg = args[ i ].trim();
             
-            if( args[ i ].toLowerCase().startsWith( "key=" )) {
-              builder.setKey( args[ i ].substring( "key=".length() ).trim() );
-            }
-            else if( args[ i ].toLowerCase().startsWith( "command=" )) {
-              String   temp         = args[ i ].substring( "command=".length() );
-              String[] commandArray = temp.split( " (?=(([^'\"]*['\"]){2})*[^'\"]*$)" );
-              
-              if( commandArray != null && commandArray.length > 0 ) {
-                for( int y = 0; y < commandArray.length; ++y ) {
-                  commandArray[ y ] = commandArray[ y ].trim();
-                } 
-                builder.setCommandArray( commandArray );
-              }
-            }
+            builder.checkStringForKeyOption( trimmedArg );
+            builder.checkStringForCommandOption( trimmedArg );
           }
         }
       }
