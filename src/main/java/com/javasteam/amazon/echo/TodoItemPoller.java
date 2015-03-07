@@ -110,7 +110,7 @@ public class TodoItemPoller extends Thread {
     }
   }
   
-  private void doSleep( long intervalInSeconds ) {
+  private void doSleep( final long intervalInSeconds ) {
     int loop = 0;
 
     while( !isStopped() && loop < intervalInSeconds ) {
