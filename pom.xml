@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>javasteam-echo</groupId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>amazon-echo</name>
@@ -14,8 +14,11 @@
     <maven.pmd.plugin>3.4</maven.pmd.plugin>
     <jdk.target.version>1.7</jdk.target.version>
     <guava.version>18.0</guava.version>
-    <httpClient.version>4.3.6</httpClient.version>
-    <jackson.version>2.5.1</jackson.version>
+    <httpClient.version>4.4</httpClient.version>
+    <jackson.core.version>2.5.1</jackson.core.version>
+    <jackson.databind.version>2.5.1</jackson.databind.version>
+    <!--  I think there is a bug in databind pom that 2.5.1 points to 2.5.0 -->
+    <jackson.annotations.version>2.5.0</jackson.annotations.version>
     <maximumStaticImports>0</maximumStaticImports>
     <maven.pmd.rulesetfiles>${project.basedir}/pmd.xml</maven.pmd.rulesetfiles>
   </properties>
@@ -65,19 +68,19 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
+      <version>${jackson.core.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
+      <version>${jackson.databind.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
+      <version>${jackson.annotations.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
