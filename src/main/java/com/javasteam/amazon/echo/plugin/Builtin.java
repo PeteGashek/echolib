@@ -27,7 +27,6 @@ public class Builtin {
   public boolean createTodo( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
     Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
-    Preconditions.checkNotNull( commands,        "Command array can not be null" );
     
     boolean retval = false;
     
@@ -35,7 +34,7 @@ public class Builtin {
       
     retval = true;
       
-    if( commands.length > 0 ) {
+    if( commands != null && commands.length > 0 ) {
       for( String todo : commands ) {
         try {
           todo = todo.replaceAll( "\"", "" );
@@ -56,7 +55,6 @@ public class Builtin {
   public boolean executeExternal( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
     Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
-    Preconditions.checkNotNull( commands,        "Command array can not be null" );
 
     boolean retval = false;
     
@@ -66,7 +64,7 @@ public class Builtin {
       
     retval = true;
       
-    if( commands.length > 0 ) {
+    if( commands != null && commands.length > 0 ) {
       CommandLine commandLine = new CommandLine( commands[ 0 ] );
       
       if( commands.length > 1 ) {

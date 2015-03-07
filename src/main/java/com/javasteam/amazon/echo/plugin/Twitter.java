@@ -175,8 +175,7 @@ public class Twitter {
   public boolean sendTwit( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) throws ClientProtocolException, IOException {
     Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
-    Preconditions.checkNotNull( commands,        "Command array can not be null" );
-
+    
     boolean retval = false;
     User    user   = getUser( echoUserSession );
     
