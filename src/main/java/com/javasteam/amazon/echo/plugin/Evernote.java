@@ -17,12 +17,10 @@ import com.javasteam.http.FormFieldMap;
 import com.javasteam.http.User;
 
 public class Evernote {
-  private final static Log log            = LogFactory.getLog( Twitter.class
-                                              .getName() );
+  private final static Log log            = LogFactory.getLog( Twitter.class.getName() );
 
   public static String     EVERNOTE_BASE  = "https://www.evernote.com";
-  public static String     LOGIN_PAGE     = EVERNOTE_BASE
-                                              + "/Login.action?targetUrl=/Home.action";
+  public static String     LOGIN_PAGE     = EVERNOTE_BASE + "/Login.action?targetUrl=/Home.action";
   public static String     LOGIN_FORM     = "login_form";
   public static String     USER_FIELD     = "username";
   public static String     PASSWORD_FIELD = "password";
@@ -31,42 +29,34 @@ public class Evernote {
   }
 
   // not logging in yet.....
-  public synchronized String login( final EchoBase base, final User user )
-      throws ClientProtocolException, IOException {
-    String retval = null;
+  public synchronized String login( final EchoBase base, final User user ) throws ClientProtocolException, IOException {
+    String   retval   = null;
+    Document document = FormFieldMap.getDocumentByUrl( Evernote.LOGIN_PAGE, user );
+    Form     form     = FormFieldMap.getHtmlFormFieldsByFormName( document, Evernote.LOGIN_FORM );
 
-    Document document = FormFieldMap.getDocumentByUrl( Evernote.LOGIN_PAGE,
-        user );
-    Form form = FormFieldMap.getHtmlFormFieldsByFormName( document,
-        Evernote.LOGIN_FORM );
-
-    ArrayList<String> scriptElements = FormFieldMap
-        .getScriptElements( document );
+    ArrayList<String> scriptElements = FormFieldMap.getScriptElements( document );
 
     for( String script : scriptElements ) {
       if( script.contains( "\"actionBean\"" ) ) {
         System.out.println( "Script: " + script );
 
-        Pattern pattern = Pattern.compile( ".*?\"(hpts)\":\"([^\"]*)\".*",
-            Pattern.DOTALL );
+        Pattern pattern = Pattern.compile( ".*?\"(hpts)\":\"([^\"]*)\".*", Pattern.DOTALL );
         Matcher matcher = pattern.matcher( script );
 
         if( matcher.matches() ) {
           form.getFields().put( matcher.group( 1 ), matcher.group( 2 ) );
-          System.out.println( "SET: " + matcher.group( 1 ) + " = "
-              + matcher.group( 2 ) );
+          System.out.println( "SET: " + matcher.group( 1 ) + " = " + matcher.group( 2 ) );
         }
         else {
           System.out.println( "match failed for script " + script );
         }
 
-        pattern = Pattern.compile( ".*?\"(hptsh)\":\"([^\"]*)\".*",
-            Pattern.DOTALL );
+        pattern = Pattern.compile( ".*?\"(hptsh)\":\"([^\"]*)\".*", Pattern.DOTALL );
         matcher = pattern.matcher( script );
+        
         if( matcher.matches() ) {
           form.getFields().put( matcher.group( 1 ), matcher.group( 2 ) );
-          System.out.println( "SET: " + matcher.group( 1 ) + " = "
-              + matcher.group( 2 ) );
+          System.out.println( "SET: " + matcher.group( 1 ) + " = " + matcher.group( 2 ) );
         }
         else {
           System.out.println( "match failed for script " + script );
@@ -83,18 +73,18 @@ public class Evernote {
 
       form.setAction( EVERNOTE_BASE + form.getAction() );
       System.out.println( "LoginAction: " + form.getAction() );
+      
       for( String key : form.getFields().keySet() ) {
-        System.out.println( "Field: " + key + " : "
-            + form.getFields().get( key ) );
+        System.out.println( "Field: " + key + " : " + form.getFields().get( key ) );
       }
 
       try {
         base.postForm( form, user );
         log.info( "Evernote login successful" );
-        String actionUrl = EVERNOTE_BASE + "/Home.Action?__fp="
-            + form.getFields().get( "__fp" ) + "&username="
-            + user.getUsername() + "&login=true&_sourcePage="
-            + form.getFields().get( "_sourcePage" );
+        String actionUrl = EVERNOTE_BASE + "/Home.Action?__fp=" + form.getFields().get( "__fp" )
+                                         + "&username=" + user.getUsername()
+                                         + "&login=true&_sourcePage=" + form.getFields().get( "_sourcePage" );
+        
         System.out.println( "actionUrl = " + actionUrl );
         System.out.println( base.httpGet( actionUrl, user ) );
         //user.logCookies();
