@@ -200,7 +200,7 @@ public class EchoUserSession implements EchoUser {
    * @param filename
    * @return
    */
-  private boolean loadProperties( final String filename ) {
+  public boolean loadProperties( final String filename ) {
     boolean retval = false;
     
     Preconditions.checkNotNull( filename );

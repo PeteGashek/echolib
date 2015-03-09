@@ -120,8 +120,6 @@ public class Twitter {
       catch( AmazonLoginException e ) {
         log.error( "Twitter login Failed!", e );
       }
-
-      
     }
     
     return authenticityToken;

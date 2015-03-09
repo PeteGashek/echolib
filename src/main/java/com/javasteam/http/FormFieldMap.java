@@ -1,6 +1,7 @@
 package com.javasteam.http;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public class FormFieldMap {
     return retval;
   }
   
-  private static Map<String, String>  mapAttributes( final Element element ) {
+  public static Map<String, String>  mapAttributes( final Element element ) {
     Map<String, String> retval = new HashMap<String,String>();
     String              name   = element.attr( "name" );
     
@@ -85,7 +86,7 @@ public class FormFieldMap {
     return retval;
   }
   
-  private static  Map<String, String> mapElement( final Element element ) {
+  public static  Map<String, String> mapElement( final Element element ) {
     Map<String, String> retval = new HashMap<String,String>();
     
     if( element.nodeName().equalsIgnoreCase( "input" )) {
@@ -106,21 +107,29 @@ public class FormFieldMap {
     return Jsoup.parse( output );
   }
   
+  public static Form getHtmlFormFieldsByFormName( Document document, final String formName ) {
+    Form retval = new Form();
+    
+    Element  element   = document.getElementById( formName );
+    if( element != null ) {
+      retval.setAction( element.attr( "action" ) );
+      retval.setFields( mapElement( element ));
+    }
+    else {
+      log.error( "Can't find requested form: " + formName );
+    }
+    
+    return retval;
+  }
+  
   public static Form getHtmlFormFieldsByFormName( final String url, final String formName, final User user ) {
     Form retval = new Form();
     
     retval.setFields( new HashMap<String,String>() );
     
     try {
-      Document doc     = getDocumentByUrl( url, user );
-      Element  element = doc.getElementById( formName );
-      if( element != null ) {
-        retval.setAction( element.attr( "action" ) );
-        retval.getFields().putAll( mapElement( element ));
-      }
-      else {
-        log.error( "Can't find requested form: " + formName );
-      }
+      Document document  = getDocumentByUrl( url, user );
+      retval = getHtmlFormFieldsByFormName( document, formName );
     }
     catch( ClientProtocolException e ) {
       // TODO Auto-generated catch block
@@ -133,23 +142,31 @@ public class FormFieldMap {
     
     return retval;    
   }
+  
+  public static Form getHtmlFormFieldsByAction( final Document document, final String action ) {
+    Form retval = new Form();
+    
+    Element  element  = document.getElementsByAttributeValueContaining( "action", action ).get( 0 );
+    
+    if( element != null ) {
+      retval.setAction( element.attr( "action" ) );
+      retval.getFields().putAll( mapElement( element ));
+    }
+    else {
+      log.error( "Can't find requested form with action: " + action );
+    }
+    
+    return retval;
+  }
     
   public static Form getHtmlFormFieldsByAction( final String url, final String action, final User user ) {
-   Form retval = new Form();
+    Form retval = new Form();
     
     retval.setFields( new HashMap<String,String>() );
     
     try {
-      Document doc     = getDocumentByUrl( url, user );
-      Element  element = doc.getElementsByAttributeValueContaining( "action", action ).get( 0 );
-      
-      if( element != null ) {
-        retval.setAction( element.attr( "action" ) );
-        retval.getFields().putAll( mapElement( element ));
-      }
-      else {
-        log.error( "Can't find requested form with action: " + action );
-      }
+      Document document = getDocumentByUrl( url, user );
+      retval = getHtmlFormFieldsByAction( document, action );
     }
     catch( ClientProtocolException e ) {
       // TODO Auto-generated catch block
@@ -162,34 +179,59 @@ public class FormFieldMap {
     
     return retval;    
   }
-
+  
+  public static ArrayList<String> getScriptElements( final Document document ) {
+    ArrayList<String> retval = new ArrayList<String>();
+    
+    Elements elements = document.getElementsByTag( "script" );
+    
+    if( elements != null ) {
+      for( Element element : elements ) {
+        retval.add( element.data() );
+      }
+    }
+    else {
+      log.error( "Can't find any script elements" );
+    }
+    
+    return retval;
+  }
+  
+  public static HashMap<String,String> getHtmlFieldsByType( final Document document, final String type ) {
+    HashMap<String,String> retval = new HashMap<String,String>();
+    
+    Elements elements = document.getElementsByClass( type );
+    
+    if( elements != null ) {
+      for( Element element : elements ) {
+        retval.putAll( mapElement( element ));
+      }
+    }
+    else {
+      log.error( "Can't find elements of type: " + type );
+    }
+    
+    return retval;
+  }
+  
   public static Form getHtmlFormFieldsByType( final String url, final String type, final User user ) {
     Form retval = new Form();
      
-     retval.setFields( new HashMap<String,String>() );
+    retval.setFields( new HashMap<String,String>() );
      
-     try {
-       Document doc     = getDocumentByUrl( url, user );
-       Elements elements = doc.getElementsByClass( type );
-       
-       if( elements != null ) {
-         for( Element element : elements ) {
-           retval.getFields().putAll( mapElement( element ));
-         }
-       }
-       else {
-         log.error( "Can't find elements of type: " + type );
-       }
-     }
-     catch( ClientProtocolException e ) {
-       // TODO Auto-generated catch block
-       e.printStackTrace();
-     }
-     catch( IOException e ) {
-       // TODO Auto-generated catch block
-       e.printStackTrace();
-     }
+    try {
+      Document document = getDocumentByUrl( url, user );
+      retval.setFields( getHtmlFieldsByType( document, type ));
+    }
+    catch( ClientProtocolException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IOException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
      
-     return retval;    
-   }
+    return retval;    
+  }
 }

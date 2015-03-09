@@ -143,9 +143,23 @@ public class DumpForms {
     return retval;
   }
   
-  private Map<String, String> mapElement( final Element element ) {
-    Map<String, String> retval = new HashMap<String,String>();
+  private Map<String, String> mapElement( final Element element, Map<String, String> map ) {
     
+    
+    if( element.getAllElements() == null ) {
+      if( element.nodeName().equalsIgnoreCase( "input" )) {
+        map.putAll( mapAttributes( element ));
+      }
+    }
+    else {
+      for( Element innerElement : element.getAllElements() ) {
+        if( innerElement != element ) {
+          mapElement( innerElement, map );
+        }
+      }
+    }
+    
+    /*
     if( element.nodeName().equalsIgnoreCase( "input" )) {
       retval.putAll( mapAttributes( element ));
     }
@@ -156,7 +170,9 @@ public class DumpForms {
         }
       }
     }
-    return retval;
+    */
+    
+    return map;
   }
 
   
@@ -168,7 +184,7 @@ public class DumpForms {
       String   output  = httpGet( url, user );
       Document doc     = Jsoup.parse( output );
       Element  element = doc.getElementById( formName );
-      retval = mapElement( element );
+      retval = mapElement( element, new HashMap<String,String>() );
     }
     catch( ClientProtocolException e ) {
       // TODO Auto-generated catch block

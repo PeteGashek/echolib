@@ -144,12 +144,12 @@ public class EchoBase {
    * @throws ClientProtocolException
    * @throws IOException
    */
-  private String amazonEchoGet( final String actionUrl, final EchoUser user ) throws ClientProtocolException, IOException {
+  public String httpGet( final String actionUrl, final User user ) throws ClientProtocolException, IOException {
     Preconditions.checkNotNull( user );
     
     String retval = "";
 
-    EchoHttpGet httpGet = getEchoHttpGetForActionUrl( getEchoURL() + actionUrl );
+    EchoHttpGet httpGet = getEchoHttpGetForActionUrl( actionUrl );
 
     httpGet.setUserAgentHeader( userAgent );
     httpGet.setUserContext( user );
@@ -162,6 +162,17 @@ public class EchoBase {
     httpGet.logHeaders();
     
     return retval;
+  }
+  
+  /**
+   * @param actionUrl
+   * @param user
+   * @return
+   * @throws ClientProtocolException
+   * @throws IOException
+   */
+  public String amazonEchoGet( final String actionUrl, final User user ) throws ClientProtocolException, IOException {
+    return httpGet( getEchoURL() +  actionUrl, user );
   }
 
   
@@ -249,6 +260,9 @@ public class EchoBase {
     HttpResponse httpResponse = httpPost.execute( httpClientPool );
     
     log.debug( "Form response: " + httpResponse.toString() );
+    
+    String responseString = EntityUtils.toString( httpResponse.getEntity() );
+    log.debug( "Form entity: " + responseString );
     
     user.logCookies();
     
