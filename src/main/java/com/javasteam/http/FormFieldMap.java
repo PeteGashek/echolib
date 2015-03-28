@@ -25,6 +25,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.common.base.Preconditions;
 import com.javasteam.restful.HttpClientPool;
 
 public class FormFieldMap {
@@ -145,11 +146,12 @@ public class FormFieldMap {
   
   public static Form getHtmlFormFieldsByAction( final Document document, final String action ) {
     Form retval = new Form();
+    Preconditions.checkNotNull( retval.getFields() );
     
     Element  element  = document.getElementsByAttributeValueContaining( "action", action ).get( 0 );
     
     if( element != null ) {
-      retval.setAction( element.attr( "action" ) );
+      retval.setAction( element.attr( "action" ));
       retval.getFields().putAll( mapElement( element ));
     }
     else {

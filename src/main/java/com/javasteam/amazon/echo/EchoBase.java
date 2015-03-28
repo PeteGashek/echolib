@@ -155,6 +155,8 @@ public class EchoBase {
     httpGet.setUserContext( user );
 
     HttpResponse response = httpGet.execute( httpClientPool );
+    
+    log.debug( "get for: " + actionUrl + " statusCode: " + response.getStatusLine().getStatusCode() );
 
     retval = httpGet.parseResponse( response );
 
@@ -259,7 +261,7 @@ public class EchoBase {
     
     HttpResponse httpResponse = httpPost.execute( httpClientPool );
     
-    log.debug( "Form response: " + httpResponse.toString() );
+    log.info( "Form " + form.getAction() + " response:" + httpResponse.toString() );
     
     String responseString = EntityUtils.toString( httpResponse.getEntity() );
     log.debug( "Form entity: " + responseString );

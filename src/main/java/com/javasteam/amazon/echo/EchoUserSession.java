@@ -40,8 +40,8 @@ public class EchoUserSession implements EchoUser {
   public EchoUserSession( final EchoUser echoUser, final EchoBase echoBase ) {
     this();
     
-    Preconditions.checkNotNull( echoUser  );
-    Preconditions.checkNotNull( echoBase  );
+    Preconditions.checkNotNull( echoUser );
+    Preconditions.checkNotNull( echoBase );
     
     this.echoUser = echoUser;
     this.echoBase = echoBase;

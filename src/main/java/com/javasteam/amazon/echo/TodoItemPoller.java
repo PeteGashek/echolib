@@ -106,7 +106,7 @@ public class TodoItemPoller extends Thread {
     
     List<EchoTodoItemImpl> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
     
-    log.debug( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
+    log.info( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
     
     if( todos != null ) {
       for( EchoTodoItemImpl todoItem : todos ) {

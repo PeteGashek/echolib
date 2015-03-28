@@ -3,6 +3,10 @@ package com.javasteam.amazon.echo.plugin.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.EchoTodoItemImpl;
 import com.javasteam.amazon.echo.EchoUserSession;
 
@@ -12,7 +16,8 @@ import com.javasteam.amazon.echo.EchoUserSession;
  *
  */
 public class EchoCommandHandlerImpl implements EchoCommandHandler {
-
+  private final static Log log = LogFactory.getLog( EchoCommandHandlerImpl.class.getName() );
+  
   private String   name     = null;
   private String   key      = null;
   private String[] commands = null;
@@ -87,12 +92,19 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
   
   //TODO this is targeted for todo items right now.... needs generalization
   private Object  makeMethodCall( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    Preconditions.checkNotNull( getExecutor() );
+    Preconditions.checkNotNull( getMethod() );
+    
     Object[] args = { todoItem
                     , echoUserSession
                     , remainder
                     , this.commands
                     };
 
+    if( log.isDebugEnabled() ) {
+      log.debug( "Making handler call for: " + getExecutor().getClass().getSimpleName() + "." + getMethod().getName() + "()" );
+    }
+    
     return getMethod().invoke( getExecutor(), args );
   }
   

@@ -77,6 +77,7 @@ public class Twitter {
     fields.put( AUTHENTICITY_TOKEN_KEY, authenticityToken );
     
     try {
+      log.info( "Sending twit: " + twitText );
       base.postForm( form, user );
       retval = true;
     }

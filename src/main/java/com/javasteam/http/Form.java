@@ -1,6 +1,7 @@
 package com.javasteam.http;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class Form {
   private String             action = null;
-  private Map<String,String> fields = null;
+  private Map<String,String> fields = new HashMap<String,String>();
   
   public Form() {
     
