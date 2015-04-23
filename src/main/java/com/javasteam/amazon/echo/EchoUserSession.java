@@ -260,9 +260,6 @@ public class EchoUserSession implements EchoUser {
     
     if( StringUtils.isNotBlank( timeToLiveStr ) ) {
       timeToLive = Long.parseLong( timeToLiveStr ) * 60000;
-      if( timeToLive > 0 ) {
-        timeToLive = timeToLive * 60000;
-      }
     }
     
     return timeToLive;
@@ -274,7 +271,7 @@ public class EchoUserSession implements EchoUser {
     Date date = new Date();
     
     if( log.isDebugEnabled() ) {
-      log.debug( "cancelled item alive for (ms): " + ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ));
+      log.debug( "checking TTL for item alive for (ms): " + ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) + " > " + timeToLive );
     }
 
     if( timeToLive > -1 && ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) > timeToLive ) {
