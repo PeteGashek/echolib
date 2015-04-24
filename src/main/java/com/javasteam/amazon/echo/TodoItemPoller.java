@@ -1,9 +1,11 @@
 package com.javasteam.amazon.echo;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.ClientProtocolException;
 
 import com.google.common.base.Preconditions;
 
@@ -103,6 +105,19 @@ public class TodoItemPoller extends Thread {
   private void handleUsersTodoItems() throws AmazonAPIAccessException {
     Preconditions.checkNotNull( echoUserSession );
     //System.out.print( "." );
+    
+    // This is just testing the echo activity api call.....
+    try {
+      echoUserSession.getEchoBase().listActivities( 100, echoUserSession.getEchoUser() );
+    }
+    catch( ClientProtocolException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( IOException e ) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     
     List<EchoTodoItemImpl> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
     

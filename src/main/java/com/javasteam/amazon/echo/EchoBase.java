@@ -3,6 +3,7 @@ package com.javasteam.amazon.echo;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -602,5 +603,56 @@ public class EchoBase {
     item.setType( "TASK" );
 
     return addTodoItem( item, user );
+  }
+  
+  
+  public void listActivities( final int size, final EchoUser user ) throws ClientProtocolException, IOException, AmazonAPIAccessException {
+    List<EchoActivityItemImpl> activities = getActivityItems( size, user );
+    
+    for( EchoActivityItemImpl activity : activities ) {
+      System.out.println( "Activity command: " + activity.getActivityDescription().getSummary() + " :: " + activity.getDomainAttributes() );
+    }
+
+  }
+  
+  
+  /**
+   * @param size
+   * @param user
+   * @return
+   * @throws AmazonAPIAccessException
+   */
+  // Problem with this is it does not return the start and end times which we will need to do the next query....
+  public List<EchoActivityItemImpl> getActivityItems( final int size, final EchoUser user ) throws AmazonAPIAccessException {
+    Preconditions.checkNotNull( user );
+    List<EchoActivityItemImpl> retval = new ArrayList<EchoActivityItemImpl>();
+
+    user.logCookies();
+    
+    try {
+      String activities = amazonEchoGet( "/api/activities?startTime=&endTime=&size=" + size + "&offset=-1", user );
+      
+      // Parse JSON
+      //if( log.isDebugEnabled() ) {
+      //  log.debug( "activities: " + activities );
+      //}
+      if( activities != null && activities.length() > 0 ) {
+        ActivityResponse items = mapper.readValue( activities, ActivityResponse.class );
+        retval = new ArrayList<EchoActivityItemImpl>( Arrays.asList( items.getActivities() )); 
+      }   
+      else {
+        log.error( "Amazon returned empty activity list" );
+      }
+    }
+    catch( JsonMappingException e ) {
+      log.fatal( "Failure getting todo list- JSON mapping error", e );
+      System.exit( -1 );
+    }
+    catch( IOException e ) {
+      log.fatal( "Failure geting todo list", e );
+      throw new AmazonAPIAccessException( "Failure getting todo list", e );
+    }
+
+    return retval;
   }
 }
