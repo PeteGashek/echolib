@@ -2,6 +2,33 @@ Echolib
 =======
 Send tweets and start programs from your Amazon echo.
 
+-- comment --
+I didn't like the usage of 'todo' items for identifying tasks.  It seems like 'todo' processing at amazon performs extra procession on the text to clean it up when it's a todo.
+
+Instead I personally am using the 'simon says' feature.  This just tries to have echo repeat what you said.  Here's a snippet from my config file (I changed the todo configuration as well so that's captured here):
+
+# todo configuration
+todoPollingInterval=15
+todoPollingItemCount=100
+cancelledMinutesToLive=1440
+todoListener.1=com.javasteam.amazon.echo.plugin.Builtin:shutdownTodoPoller key=halt echo
+todoListener.2=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=Twitter
+todoListener.3=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=Twit
+todoListener.4=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=Tweet
+todoListener.5=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=Notify twitter
+todoListener.6=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=Send twitter
+
+# activity configuration
+activityPollingInterval=15
+activityPollingItemCount=30
+activityListener.1=com.javasteam.amazon.echo.plugin.Builtin:shutdownTodoPoller key=alexa simon says halt echo
+activityListener.2=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=alexa simon says tweet
+activityListener.3=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=alexa simon says twit
+
+For activities you need to include your wakeup command (alexa or amazon) plus 'simon says'.
+
+Echolib does not clean up your history like it does todos.  So when you restart, it will retry commands that is has already processed.  It keeps track by timestamp while running.  -- future feature.
+
 Name change pending....
 
 Echolib Deeper Dive
