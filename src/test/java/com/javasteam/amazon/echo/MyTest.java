@@ -16,6 +16,7 @@ import org.jsoup.select.Elements;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
@@ -50,7 +51,7 @@ public class MyTest {
     this.ccValue = ccValue;
   }
 
-  public boolean handleCommand( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
+  public boolean handleCommand( EchoTodoItemRetrieved todoItem, EchoUserSession echoUserSession, String remainder, String[] commands ) {
     System.out.println( "Called with: " + todoItem.getText() );
     
     if( commands != null ) {
@@ -237,12 +238,14 @@ public class MyTest {
     
     EchoCommandHandler handler = builder.generate();
 
-    EchoTodoItemImpl todoItem = new EchoTodoItemImpl();
+    EchoTodoItemRetrieved todoItem = new EchoTodoItemRetrieved();
     todoItem.setText( "This is a test todo item" );
     EchoUserSession echoUserSession = new EchoUserSession();
     String remainder = "extra stuff";
     
-    boolean output = handler.handle( todoItem, echoUserSession, remainder );
+    EchoTodoResponseItem responseItem = new EchoTodoResponseItem( "Test", remainder, todoItem );
+    
+    boolean output = handler.handle( responseItem, echoUserSession );
     System.out.println( "returned: " + output );
   }
 }

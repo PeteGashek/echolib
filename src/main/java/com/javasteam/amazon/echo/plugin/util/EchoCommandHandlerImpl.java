@@ -7,7 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Preconditions;
-import com.javasteam.amazon.echo.EchoTodoItemImpl;
+import com.javasteam.amazon.echo.EchoResponseItem;
 import com.javasteam.amazon.echo.EchoUserSession;
 
 
@@ -91,13 +91,12 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
   }
   
   //TODO this is targeted for todo items right now.... needs generalization
-  private Object  makeMethodCall( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  private Object  makeMethodCall( final EchoResponseItem responseItem, final EchoUserSession echoUserSession ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Preconditions.checkNotNull( getExecutor() );
     Preconditions.checkNotNull( getMethod() );
     
-    Object[] args = { todoItem
+    Object[] args = { responseItem
                     , echoUserSession
-                    , remainder
                     , this.commands
                     };
 
@@ -108,11 +107,11 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
     return getMethod().invoke( getExecutor(), args );
   }
   
-  public boolean  handle( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder ) {
+  public boolean  handle( final EchoResponseItem responseItem, final EchoUserSession echoUserSession) {
     boolean retval = false;
     
     try {
-      Object response = makeMethodCall( todoItem, echoUserSession, remainder );
+      Object response = makeMethodCall( responseItem, echoUserSession );
       if( response instanceof Boolean ) {
         retval = ( Boolean ) response;
       }

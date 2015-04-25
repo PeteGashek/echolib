@@ -2,6 +2,8 @@ package com.javasteam.amazon.echo;
 
 import java.util.Calendar;
 
+import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
+
 /**
  * @author ddamon
  *

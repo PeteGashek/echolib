@@ -5,7 +5,7 @@ package com.javasteam.amazon.echo.plugin.util;
 
 import java.lang.reflect.Method;
 
-import com.javasteam.amazon.echo.EchoTodoItemImpl;
+import com.javasteam.amazon.echo.EchoResponseItem;
 import com.javasteam.amazon.echo.EchoUserSession;
 
 /**
@@ -15,7 +15,7 @@ import com.javasteam.amazon.echo.EchoUserSession;
 public interface EchoCommandHandler {
  
   //TODO this is targeted for todo items right now.... needs generalization
-  public boolean  handle( EchoTodoItemImpl todoItem, EchoUserSession echoUserSession, String remainder );
+  public boolean  handle( EchoResponseItem responseItem, EchoUserSession echoUserSession );
   
   public void     setName( String name );
   public String   getName();

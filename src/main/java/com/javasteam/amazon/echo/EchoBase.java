@@ -24,6 +24,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javasteam.amazon.echo.http.EchoHttpGet;
 import com.javasteam.amazon.echo.http.EchoHttpPost;
 import com.javasteam.amazon.echo.http.EchoHttpPut;
+import com.javasteam.amazon.echo.object.EchoActivityItem;
+import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
+import com.javasteam.amazon.echo.object.EchoTodoItem;
+import com.javasteam.amazon.echo.object.EchoTodoItemImpl;
+import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 import com.javasteam.http.Form;
 import com.javasteam.http.FormFieldMap;
 import com.javasteam.http.User;
@@ -364,12 +369,12 @@ public class EchoBase {
   }
 
   
-  private List<EchoTodoItemImpl> getTodoItemsFromResponse( TodoResponse items ) throws JsonProcessingException {
-    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
+  private List<EchoTodoItemRetrieved> getTodoItemsFromResponse( TodoResponse items ) throws JsonProcessingException {
+    List<EchoTodoItemRetrieved> retval = new ArrayList<EchoTodoItemRetrieved>();
     Preconditions.checkNotNull( items );
 
     if( items != null && items.getValues() != null && items.getValues().length > 0 ) {
-      for( EchoTodoItemImpl todoItem : items.getValues() ) {
+      for( EchoTodoItemRetrieved todoItem : items.getValues() ) {
         if( log.isDebugEnabled() ) {
           log.debug( "Item recv'd: " + mapper.writeValueAsString( todoItem ));
         }
@@ -389,9 +394,9 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> getTodoItems( final int size, final EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemRetrieved> getTodoItems( final int size, final EchoUser user ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );
-    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
+    List<EchoTodoItemRetrieved> retval = new ArrayList<EchoTodoItemRetrieved>();
 
     user.logCookies();
     
@@ -430,11 +435,11 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  private List<EchoTodoItemImpl> updateTodoItem( final EchoTodoItemBase item, final EchoUser user ) throws AmazonAPIAccessException {
+  private List<EchoTodoItemRetrieved> updateTodoItem( final EchoTodoItemImpl item, final EchoUser user ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );
     Preconditions.checkNotNull( item );
     
-    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
+    List<EchoTodoItemRetrieved> retval = new ArrayList<EchoTodoItemRetrieved>();
     StringBuilder           path   = new StringBuilder( "/api/todos" );
 
     try {
@@ -489,12 +494,12 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  private List<EchoTodoItemImpl> addTodoItem( final EchoTodoItemBase item, final EchoUser user ) throws AmazonAPIAccessException {
+  private List<EchoTodoItemRetrieved> addTodoItem( final EchoTodoItem item, final EchoUser user ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );
     Preconditions.checkNotNull( item );
     
-    List<EchoTodoItemImpl> retval = new ArrayList<EchoTodoItemImpl>();
-    StringBuffer       path   = new StringBuffer( "/api/todos" );
+    List<EchoTodoItemRetrieved> retval = new ArrayList<EchoTodoItemRetrieved>();
+    StringBuffer                path   = new StringBuffer( "/api/todos" );
 
     try {
       log.info( "Adding todo Item: " + mapper.writeValueAsString( item ));
@@ -538,7 +543,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> setTodoItemDeletedStatus( final EchoTodoItemImpl item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemRetrieved> setTodoItemDeletedStatus( final EchoTodoItemRetrieved item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );
     Preconditions.checkNotNull( item );
     
@@ -555,7 +560,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> deleteTodoItem( final EchoTodoItemImpl item, final EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemRetrieved> deleteTodoItem( final EchoTodoItemRetrieved item, final EchoUser user ) throws AmazonAPIAccessException {
     return this.setTodoItemDeletedStatus( item, true, user );
   }
 
@@ -566,7 +571,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> setTodoItemCompleteStatus( final EchoTodoItemImpl item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemRetrieved> setTodoItemCompleteStatus( final EchoTodoItemRetrieved item, final boolean value, final EchoUser user ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );
     Preconditions.checkNotNull( item );
     
@@ -583,7 +588,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> completeTodoItem( final EchoTodoItemImpl item, final EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemRetrieved> completeTodoItem( final EchoTodoItemRetrieved item, final EchoUser user ) throws AmazonAPIAccessException {
     return setTodoItemCompleteStatus( item, true, user );
   }
 
@@ -593,11 +598,11 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
-  public List<EchoTodoItemImpl> addTodoItem( final String text, final EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoTodoItemRetrieved> addTodoItem( final String text, final EchoUser user ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );
     Preconditions.checkNotNull( text );
     
-    EchoTodoItemBase item        = new EchoTodoItemBase( text );
+    EchoTodoItem item        = new EchoTodoItemImpl( text );
     
     item.setCreatedDateToNow();
     item.setType( "TASK" );
@@ -606,13 +611,14 @@ public class EchoBase {
   }
   
   
-  public void listActivities( final int size, final EchoUser user ) throws ClientProtocolException, IOException, AmazonAPIAccessException {
+  public List<EchoActivityItemImpl> listActivities( final int size, final EchoUser user ) throws ClientProtocolException, IOException, AmazonAPIAccessException {
     List<EchoActivityItemImpl> activities = getActivityItems( size, user );
     
-    for( EchoActivityItemImpl activity : activities ) {
+    for( EchoActivityItem activity : activities ) {
       System.out.println( "Activity command: " + activity.getActivityDescription().getSummary() + " :: " + activity.getDomainAttributes() );
     }
-
+    
+    return activities;
   }
   
   
@@ -622,6 +628,7 @@ public class EchoBase {
    * @return
    * @throws AmazonAPIAccessException
    */
+  // TODO
   // Problem with this is it does not return the start and end times which we will need to do the next query....
   public List<EchoActivityItemImpl> getActivityItems( final int size, final EchoUser user ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );

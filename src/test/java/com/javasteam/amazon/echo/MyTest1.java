@@ -16,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.google.common.base.Preconditions;
+import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 import com.javasteam.amazon.echo.plugin.Evernote;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
@@ -33,7 +34,7 @@ public class MyTest1 {
   public MyTest1() {
   }
   
-  public boolean handleCommand( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
+  public boolean handleCommand( final EchoTodoItemRetrieved todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
     Preconditions.checkNotNull( todoItem );
     
     System.out.println( "Called with: " + todoItem.getText() );
@@ -218,12 +219,14 @@ public class MyTest1 {
     
     EchoCommandHandler handler = builder.generate();
 
-    EchoTodoItemImpl todoItem = new EchoTodoItemImpl();
+    EchoTodoItemRetrieved todoItem = new EchoTodoItemRetrieved();
     todoItem.setText( "This is a test todo item" );
-    EchoUserSession echoUserSession = new EchoUserSession();
-    String remainder = "extra stuff";
     
-    boolean output = handler.handle( todoItem, echoUserSession, remainder );
+    EchoUserSession      echoUserSession = new EchoUserSession();
+    String               remainder = "extra stuff";
+    EchoTodoResponseItem responseItem = new EchoTodoResponseItem( "Test1", remainder, todoItem );
+    
+    boolean output = handler.handle( responseItem, echoUserSession );
     System.out.println( "returned: " + output );
   }
 

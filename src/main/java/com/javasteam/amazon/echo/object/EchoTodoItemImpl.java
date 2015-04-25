@@ -1,4 +1,4 @@
-package com.javasteam.amazon.echo;
+package com.javasteam.amazon.echo.object;
 
 import com.google.common.base.Preconditions;
 
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.time.DateUtils;
  * @author ddamon
  *
  */
-public class EchoTodoItemBase {
+public class EchoTodoItemImpl implements EchoTodoItem {
   public static String TASK_KEY = "TASK";
     
   private String   itemId;
@@ -28,14 +28,14 @@ public class EchoTodoItemBase {
   private Integer  version;
   private String   utteranceId;
   
-  public EchoTodoItemBase( ) {
+  public EchoTodoItemImpl( ) {
     
   }
   
   /**
    * @param text
    */
-  public EchoTodoItemBase( final String text ) {
+  public EchoTodoItemImpl( final String text ) {
     this();
     
     Preconditions.checkNotNull( text  );
@@ -47,7 +47,7 @@ public class EchoTodoItemBase {
    * @param itemId
    * @param text
    */
-  public EchoTodoItemBase( final String itemId, final String text ) {
+  public EchoTodoItemImpl( final String itemId, final String text ) {
     this( text );
     
     Preconditions.checkNotNull( itemId  );
@@ -69,37 +69,40 @@ public class EchoTodoItemBase {
     return DateUtils.toCalendar( date );
   }
   
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#isComplete()
    */
   public boolean isComplete() {
     return complete;
   }
 
 
-  /**
-   * @param complete
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setComplete(boolean)
    */
   public void setComplete( final boolean complete ) {
     this.complete = complete;
   }
 
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getCreatedDate()
    */
   public Calendar getCreatedDate() {
     return createdDate;
   }
 
 
-  /**
-   * @param createdDate
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setCreatedDate(java.util.Calendar)
    */
   public void setCreatedDate(final  Calendar createdDate ) {
     this.createdDate = createdDate;
   }
 
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setCreatedDateToNow()
+   */
   public void setCreatedDateToNow() {
     Calendar localUpdate = Calendar.getInstance();
 
@@ -107,141 +110,141 @@ public class EchoTodoItemBase {
     setCreatedDate( localUpdate );
   }
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getLastLocalUpdateDate()
    */
   public Calendar getLastLocalUpdateDate() {
     return lastLocalUpdateDate;
   }
 
 
-  /**
-   * @param lastLocalUpdateDate
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setLastLocalUpdateDate(java.util.Calendar)
    */
   public void setLastLocalUpdateDate( final Calendar lastLocalUpdateDate ) {
     this.lastLocalUpdateDate = lastLocalUpdateDate;
   }
 
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getLastUpdatedDate()
    */
   public Calendar getLastUpdatedDate() {
     return lastUpdatedDate;
   }
 
 
-  /**
-   * @param lastUpdatedDate
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setLastUpdatedDate(java.util.Calendar)
    */
   public void setLastUpdatedDate( final Calendar lastUpdatedDate ) {
     this.lastUpdatedDate = lastUpdatedDate;
   }
 
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#isDeleted()
    */
   public boolean isDeleted() {
     return deleted;
   }
 
 
-  /**
-   * @param deleted
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setDeleted(boolean)
    */
   public void setDeleted( final boolean deleted ) {
     this.deleted = deleted;
   }
 
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getNbestItems()
    */
   public String[] getNbestItems() {
     return nbestItems;
   }
 
 
-  /**
-   * @param nbestItems
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setNbestItems(java.lang.String[])
    */
   public void setNbestItems( final String[] nbestItems ) {
     this.nbestItems = nbestItems;
   }
   
  
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getType()
    */
   public String getType() {
     return type;
   }
 
 
-  /**
-   * @param type
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setType(java.lang.String)
    */
   public void setType( final String type ) {
     this.type = type;
   }
 
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getVersion()
    */
   public Integer getVersion() {
     return version;
   }
 
 
-  /**
-   * @param version
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setVersion(java.lang.Integer)
    */
   public void setVersion( final Integer version ) {
     this.version = version;
   }
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getItemId()
    */
   public String getItemId() {
     return itemId;
   }
 
 
-  /**
-   * @param itemId
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setItemId(java.lang.String)
    */
   public void setItemId( final String itemId ) {
     this.itemId = itemId;
   }
 
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getText()
    */
   public String getText() {
     return text;
   }
 
 
-  /**
-   * @param text
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setText(java.lang.String)
    */
   public void setText( final String text ) {
     this.text = text;
   }
   
-  /**
-   * @return
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#getUtteranceId()
    */
   public String getUtteranceId() {
     return utteranceId;
   }
 
 
-  /**
-   * @param utteranceId
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.EchoTodoItem#setUtteranceId(java.lang.String)
    */
   public void setUtteranceId( final String utteranceId ) {
     this.utteranceId = utteranceId;
@@ -283,7 +286,7 @@ public class EchoTodoItemBase {
                    && ( otherObject.getClass() != getClass() );
     
     if( retval ) {  
-      EchoTodoItemImpl comparisonObject = (EchoTodoItemImpl) otherObject;
+      EchoTodoItemRetrieved comparisonObject = (EchoTodoItemRetrieved) otherObject;
     
       retval = new EqualsBuilder().appendSuper( super.equals( otherObject ))
                                   .append( getItemId(),              comparisonObject.getItemId() )

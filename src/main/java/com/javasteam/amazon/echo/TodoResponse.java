@@ -1,23 +1,25 @@
 package com.javasteam.amazon.echo;
 
+import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
+
 /**
  * @author ddamon
  *
  */
 public class TodoResponse {
-  private EchoTodoItemImpl[] values;
+  private EchoTodoItemRetrieved[] values;
 
   /**
    * @return the values
    */
-  public EchoTodoItemImpl[] getValues() {
+  public EchoTodoItemRetrieved[] getValues() {
     return values;
   }
 
   /**
    * @param values the values to set
    */
-  public void setValues( final EchoTodoItemImpl[] values ) {
+  public void setValues( final EchoTodoItemRetrieved[] values ) {
     this.values = values;
   }
 }

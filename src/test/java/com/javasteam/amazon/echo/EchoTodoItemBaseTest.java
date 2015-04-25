@@ -1,5 +1,8 @@
 package com.javasteam.amazon.echo;
 
+import com.javasteam.amazon.echo.object.EchoTodoItem;
+import com.javasteam.amazon.echo.object.EchoTodoItemImpl;
+
 import junit.framework.TestCase;
 
 /**
@@ -27,7 +30,7 @@ public class EchoTodoItemBaseTest extends TestCase {
    */
   public void testEchoTodoItemBase() throws Exception {
     // test constructor with text passed in as argument
-    EchoTodoItemBase todoItem = new EchoTodoItemBase( TEST_TODO_ITEM );
+    EchoTodoItem todoItem = new EchoTodoItemImpl( TEST_TODO_ITEM );
     
     assertEquals( TEST_TODO_ITEM, todoItem.getText() );
     assertEquals( null,             todoItem.getItemId() );
@@ -42,7 +45,7 @@ public class EchoTodoItemBaseTest extends TestCase {
     assertFalse( todoItem.isComplete() );
     
     // constructor with itemId and text parameters
-    todoItem = new EchoTodoItemBase( "ITEMID", TEST_TODO_ITEM );
+    todoItem = new EchoTodoItemImpl( "ITEMID", TEST_TODO_ITEM );
     
     assertEquals( TEST_TODO_ITEM, todoItem.getText() );
     assertEquals( "ITEMID",         todoItem.getItemId() );

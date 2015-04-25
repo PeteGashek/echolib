@@ -3,8 +3,6 @@
  */
 package com.javasteam.amazon.echo.plugin;
 
-import com.google.common.base.Preconditions;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +15,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.AmazonLoginException;
 import com.javasteam.amazon.echo.EchoBase;
-import com.javasteam.amazon.echo.EchoTodoItemImpl;
+import com.javasteam.amazon.echo.EchoResponseItem;
 import com.javasteam.amazon.echo.EchoUserSession;
 import com.javasteam.http.Form;
 import com.javasteam.http.FormFieldMap;
@@ -171,8 +170,8 @@ public class Twitter {
    * #handleTodoItem(com.javasteam.amazon.echo.EchoTodoItem,
    * com.javasteam.amazon.echo.EchoUserSession, java.lang.String)
    */
-  public boolean sendTwit( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) throws ClientProtocolException, IOException {
-    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+  public boolean sendTwit( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) throws ClientProtocolException, IOException {
+    Preconditions.checkNotNull( responseItem,    "Can't process a null responseItem item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     
     boolean retval = false;
@@ -187,7 +186,7 @@ public class Twitter {
       }
       
       if( authenticityToken != null ) {
-        String hashTaggedRemainder = popluateHashtags( remainder );
+        String hashTaggedRemainder = popluateHashtags( responseItem.getRemainder() );
         sendTwit( echoUserSession.getEchoBase(), authenticityToken, hashTaggedRemainder, user );
         retval = true;
       }

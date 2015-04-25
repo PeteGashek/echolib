@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javasteam.amazon.echo.activity.ActivityDescription;
+import com.javasteam.amazon.echo.object.EchoActivityItem;
+import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
 
 public class ActivityTest {
   private static final ObjectMapper mapper                     = new ObjectMapper();
@@ -31,7 +33,7 @@ public class ActivityTest {
     System.out.println( "ItemDevice: " + items.getActivities()[0].getSourceDeviceIds()[ 0 ].getDeviceType());
     System.out.println( "DomainAttributes: " + items.getActivities()[0].getDomainAttributes() );
     
-    EchoActivityItemBase item = mapper.readValue( itemData, EchoActivityItemBase.class );
+    EchoActivityItem item = mapper.readValue( itemData, EchoActivityItemImpl.class );
     System.out.println( "Item: " + item.getActivityDescription().getSummary() );
     item.getDomainType();
     

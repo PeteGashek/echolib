@@ -11,12 +11,13 @@ import org.apache.commons.exec.Executor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.AmazonAPIAccessException;
 import com.javasteam.amazon.echo.EchoBase;
-import com.javasteam.amazon.echo.EchoTodoItemImpl;
+import com.javasteam.amazon.echo.EchoResponseItem;
 import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
-import com.google.common.base.Preconditions;
+import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 
 public class Builtin {
   private final static Log log = LogFactory.getLog( Builtin.class.getName() );
@@ -24,13 +25,13 @@ public class Builtin {
   public Builtin() {
   }
 
-  public boolean createTodo( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
-    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+  public boolean createTodo( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
+    Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     
     boolean retval = false;
     
-    log.info(  "Processing create todo: " + todoItem.getText() );
+    log.info(  "Processing create todo: " + responseItem.getText() );
       
     retval = true;
       
@@ -58,9 +59,11 @@ public class Builtin {
     if( commands.length > 1 ) {
       for( int i = 1; i < commands.length; ++i ) {
         String theCommand = commands[ i ].trim();
+        
         if( theCommand.equalsIgnoreCase( "%text%" )) {
           theCommand = remainder;
         }
+        
         commandLine.addArgument( theCommand );            
       }
     }
@@ -68,20 +71,20 @@ public class Builtin {
     return commandLine;
   }
   
-  public boolean executeExternal( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
-    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+  public boolean executeExternal( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
+    Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
 
     boolean retval = false;
     
-    String command = todoItem.getText();
+    String command = responseItem.getText();
     
     log.info(  "Processing command: " + command );
       
     retval = true;
       
     if( commands != null && commands.length > 0 ) {
-      CommandLine commandLine = buildCommandLine( commands, remainder );
+      CommandLine commandLine = buildCommandLine( commands, responseItem.getRemainder() );
         
       DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 
@@ -108,8 +111,8 @@ public class Builtin {
     return retval;
   }
   
-  public boolean shutdownTodoPoller( final EchoTodoItemImpl todoItem, final EchoUserSession echoUserSession, final String remainder, final String[] commands ) {
-    Preconditions.checkNotNull( todoItem,        "Can't process a null todo item" );
+  public boolean shutdownTodoPoller( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
+    Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
     
     boolean retval = false;
@@ -118,9 +121,10 @@ public class Builtin {
     EchoBase echoBase = echoUserSession.getEchoBase();
     
     try {
+      if( responseItem.getEchoResponseObject() instanceof EchoTodoItemRetrieved )
       // We do this here since we are shutting down and it won't be marked
       // complete otherwise.  We'd just process it again on the next start.
-      echoBase.completeTodoItem( todoItem, echoUser );
+      echoBase.completeTodoItem((EchoTodoItemRetrieved) responseItem.getEchoResponseObject(), echoUser );
     }
     catch( AmazonAPIAccessException e ) {
       log.error( "Failed completing and deleting stop poller command" );

@@ -8,28 +8,28 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.ClientProtocolException;
 
 import com.google.common.base.Preconditions;
-import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
+import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
 
 /**
  * @author ddamon
  *
  */
-public class TodoItemPoller extends Thread {
-  private final static Log          log = LogFactory.getLog( TodoItemPoller.class.getName() );
+public class ActivityItemPoller extends Thread {
+  private final static Log          log = LogFactory.getLog( ActivityItemPoller.class.getName() );
   
   private EchoUserSession echoUserSession;
   private int             intervalInSeconds  = 10;
   private int             itemRetrievalCount = 100;
   private boolean         stopped            = false;
   
-  public TodoItemPoller() {
+  public ActivityItemPoller() {
     super();
   }
 
   /**
    * @param echoUserSession
    */
-  public TodoItemPoller( final EchoUserSession echoUserSession ) {
+  public ActivityItemPoller( final EchoUserSession echoUserSession ) {
     this();
     
     Preconditions.checkNotNull( echoUserSession );
@@ -103,7 +103,7 @@ public class TodoItemPoller extends Thread {
     //this.interrupt();
   }
   
-  private void handleUsersTodoItems() throws AmazonAPIAccessException {
+  private void handleUsersActivityItems() throws AmazonAPIAccessException, ClientProtocolException, IOException {
     Preconditions.checkNotNull( echoUserSession );
     //System.out.print( "." );
     
@@ -120,13 +120,13 @@ public class TodoItemPoller extends Thread {
       e.printStackTrace();
     }
     
-    List<EchoTodoItemRetrieved> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
+    List<EchoActivityItemImpl> todos = echoUserSession.getEchoBase().listActivities( itemRetrievalCount, echoUserSession.getEchoUser() );
     
     log.info( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
     
     if( todos != null ) {
-      for( EchoTodoItemRetrieved todoItem : todos ) {
-        echoUserSession.notifyTodoRetrievedListeners( todoItem );
+      for( EchoActivityItemImpl activity : todos ) {
+        echoUserSession.notifyActivityRetrievedListeners( activity );
       } 
     }
     else {
@@ -172,10 +172,18 @@ public class TodoItemPoller extends Thread {
         
       if( echoUserSession.getEchoUser().isLoggedIn() ) {
         try {
-          handleUsersTodoItems();
+          handleUsersActivityItems();
         }
         catch( AmazonAPIAccessException e ) {
           log.error( "Error fetching Todo items", e );
+        }
+        catch( ClientProtocolException e ) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( IOException e ) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
         }
       }
       

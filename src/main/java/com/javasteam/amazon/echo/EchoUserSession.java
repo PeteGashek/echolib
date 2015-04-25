@@ -10,10 +10,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 
-import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
-import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
-import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.google.common.base.Preconditions;
+import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
+import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
 
 /**
  * @author ddamon
@@ -22,7 +24,8 @@ import com.google.common.base.Preconditions;
 public class EchoUserSession implements EchoUser {
   private final static Log log = LogFactory.getLog( EchoUserSession.class.getName() );
   
-  private Vector<EchoCommandHandler> todoListeners = new Vector<EchoCommandHandler>();
+  private Vector<EchoCommandHandler> todoListeners     = new Vector<EchoCommandHandler>();
+  private Vector<EchoCommandHandler> activityListeners = new Vector<EchoCommandHandler>();
   
   private TodoItemPoller    todoItemPoller = null;
   private Object            todoPollerLock = new Object();
@@ -251,7 +254,7 @@ public class EchoUserSession implements EchoUser {
     return retval; 
   }
   
-  private boolean todoItemCanBeProcessed( final EchoTodoItemImpl todoItem ) {
+  private boolean todoItemCanBeProcessed( final EchoTodoItemRetrieved todoItem ) {
     return todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null;
   }
   
@@ -265,7 +268,7 @@ public class EchoUserSession implements EchoUser {
     return timeToLive;
   }
   
-  private void deleteTodoItemIfExpired( final long timeToLive, final EchoTodoItemImpl todoItem ) {
+  private void deleteTodoItemIfExpired( final long timeToLive, final EchoTodoItemRetrieved todoItem ) {
     Preconditions.checkNotNull( todoItem );
     
     Date date = new Date();
@@ -285,15 +288,21 @@ public class EchoUserSession implements EchoUser {
     }
   }
   
-  private boolean sendTodoNotifications( final EchoTodoItemImpl todoItem ) {
+  private boolean sendTodoNotifications( final EchoTodoItemRetrieved todoItem ) {
     boolean handled = false;
     
     for( EchoCommandHandler listener : this.todoListeners ) {
       if( todoItemCanBeProcessed( todoItem )) {
         if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
-          String remainder = todoItem.getText().substring( listener.getKey().length() );
+          String           remainder    = todoItem.getText().substring( listener.getKey().length() );
+          EchoResponseItem responseItem = new EchoTodoResponseItem( listener.getKey()
+                                                                  , remainder
+                                                                  , todoItem
+                                                                  );
+          
+          
           log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
-          handled = handled | listener.handle( todoItem, this, remainder );
+          handled = handled | listener.handle( responseItem, this );
         }
       }
     }
@@ -304,7 +313,7 @@ public class EchoUserSession implements EchoUser {
   /**
    * @param todoItem
    */
-  public void notifyTodoRetrievedListeners( final EchoTodoItemImpl todoItem ) {
+  public void notifyTodoRetrievedListeners( final EchoTodoItemRetrieved todoItem ) {
     Preconditions.checkNotNull( todoItem );
     
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
@@ -370,6 +379,38 @@ public class EchoUserSession implements EchoUser {
     this.todoItemPoller.setItemRetrievalCount( itemRetrievalCount );
   }
   
+  private boolean sendActivityNotification( final EchoActivityItemImpl activityItem ) {
+    boolean handled = false;
+    
+    for( EchoCommandHandler listener : this.activityListeners ) {
+      StringBuilder activityCommand = new StringBuilder( activityItem.getActivityDescription().getSummary().toLowerCase() );
+      // we're using simon says commands for now....
+      int simonIndex = activityCommand.indexOf( "alexa simon says " );
+      if( simonIndex >= 0 ) {
+        activityCommand.delete( 0, "alexa simon says ".length() );
+        String workingString = activityCommand.toString();
+        
+        if( workingString.startsWith( listener.getKey().toLowerCase() )) {
+          String remainder = workingString.substring( listener.getKey().length() );
+          EchoResponseItem responseItem = new EchoActivityResponseItem( listener.getKey(), remainder, activityItem );
+          log.info( "Handling '" + activityItem.getActivityDescription().getSummary() + "' with listener " + listener.getKey() );
+          handled = handled | listener.handle( responseItem, this );
+        }
+      }
+    }
+    
+    return handled;
+  }
+  /**
+   * @param todoItem
+   */
+  public void notifyActivityRetrievedListeners( final EchoActivityItemImpl activityItem ) {
+    Preconditions.checkNotNull( activityItem );
+    
+    if( this.activityListeners != null && !this.activityListeners.isEmpty() ) {
+      sendActivityNotification( activityItem );
+    }
+  }
   /**
    * @return
    */
