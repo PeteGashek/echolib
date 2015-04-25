@@ -23,21 +23,30 @@ public class ActivityItemPoller extends PollerBase {
   private Vector<EchoCommandHandler> activityListeners = new Vector<EchoCommandHandler>();
   
   private String          activityKey        = "alexa simon says ";
-  private long            lastMaxTime        = ( new Date() ).getTime();
   
   /**
    * @param echoUserSession
    */
   public ActivityItemPoller( final Configurator configurator, final EchoUserSession echoUserSession ) {
     super( configurator, echoUserSession );
+  }
+  
+  private long getActivityPollingStartTime() {
+    long   retval    = 0;
+    String startTime = getConfigurator().get( "activityPollingStartTime" );
     
-    String startTime = configurator.get( "activityPollingStartTime" );
     if( startTime == null || startTime.length() == 0 || startTime.equalsIgnoreCase( "now" )) {
-      lastMaxTime = ( new Date() ).getTime();
+      retval = ( new Date() ).getTime();
     }
     else {
-      lastMaxTime = Long.parseLong( startTime );
+      retval = Long.parseLong( startTime );
     }
+    
+    return retval;
+  }
+  
+  private void setActivityPollingStartTime( long startTime ) {
+    getConfigurator().set( "activityPollingStartTime", (new Long( startTime )).toString() );
   }
   
   public boolean addActivityRetrievedListener( final EchoCommandHandler activityListener ) {
@@ -119,9 +128,10 @@ public class ActivityItemPoller extends PollerBase {
   }
   
   protected void doProcess() throws AmazonAPIAccessException {
+    long startTime = this.getActivityPollingStartTime();
     List<EchoActivityItemImpl> activities = getEchoUserSession().getEchoBase().getActivityItems( getItemRetrievalCount()
                                                                                                , getEchoUserSession().getEchoUser()
-                                                                                               , this.lastMaxTime
+                                                                                               , startTime
                                                                                                );
     
     log.info( "getting Activities for user: " + getEchoUser().getUsername() );
@@ -130,9 +140,10 @@ public class ActivityItemPoller extends PollerBase {
       for( EchoActivityItemImpl activity : activities ) {
         log.debug( "Activity from amazon: " + activity.getActivityDescription().getSummary() + " -- created: " + activity.getCreationTimestamp().getTime().getTime() );
         // amazon is not honoring the timestamps for some reason....
-        if( activity.getCreationTimestamp().getTime().getTime() > this.lastMaxTime ) {
+        if( activity.getCreationTimestamp().getTime().getTime() > startTime ) {
           notifyActivityRetrievedListeners( activity );
-          this.lastMaxTime = activity.getCreationTimestamp().getTime().getTime() + 1;
+          
+          this.setActivityPollingStartTime( activity.getCreationTimestamp().getTime().getTime() + 1 );
         }
       }
       log.info( "finished Activities for user: " + getEchoUser().getUsername() );
