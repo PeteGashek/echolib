@@ -7,6 +7,7 @@ I didn't like the usage of 'todo' items for identifying tasks.  It seems like 't
 
 Instead I personally am using the 'simon says' feature.  This just tries to have echo repeat what you said.  Here's a snippet from my config file (I changed the todo configuration as well so that's captured here):
 
+```
 # todo configuration
 todoPollingInterval=15
 todoPollingItemCount=100
@@ -24,6 +25,7 @@ activityPollingItemCount=30
 activityListener.1=com.javasteam.amazon.echo.plugin.Builtin:shutdownTodoPoller key=alexa simon says halt echo
 activityListener.2=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=alexa simon says tweet
 activityListener.3=com.javasteam.amazon.echo.plugin.Twitter:sendTwit key=alexa simon says twit
+```
 
 For activities you need to include your wakeup command (alexa or amazon) plus 'simon says'.
 
