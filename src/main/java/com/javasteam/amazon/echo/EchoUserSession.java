@@ -8,7 +8,6 @@ import org.apache.http.impl.client.BasicCookieStore;
 
 import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
-import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 
 /**
@@ -292,25 +291,7 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
   
-  public void notifyTodoRetrievedListeners( final EchoTodoItemRetrieved todoItem ) {
-    verifyTodoItemPoller();
-    todoItemPoller.notifyTodoRetrievedListeners( todoItem );  
-  }
-  
-  public void setTodoItemPollerIntervalInSeconds( final int intervalInSeconds ) {
-    verifyTodoItemPoller();
-    this.todoItemPoller.setTodoItemPollerIntervalInSeconds( intervalInSeconds );
-  }
-  
-  /**
-   * @param itemRetrievalCount
-   */
-  public void setTodoItemPollerItemRetrievalCount( final int itemRetrievalCount ) {
-    verifyTodoItemPoller();
-    this.todoItemPoller.setItemRetrievalCount( itemRetrievalCount );
-  }
-  
-  
+
   private synchronized void verifyActivityItemPoller() {
     if( this.activityItemPoller == null || this.activityItemPoller.isStopped() ) {
       this.activityItemPoller = new ActivityItemPoller( configurator, this );

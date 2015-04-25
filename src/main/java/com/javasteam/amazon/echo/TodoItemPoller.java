@@ -18,60 +18,25 @@ import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropert
  * @author ddamon
  *
  */
-public class TodoItemPoller extends Thread {
+public class TodoItemPoller extends PollerBase {
   private final static Log          log = LogFactory.getLog( TodoItemPoller.class.getName() );
   
-  public static final TodoItemPoller EMPTY_INSTANCE = new TodoItemPoller();
-  
   private Vector<EchoCommandHandler> todoListeners     = new Vector<EchoCommandHandler>();
-  
-  private EchoUserSession echoUserSession;
-  private int             intervalInSeconds  = 10;
-  private int             itemRetrievalCount = 100;
-  private boolean         stopped            = false;
-  private Configurator    configurator       = null;
-  
-  private TodoItemPoller() {
-    super();
-  }
-
+ 
   /**
    * @param echoUserSession
    */
   public TodoItemPoller( final Configurator configurator, final EchoUserSession echoUserSession ) {
-    this();
-    
-    Preconditions.checkNotNull( echoUserSession );
-    Preconditions.checkNotNull( configurator );
-    
-    this.configurator    = configurator;
-    this.echoUserSession = echoUserSession; 
+    super( configurator, echoUserSession );
   }
-  
-  private void configure() {
-    String todoPollingIntervalStr  = configurator.get( "todoPollingInterval" );
-    String todoPollingItemCountStr = configurator.get( "todoPollingItemCount" );
-    int    todoPollingInterval     = 60;
-    int    todoPollingItemCount    = 100;
     
-    if( todoPollingIntervalStr != null ) {
-      int temp = Integer.parseInt( todoPollingIntervalStr );
-      if( temp >= 10 ) {
-        todoPollingInterval = temp;
-      }
-    }
-      
-    if( todoPollingItemCountStr != null ) {
-      int temp = Integer.parseInt( todoPollingItemCountStr );
-      if( temp > 0 ) {
-        todoPollingItemCount = temp;
-      }
-    }
+  private void configure() {
+    super.baseConfigure();
 
     int i = 0;
     boolean halt = false;
     do {
-      String listenerString = configurator.get( "todoListener." + ++i );
+      String listenerString = getConfigurator().get( "todoListener." + ++i );
       if( listenerString != null ) {
         EchoCommandHandlerBuilder listenerBuilder = EchoCommandHandlerDefinitionPropertyParser.getCommandHandlerBuilder( listenerString );
         EchoCommandHandler        listener        = listenerBuilder.generate();
@@ -83,104 +48,9 @@ public class TodoItemPoller extends Thread {
       }
     } while( !halt );
 
-    this.setIntervalInSeconds( todoPollingInterval );
-    this.setItemRetrievalCount( todoPollingItemCount );
-    echoUserSession.startTodoItemPoller();
+    getEchoUserSession().startTodoItemPoller();
   }
   
-  
-  /**
-   * @return
-   */
-  public EchoUserSession getEchoUserSession() {
-    return echoUserSession;
-  }
-
-  /**
-   * @param echoUserSession
-   */
-  public void setEchoUserSession( final EchoUserSession echoUserSession ) {
-    Preconditions.checkNotNull( echoUserSession );
-    
-    this.echoUserSession = echoUserSession;
-  }
-
-  /**
-   * @return
-   */
-  public int getIntervalInSeconds() {
-    return intervalInSeconds;
-  }
-
-  /**
-   * @param intervalInSeconds
-   */
-  public void setIntervalInSeconds( final int intervalInSeconds ) {
-    this.intervalInSeconds = intervalInSeconds;
-  }
-
-  /**
-   * @return
-   */
-  public int getItemRetrievalCount() {
-    return itemRetrievalCount;
-  }
-
-  /**
-   * @param itemRetrievalCount
-   */
-  public void setItemRetrievalCount( final int itemRetrievalCount ) {
-    this.itemRetrievalCount = itemRetrievalCount;
-  }
-
-  /**
-   * @return
-   */
-  public boolean isStopped() {
-    return stopped;
-  }
-
-  /**
-   * @param stopped
-   */
-  public void setStopped( final boolean stopped ) {
-    this.stopped = stopped;
-  }
-
-  /**
-   * 
-   */
-  public synchronized void shutdown() {
-    stopped = true;
-    //this.interrupt();
-  }
-  
-
-  private void doSleep( final long intervalInSeconds ) {
-    int loop = 0;
-
-    while( !isStopped() && loop < intervalInSeconds ) {
-      try {
-        Thread.sleep( 1000 );
-      }
-      catch( InterruptedException e ) {}
-      ++loop;
-    }
-  }
-  
-  private void loginUserIfNecessary() {
-    Preconditions.checkNotNull( echoUserSession );
-    
-    if( !echoUserSession.getEchoUser().isLoggedIn() ) {
-      try {
-        log.info( "Logging in user: " + echoUserSession.getEchoUser().getUsername() );
-        echoUserSession.getEchoBase().echoLogin( echoUserSession.getEchoUser() );
-      }
-      catch( AmazonLoginException e ) {
-        log.error( "Logging in echoUser", e  );
-      }
-    }
-  }
   
   private boolean todoItemCanBeProcessed( final EchoTodoItemRetrieved todoItem ) {
     return todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null;
@@ -254,10 +124,6 @@ public class TodoItemPoller extends Thread {
     return timeToLive;
   }
   
-  public void setTodoItemPollerIntervalInSeconds( final int intervalInSeconds ) {
-    this.intervalInSeconds = intervalInSeconds;
-  }
-
   private void deleteTodoItemIfExpired( final long timeToLive, final EchoTodoItemRetrieved todoItem ) {
     Preconditions.checkNotNull( todoItem );
     
@@ -287,7 +153,7 @@ public class TodoItemPoller extends Thread {
     
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
       if( todoItem.isComplete() ) {
-        deleteTodoItemIfExpired( parseTimeToLiveString( configurator.get( "cancelledMinutesToLive" ))
+        deleteTodoItemIfExpired( parseTimeToLiveString( getConfigurator().get( "cancelledMinutesToLive" ))
                                , todoItem );
       }
       
@@ -302,18 +168,16 @@ public class TodoItemPoller extends Thread {
     }
   }
 
-  private void handleUsersTodoItems() throws AmazonAPIAccessException {
-    Preconditions.checkNotNull( echoUserSession );
+  protected void doProcess() throws AmazonAPIAccessException {
+    List<EchoTodoItemRetrieved> todos = getEchoUserSession().getEchoBase().getTodoItems( getItemRetrievalCount(), getEchoUser() );
     
-    List<EchoTodoItemRetrieved> todos = echoUserSession.getEchoBase().getTodoItems( itemRetrievalCount, echoUserSession.getEchoUser() );
-    
-    log.info( "getting todos for user: " + echoUserSession.getEchoUser().getUsername() );
+    log.info( "getting todos for user: " + getEchoUser().getUsername() );
     
     if( todos != null ) {
       for( EchoTodoItemRetrieved todoItem : todos ) {
-        echoUserSession.notifyTodoRetrievedListeners( todoItem );
+        notifyTodoRetrievedListeners( todoItem );
       }
-      log.info( "finished todos for user: " + echoUserSession.getEchoUser().getUsername() );
+      log.info( "finished todos for user: " + getEchoUser().getUsername() );
     }
     else {
       log.info( "No todos to process" );
@@ -327,21 +191,6 @@ public class TodoItemPoller extends Thread {
   public void run() {
     this.configure();
     
-    while( !isStopped() ) {
-      Preconditions.checkNotNull( echoUserSession );
-      
-      loginUserIfNecessary();
-        
-      if( echoUserSession.getEchoUser().isLoggedIn() ) {
-        try {
-          handleUsersTodoItems();
-        }
-        catch( AmazonAPIAccessException e ) {
-          log.error( "Error fetching Todo items", e );
-        }
-      }
-      
-      doSleep( intervalInSeconds );
-    }
+    super.run();
   }
 }
