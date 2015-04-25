@@ -1,6 +1,7 @@
 package com.javasteam.amazon.echo;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -22,12 +23,13 @@ public class ActivityItemPoller extends Thread {
   private final static Log          log = LogFactory.getLog( ActivityItemPoller.class.getName() );
   private Vector<EchoCommandHandler> activityListeners = new Vector<EchoCommandHandler>();
   
+  private String          activityKey        = "alexa simon says ";
   private EchoUserSession echoUserSession;
   private int             intervalInSeconds  = 10;
   private int             itemRetrievalCount = 100;
   private boolean         stopped            = false;
   private Configurator    configurator       = null;
-  private long            lastMaxTime        = 1;
+  private long            lastMaxTime        = ( new Date() ).getTime();
   
   public ActivityItemPoller() {
     super();
@@ -193,6 +195,10 @@ public class ActivityItemPoller extends Thread {
     }
   }
   
+  public void setActivityKey( String activityKey ) {
+    this.activityKey = activityKey;
+  }
+  
   private boolean sendActivityNotification( final EchoActivityItemImpl activityItem ) {
     boolean handled = false;
     
@@ -200,15 +206,17 @@ public class ActivityItemPoller extends Thread {
       String activityCommand = activityItem.getActivityDescription().getSummary();
 
       // we're using simon says commands for now....
-      String lowercase     = activityCommand.toLowerCase();
-      int    simonIndex    = lowercase.indexOf( "alexa simon says " );
+      String  lowercase     = activityCommand.toLowerCase();
+      boolean matchAny      = listener.getKey().trim().equals( "*" );
+      int     simonIndex    = matchAny ? 0 : lowercase.indexOf( activityKey );
       
       if( simonIndex >= 0 ) {
-        if( lowercase.startsWith( listener.getKey().toLowerCase() )) {
-          String           remainder    = activityCommand.substring( listener.getKey().length() );
+        if( matchAny || lowercase.startsWith( listener.getKey().toLowerCase() )) {
+          int              length       = matchAny ? 0 : listener.getKey().length();
+          String           remainder    = activityCommand.substring( length );
           EchoResponseItem responseItem = new EchoActivityResponseItem( listener.getKey(), remainder, activityItem );
           
-          log.debug( "Activity '" + activityItem.getActivityDescription().getSummary() + "' processing with listener " + listener.getKey() );
+          log.info( "Activity '" + activityItem.getActivityDescription().getSummary() + "' processing with listener " + listener.getKey() );
           handled = handled | listener.handle( responseItem, this.getEchoUserSession() );
         }
       }
@@ -235,12 +243,14 @@ public class ActivityItemPoller extends Thread {
     
     List<EchoActivityItemImpl> activities = echoUserSession.getEchoBase().getActivityItems( itemRetrievalCount
                                                                                           , echoUserSession.getEchoUser()
-                                                                                          , this.lastMaxTime );
+                                                                                          , this.lastMaxTime
+                                                                                          );
     
     log.info( "getting Activities for user: " + echoUserSession.getEchoUser().getUsername() );
     
     if( activities != null ) {
       for( EchoActivityItemImpl activity : activities ) {
+        log.debug( "Activity from amazon: " + activity.getActivityDescription().getSummary() + " -- created: " + activity.getCreationTimestamp().getTime().getTime() );
         // amazon is not honoring the timestamps for some reason....
         if( activity.getCreationTimestamp().getTime().getTime() > this.lastMaxTime ) {
           notifyActivityRetrievedListeners( activity );

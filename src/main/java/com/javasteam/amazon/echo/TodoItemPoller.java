@@ -1,6 +1,5 @@
 package com.javasteam.amazon.echo;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -8,7 +7,6 @@ import java.util.Vector;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.ClientProtocolException;
 
 import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;

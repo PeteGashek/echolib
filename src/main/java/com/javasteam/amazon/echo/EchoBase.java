@@ -21,10 +21,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.http.EchoHttpGet;
 import com.javasteam.amazon.echo.http.EchoHttpPost;
 import com.javasteam.amazon.echo.http.EchoHttpPut;
-import com.javasteam.amazon.echo.object.EchoActivityItem;
 import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
 import com.javasteam.amazon.echo.object.EchoTodoItem;
 import com.javasteam.amazon.echo.object.EchoTodoItemImpl;
@@ -33,7 +33,6 @@ import com.javasteam.http.Form;
 import com.javasteam.http.FormFieldMap;
 import com.javasteam.http.User;
 import com.javasteam.restful.HttpClientPool;
-import com.google.common.base.Preconditions;
 
 /**
  * @author ddamon
