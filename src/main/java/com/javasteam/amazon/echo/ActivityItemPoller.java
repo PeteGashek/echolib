@@ -30,6 +30,14 @@ public class ActivityItemPoller extends PollerBase {
    */
   public ActivityItemPoller( final Configurator configurator, final EchoUserSession echoUserSession ) {
     super( configurator, echoUserSession );
+    
+    String startTime = configurator.get( "activityPollingStartTime" );
+    if( startTime == null || startTime.length() == 0 || startTime.equalsIgnoreCase( "now" )) {
+      lastMaxTime = ( new Date() ).getTime();
+    }
+    else {
+      lastMaxTime = Long.parseLong( startTime );
+    }
   }
   
   public boolean addActivityRetrievedListener( final EchoCommandHandler activityListener ) {
