@@ -27,6 +27,8 @@ import com.javasteam.http.FormFieldMap;
 import com.javasteam.http.HttpGetHelper;
 import com.javasteam.http.User;
 import com.javasteam.http.UserImpl;
+import com.javasteam.util.Configurator;
+import com.javasteam.util.PropertyFileConfigurator;
 
 public class MyTest1 {
   private final static Log          log = LogFactory.getLog( MyTest1.class.getName() );

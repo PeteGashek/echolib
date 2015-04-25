@@ -12,6 +12,7 @@ import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
+import com.javasteam.util.Configurator;
 
 /**
  * @author ddamon

@@ -13,6 +13,7 @@ import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
+import com.javasteam.util.Configurator;
 
 /**
  * @author ddamon
@@ -153,7 +154,7 @@ public class TodoItemPoller extends PollerBase {
     
     if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
       if( todoItem.isComplete() ) {
-        deleteTodoItemIfExpired( parseTimeToLiveString( getConfigurator().get( "cancelledMinutesToLive" ))
+        deleteTodoItemIfExpired( parseTimeToLiveString( getConfigurator().get( "todoCancelledMinutesToLive" ))
                                , todoItem );
       }
       

@@ -9,6 +9,8 @@ import org.apache.http.impl.client.BasicCookieStore;
 import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
+import com.javasteam.util.Configurator;
+import com.javasteam.util.PropertyFileConfigurator;
 
 /**
  * @author ddamon
