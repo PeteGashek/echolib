@@ -1,9 +1,5 @@
 package com.javasteam.amazon.echo;
 
-import java.util.Date;
-import java.util.Properties;
-import java.util.Vector;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,8 +10,6 @@ import com.google.common.base.Preconditions;
 import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
 import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
-import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
-import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
 
 /**
  * @author ddamon
@@ -24,22 +18,83 @@ import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropert
 public class EchoUserSession implements EchoUser {
   private final static Log log = LogFactory.getLog( EchoUserSession.class.getName() );
   
-  private Vector<EchoCommandHandler> todoListeners     = new Vector<EchoCommandHandler>();
-  private Vector<EchoCommandHandler> activityListeners = new Vector<EchoCommandHandler>();
+  //private Vector<EchoCommandHandler> todoListeners     = new Vector<EchoCommandHandler>();
+  //private Vector<EchoCommandHandler> activityListeners = new Vector<EchoCommandHandler>();
   
-  private TodoItemPoller    todoItemPoller = null;
-  private Object            todoPollerLock = new Object();
-  private Properties        properties     = new Properties();
-  private EchoUser          echoUser;
-  private EchoBase          echoBase;
+  private TodoItemPoller     todoItemPoller      = null;
+  private ActivityItemPoller activityItemPoller  = null;
+  private Object             todoPollerLock      = new Object();
+  private Object             activityPollerLock  = new Object();
+  private Configurator       configurator;
+  private EchoUser           echoUser;
+  private EchoBase           echoBase;
   
-  public EchoUserSession() {
+  public EchoUserSession() { 
+  }
+  
+  public EchoUserSession( Configurator configurator ) {
+    this.setConfigurator( configurator );
+    refreshConfiguration();
+  }
+  
+  public void refreshConfiguration() {
+    String loginForm         = configurator.get( "loginForm" );
+    String userNameField     = configurator.get( "userNameField" );
+    String userPasswordField = configurator.get( "userPasswordField" );
+    
+    echoBase = new EchoBase();
+    echoUser = new EchoUserImpl( configurator.get( "username" )
+                               , configurator.get( "password" )
+                               );
+    
+    
+    if( StringUtils.isNotBlank( loginForm )) {
+      echoBase.setLoginFormName( loginForm.trim() );  
+    }
+
+    if( StringUtils.isNotBlank( userNameField )) {
+      echoBase.setUserFieldName( userNameField.trim() );  
+    }
+
+    if( StringUtils.isNotBlank( userPasswordField )) {
+      echoBase.setPasswordFieldName( userPasswordField.trim() );  
+    } 
+    
+    int totalPoolConnections       = 5;
+    int maxPoolConnectionsPerRoute = 2;
+      
+    EchoBase.setHttpClientPool( totalPoolConnections, maxPoolConnectionsPerRoute );
+    EchoBase.getHttpClientPool().getMonitor().setPollIntervalInSeconds( 60 );
+    EchoBase.getHttpClientPool().getMonitor().setIdleTimeoutInSeconds( 600 );
+    
+    
+  }
+  
+  public void startPollers() {
+    synchronized( this.todoPollerLock ) {
+      if( this.todoItemPoller != null ) {
+        this.todoItemPoller.shutdown();
+      }
+    
+      this.todoItemPoller = new TodoItemPoller( configurator, this );
+      this.startTodoItemPoller();
+    }
+
+    synchronized( this.activityPollerLock ) {
+      if( this.activityItemPoller != null ) {
+        this.activityItemPoller.shutdown();
+      }
+    
+      this.activityItemPoller = new ActivityItemPoller( configurator, this );
+      this.startActivityItemPoller();
+    }
   }
   
   /**
    * @param echoUser
    * @param echoBase
    */
+  /*
   public EchoUserSession( final EchoUser echoUser, final EchoBase echoBase ) {
     this();
     
@@ -49,6 +104,7 @@ public class EchoUserSession implements EchoUser {
     this.echoUser = echoUser;
     this.echoBase = echoBase;
   }
+  */
 
   /**
    * @return
@@ -84,27 +140,27 @@ public class EchoUserSession implements EchoUser {
   /**
    * @return
    */
-  public Properties getProperties() {
-    return properties;
+  public Configurator getConfigurator() {
+    return configurator;
   }
 
   /**
    * @param properties
    */
-  public void setProperties( final Properties properties ) {
-    Preconditions.checkNotNull( properties );
+  public void setConfigurator( final Configurator configurator ) {
+    Preconditions.checkNotNull( configurator );
     
-    this.properties = properties;
+    this.configurator = configurator;
   }
   
   /**
    * @param property
    * @return
    */
-  public String getProperty( final String property ) {
-    Preconditions.checkNotNull( properties );
+  public String getConfigSetting( final String key ) {
+    Preconditions.checkNotNull( configurator );
     
-    return properties.getProperty( property );
+    return configurator.get( key );
   }
 
   /* (non-Javadoc)
@@ -198,144 +254,19 @@ public class EchoUserSession implements EchoUser {
   public void setLoggedIn( final boolean loggedIn ) {
     echoUser.setLoggedIn( loggedIn );
   }
+  
 
-  /**
-   * @param filename
-   * @return
-   */
-  public boolean loadProperties( final String filename ) {
-    boolean retval = false;
-    
-    Preconditions.checkNotNull( filename );
-    
-    try {
-      properties.load( EchoUserSession.class.getClassLoader().getResourceAsStream( filename ));
-      retval = true;
-    } 
-    catch( Throwable e ) {
-      log.fatal( "No Properties file: " + filename );
-    }
-    
-    return retval;
-  }
-  
-  /**
-   * @return
-   */
-  public boolean hasTodoRetrievedListeners() {
-    return this.todoListeners != null && !this.todoListeners.isEmpty();
-  }
-  
-  /* (non-Javadoc)
-   * @see com.javasteam.amazon.echo.EchoUserInterface#addTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
-   */
   public boolean addTodoRetrievedListener( final EchoCommandHandler todoListener ) {
-    boolean retval = false;
-    
-    if( todoListener != null &&  !this.todoListeners.contains( todoListener )) {
-      this.todoListeners.add( todoListener );
-      retval = true;
-    }
-    
-    return retval;
+    return this.todoItemPoller.addTodoRetrievedListener( todoListener );
   }
   
-  /* (non-Javadoc)
-   * @see com.javasteam.amazon.echo.EchoUserInterface#removeTodoRetrievedListener(com.javasteam.amazon.echo.plugin.TodoItemRetrievedListener)
-   */
   public boolean removeTodoRetrievedListener( final EchoCommandHandler todoListener ) {
-    boolean retval = false;
-    
-    if( todoListener != null &&  this.todoListeners.contains( todoListener )) {
-      this.todoListeners.remove( todoListener );
-      retval = true;
-    }
-    
-    return retval; 
-  }
-  
-  private boolean todoItemCanBeProcessed( final EchoTodoItemRetrieved todoItem ) {
-    return todoItem != null && !todoItem.isComplete() && !todoItem.isDeleted() && todoItem.getText() != null;
-  }
-  
-  private long parseTimeToLiveString( String timeToLiveStr ) {
-    long   timeToLive    = 60 * 60000; // 60 minutes
-    
-    if( StringUtils.isNotBlank( timeToLiveStr ) ) {
-      timeToLive = Long.parseLong( timeToLiveStr ) * 60000;
-    }
-    
-    return timeToLive;
-  }
-  
-  private void deleteTodoItemIfExpired( final long timeToLive, final EchoTodoItemRetrieved todoItem ) {
-    Preconditions.checkNotNull( todoItem );
-    
-    Date date = new Date();
-    
-    if( log.isDebugEnabled() ) {
-      log.debug( "checking TTL for item alive for (ms): " + ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) + " > " + timeToLive );
-    }
-
-    if( timeToLive > -1 && ( date.getTime() - todoItem.getLastUpdatedDate().getTimeInMillis() ) > timeToLive ) {
-      try {
-        log.info( "Time to live has passed.  Deleting todo: " + todoItem.getText() );
-        this.echoBase.deleteTodoItem( todoItem, this.getEchoUser() );
-      }
-      catch( AmazonAPIAccessException e ) {
-        log.error( "Failed deleting todo item", e );
-      }
-    }
-  }
-  
-  private boolean sendTodoNotifications( final EchoTodoItemRetrieved todoItem ) {
-    boolean handled = false;
-    
-    for( EchoCommandHandler listener : this.todoListeners ) {
-      if( todoItemCanBeProcessed( todoItem )) {
-        if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
-          String           remainder    = todoItem.getText().substring( listener.getKey().length() );
-          EchoResponseItem responseItem = new EchoTodoResponseItem( listener.getKey()
-                                                                  , remainder
-                                                                  , todoItem
-                                                                  );
-          
-          
-          log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
-          handled = handled | listener.handle( responseItem, this );
-        }
-      }
-    }
-    
-    return handled;
-  }
-  
-  /**
-   * @param todoItem
-   */
-  public void notifyTodoRetrievedListeners( final EchoTodoItemRetrieved todoItem ) {
-    Preconditions.checkNotNull( todoItem );
-    
-    if( this.todoListeners != null && !this.todoListeners.isEmpty() ) {
-      if( todoItem.isComplete() ) {
-        deleteTodoItemIfExpired( parseTimeToLiveString( this.getProperty( "cancelledMinutesToLive" ))
-                               , todoItem );
-      }
-      
-      if( sendTodoNotifications( todoItem )) {
-        try {
-          this.getEchoBase().completeTodoItem( todoItem, this.getEchoUser() );
-        }
-        catch( AmazonAPIAccessException e ) {
-          log.error( "Failed marking handled todo item as complete", e );
-        }
-      }
-    }
+    return this.todoItemPoller.removeTodoRetrievedListener( todoListener );
   }
   
   private synchronized void verifyTodoItemPoller() {
     if( this.todoItemPoller == null || this.todoItemPoller.isStopped() ) {
-      this.todoItemPoller = new TodoItemPoller( this );
+      this.todoItemPoller = new TodoItemPoller( configurator, this );
     }
   }
   
@@ -352,7 +283,7 @@ public class EchoUserSession implements EchoUser {
       verifyTodoItemPoller();
       
       if( !this.todoItemPoller.isAlive() ) {
-        log.debug( "Starting todoItem poller" );
+        log.debug( "Starting Todo Item poller" );
         this.todoItemPoller.start();
         retval = true;
       }
@@ -361,13 +292,14 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
   
-  /**
-   * @param intervalInSeconds
-   */
+  public void notifyTodoRetrievedListeners( final EchoTodoItemRetrieved todoItem ) {
+    verifyTodoItemPoller();
+    todoItemPoller.notifyTodoRetrievedListeners( todoItem );  
+  }
+  
   public void setTodoItemPollerIntervalInSeconds( final int intervalInSeconds ) {
     verifyTodoItemPoller();
-    
-    this.todoItemPoller.setIntervalInSeconds( intervalInSeconds );
+    this.todoItemPoller.setTodoItemPollerIntervalInSeconds( intervalInSeconds );
   }
   
   /**
@@ -375,42 +307,45 @@ public class EchoUserSession implements EchoUser {
    */
   public void setTodoItemPollerItemRetrievalCount( final int itemRetrievalCount ) {
     verifyTodoItemPoller();
-    
     this.todoItemPoller.setItemRetrievalCount( itemRetrievalCount );
   }
   
-  private boolean sendActivityNotification( final EchoActivityItemImpl activityItem ) {
-    boolean handled = false;
+  
+  private synchronized void verifyActivityItemPoller() {
+    if( this.activityItemPoller == null || this.activityItemPoller.isStopped() ) {
+      this.activityItemPoller = new ActivityItemPoller( configurator, this );
+    }
+  }
+  
+  public void notifyActivityRetrievedListeners( final EchoActivityItemImpl activityItem ) {
+    verifyActivityItemPoller();
+    activityItemPoller.notifyActivityRetrievedListeners( activityItem );  
+  }
+
+ 
+  
+  /**
+   * @return
+   */
+  public boolean startActivityItemPoller() {
+    boolean retval = false;
     
-    for( EchoCommandHandler listener : this.activityListeners ) {
-      StringBuilder activityCommand = new StringBuilder( activityItem.getActivityDescription().getSummary().toLowerCase() );
-      // we're using simon says commands for now....
-      int simonIndex = activityCommand.indexOf( "alexa simon says " );
-      if( simonIndex >= 0 ) {
-        activityCommand.delete( 0, "alexa simon says ".length() );
-        String workingString = activityCommand.toString();
-        
-        if( workingString.startsWith( listener.getKey().toLowerCase() )) {
-          String remainder = workingString.substring( listener.getKey().length() );
-          EchoResponseItem responseItem = new EchoActivityResponseItem( listener.getKey(), remainder, activityItem );
-          log.info( "Handling '" + activityItem.getActivityDescription().getSummary() + "' with listener " + listener.getKey() );
-          handled = handled | listener.handle( responseItem, this );
-        }
+    synchronized( this.activityPollerLock ) {
+      Preconditions.checkNotNull( this.echoBase );
+      Preconditions.checkNotNull( this.echoUser );
+      
+      verifyActivityItemPoller();
+      
+      if( !this.activityItemPoller.isAlive() ) {
+        log.debug( "Starting Activity Item poller" );
+        this.activityItemPoller.start();
+        retval = true;
       }
     }
-    
-    return handled;
+
+    return retval;
   }
-  /**
-   * @param todoItem
-   */
-  public void notifyActivityRetrievedListeners( final EchoActivityItemImpl activityItem ) {
-    Preconditions.checkNotNull( activityItem );
-    
-    if( this.activityListeners != null && !this.activityListeners.isEmpty() ) {
-      sendActivityNotification( activityItem );
-    }
-  }
+  
   /**
    * @return
    */
@@ -421,6 +356,14 @@ public class EchoUserSession implements EchoUser {
       if( this.todoItemPoller != null && this.todoItemPoller.isAlive() ) {
         this.todoItemPoller.shutdown();
         this.todoItemPoller = null;
+        retval = true;
+      }
+    }
+    
+    synchronized( this.activityPollerLock ) {
+      if( this.activityItemPoller != null && this.activityItemPoller.isAlive() ) {
+        this.activityItemPoller.shutdown();
+        this.activityItemPoller = null;
         retval = true;
       }
     }
@@ -443,85 +386,27 @@ public class EchoUserSession implements EchoUser {
     return retval;
   }
 
-  public static void configureBaseFromProperties( final EchoBase echoBase, final EchoUserSession echoUserSession ) {
-    String loginForm         = echoUserSession.getProperty( "loginForm" );
-    String userNameField     = echoUserSession.getProperty( "userNameField" );
-    String userPasswordField = echoUserSession.getProperty( "userPasswordField" );
+  /**
+   * @return
+   */
+  public boolean isActivityPollerStopped() {
+    boolean retval = true;
     
-    if( StringUtils.isNotBlank( loginForm )) {
-      echoBase.setLoginFormName( loginForm.trim() );  
+    synchronized( this.activityPollerLock ) {
+      if( this.activityItemPoller != null ) {
+        retval = this.activityItemPoller.isStopped();
+      }
     }
-
-    if( StringUtils.isNotBlank( userNameField )) {
-      echoBase.setUserFieldName( userNameField.trim() );  
-    }
-
-    if( StringUtils.isNotBlank( userPasswordField )) {
-      echoBase.setPasswordFieldName( userPasswordField.trim() );  
-    }
+    
+    return retval;
   }
   
   /**
    * @param args
    */
   public static void main( final String[] args ) {
-    EchoUserSession echoUserSession = new EchoUserSession();
-  
-    if( echoUserSession.loadProperties( "echo.properties" )) {
-      String username            = echoUserSession.getProperty( "username" );
-      String password            = echoUserSession.getProperty( "password" );
-      String pollingIntervalStr  = echoUserSession.getProperty( "pollingInterval" );
-      String pollingItemCountStr = echoUserSession.getProperty( "pollingItemCount" );
-      
-      int pollingInterval            = 60;
-      int pollingItemCount           = 100;
-      int totalPoolConnections       = 5;
-      int maxPoolConnectionsPerRoute = 2;
-      
-      if( pollingIntervalStr != null ) {
-        int temp = Integer.parseInt( pollingIntervalStr );
-        if( temp >= 10 ) {
-          pollingInterval = temp;
-        }
-      }
-      
-      if( pollingItemCountStr != null ) {
-        int temp = Integer.parseInt( pollingItemCountStr );
-        if( temp > 0 ) {
-          pollingItemCount = temp;
-        }
-      }
-      
-      EchoBase.setHttpClientPool( totalPoolConnections, maxPoolConnectionsPerRoute );
-      EchoBase.getHttpClientPool().getMonitor().setPollIntervalInSeconds( 60 );
-      EchoBase.getHttpClientPool().getMonitor().setIdleTimeoutInSeconds( 600 );
-      
-      EchoBase     echoBase = new EchoBase();
-      EchoUserImpl echoUser = new EchoUserImpl( username, password );
-    
-      configureBaseFromProperties( echoBase, echoUserSession );
-
-      int i = 0;
-      boolean halt = false;
-      do {
-        String listenerString = echoUserSession.getProperty( "todoListener." + ++i );
-        if( listenerString != null ) {
-          EchoCommandHandlerBuilder listenerBuilder = EchoCommandHandlerDefinitionPropertyParser.getCommandHandlerBuilder( listenerString );
-          EchoCommandHandler        listener        = listenerBuilder.generate();
-          echoUserSession.addTodoRetrievedListener( listener );
-          log.info(  "Added " + listener.getClass().getName() + " as a listener for key: " + listener.getKey() );
-        }
-        else {
-          halt = true;
-        }
-      } while( !halt );
-      
-      echoUserSession.setEchoUser( echoUser );
-      echoUserSession.setEchoBase( echoBase );
-    
-      echoUserSession.startTodoItemPoller();
-      echoUserSession.setTodoItemPollerIntervalInSeconds( pollingInterval );
-      echoUserSession.setTodoItemPollerItemRetrievalCount( pollingItemCount );
-    }
+    Configurator    configurator    = new PropertyFileConfigurator( "echo.properties" );
+    EchoUserSession echoUserSession = new EchoUserSession( configurator );
+    echoUserSession.startPollers();
   }
 }

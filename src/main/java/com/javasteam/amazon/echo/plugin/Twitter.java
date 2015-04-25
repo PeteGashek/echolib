@@ -129,8 +129,8 @@ public class Twitter {
     Preconditions.checkNotNull( echoUserSession );
     
     if( user == null ) {
-      String username = echoUserSession.getProperty( TWIT_USER_KEY );
-      String password = echoUserSession.getProperty( TWIT_PASSWORD_KEY );
+      String username = echoUserSession.getConfigurator().get( TWIT_USER_KEY );
+      String password = echoUserSession.getConfigurator().get( TWIT_PASSWORD_KEY );
       
       if( username != null && password != null && username.length() > 0 && password.length() > 0 ) {
         user = new UserImpl( username, password );

@@ -231,33 +231,30 @@ public class MyTest1 {
   }
 
   public static void main_evernote( final String[] args ) {
-    EchoUserSession echoUserSession = new EchoUserSession();
+    Configurator    configurator    = new PropertyFileConfigurator( "echo.properties" );
+    EchoUserSession echoUserSession = new EchoUserSession( configurator );
     
-    if( echoUserSession.loadProperties( "echo.properties" )) {
-      String username = echoUserSession.getProperty( "evernote.username" );
-      String password = echoUserSession.getProperty( "evernote.password" );
-      User   user     = new UserImpl( username, password );
+    String username = echoUserSession.getConfigurator().get( "evernote.username" );
+    String password = echoUserSession.getConfigurator().get( "evernote.password" );
+    User   user     = new UserImpl( username, password );
       
-      DumpForms dumper = new DumpForms();
-      dumper.getHtmlFormFieldsByGet( "https://www.evernote.com/Login.action?targetUrl=/Home.action", "login_form" );
-      //dumpForms( "https://www.evernote.com/Login.action?targetUrl=/Home.action", "login_form" );
+    DumpForms dumper = new DumpForms();
+    dumper.getHtmlFormFieldsByGet( "https://www.evernote.com/Login.action?targetUrl=/Home.action", "login_form" );
+    //dumpForms( "https://www.evernote.com/Login.action?targetUrl=/Home.action", "login_form" );
       
-      Evernote evernote = new Evernote();
-      EchoBase base     = new EchoBase();
-      EchoBase.setHttpClientPool( 5, 2 );
+    Evernote evernote = new Evernote();
+    EchoBase base     = new EchoBase();
+    EchoBase.setHttpClientPool( 5, 2 );
       
-      try {
-        evernote.login( base, user );
-      }
-      catch( ClientProtocolException e ) {
-        e.printStackTrace();
-      }
-      catch( IOException e ) {
-        e.printStackTrace();
-      }
+    try {
+      evernote.login( base, user );
     }
-    
-    
+    catch( ClientProtocolException e ) {
+      e.printStackTrace();
+    }
+    catch( IOException e ) {
+      e.printStackTrace();
+    }
   }
   
   public static void main( final String[] args ) {

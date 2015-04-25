@@ -611,17 +611,6 @@ public class EchoBase {
   }
   
   
-  public List<EchoActivityItemImpl> listActivities( final int size, final EchoUser user ) throws ClientProtocolException, IOException, AmazonAPIAccessException {
-    List<EchoActivityItemImpl> activities = getActivityItems( size, user );
-    
-    for( EchoActivityItem activity : activities ) {
-      System.out.println( "Activity command: " + activity.getActivityDescription().getSummary() + " :: " + activity.getDomainAttributes() );
-    }
-    
-    return activities;
-  }
-  
-  
   /**
    * @param size
    * @param user
@@ -630,14 +619,27 @@ public class EchoBase {
    */
   // TODO
   // Problem with this is it does not return the start and end times which we will need to do the next query....
-  public List<EchoActivityItemImpl> getActivityItems( final int size, final EchoUser user ) throws AmazonAPIAccessException {
+  public List<EchoActivityItemImpl> getActivityItems( final int size, final EchoUser user, long starttime ) throws AmazonAPIAccessException {
     Preconditions.checkNotNull( user );
     List<EchoActivityItemImpl> retval = new ArrayList<EchoActivityItemImpl>();
 
     user.logCookies();
     
     try {
-      String activities = amazonEchoGet( "/api/activities?startTime=&endTime=&size=" + size + "&offset=-1", user );
+      String apiCall = "/api/activities?startTime=&endTime=&size=" + size + "&offset=-1";
+      /*
+      // This did not work.  Amazon seems like it was pulling the last 50 upto the endtime specified... 
+      if( starttime > 1 ) {
+        apiCall = "/api/activities?startTime=" + starttime + "&endTime=" + (new Date()).getTime() + "&size=" + size + "&offset=-1";
+      }
+      else {
+        apiCall = "/api/activities?startTime=&endTime=&size=" + size + "&offset=-1";
+      }
+      */
+      
+      log.debug( "Activities api call: " + apiCall );
+      
+      String activities = amazonEchoGet( apiCall, user );
       
       // Parse JSON
       //if( log.isDebugEnabled() ) {
@@ -646,6 +648,7 @@ public class EchoBase {
       if( activities != null && activities.length() > 0 ) {
         ActivityResponse items = mapper.readValue( activities, ActivityResponse.class );
         retval = new ArrayList<EchoActivityItemImpl>( Arrays.asList( items.getActivities() )); 
+        //log.info( "Found " + retval.size() + " activites" );
       }   
       else {
         log.error( "Amazon returned empty activity list" );
