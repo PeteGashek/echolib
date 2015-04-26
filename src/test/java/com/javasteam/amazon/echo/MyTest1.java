@@ -16,11 +16,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.google.common.base.Preconditions;
-import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 import com.javasteam.amazon.echo.plugin.Evernote;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
+import com.javasteam.amazon.echo.todo.EchoTodoItemRetrieved;
+import com.javasteam.amazon.echo.todo.EchoTodoResponseItem;
 import com.javasteam.http.DumpForms;
 import com.javasteam.http.Form;
 import com.javasteam.http.FormFieldMap;

@@ -1,4 +1,4 @@
-package com.javasteam.amazon.echo.activity;
+package com.javasteam.amazon.echo.activity.core;
 
 public class DomainAttribute {
   private Boolean disambiguated;

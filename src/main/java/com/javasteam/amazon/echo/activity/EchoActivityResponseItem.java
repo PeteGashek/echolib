@@ -1,4 +1,6 @@
-package com.javasteam.amazon.echo;
+package com.javasteam.amazon.echo.activity;
+
+import com.javasteam.amazon.echo.EchoResponseItem;
 
 public class EchoActivityResponseItem extends EchoResponseItem {
 
@@ -9,7 +11,7 @@ public class EchoActivityResponseItem extends EchoResponseItem {
   @Override
   public String getText() {
     // TODO Auto-generated method stub
-    return null;
+    return ((EchoActivityItem) this.getEchoResponseObject() ).getActivityDescription().getSummary();
   }
 
 }

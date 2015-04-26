@@ -1,6 +1,5 @@
-package com.javasteam.amazon.echo;
+package com.javasteam.amazon.echo.todo;
 
-import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
 
 /**
  * @author ddamon

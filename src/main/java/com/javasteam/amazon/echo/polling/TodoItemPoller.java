@@ -1,4 +1,4 @@
-package com.javasteam.amazon.echo;
+package com.javasteam.amazon.echo.polling;
 
 import java.util.Date;
 import java.util.List;
@@ -9,10 +9,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Preconditions;
-import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
+import com.javasteam.amazon.echo.AmazonAPIAccessException;
+import com.javasteam.amazon.echo.EchoResponseItem;
+import com.javasteam.amazon.echo.EchoUserSession;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
+import com.javasteam.amazon.echo.todo.EchoTodoItemRetrieved;
+import com.javasteam.amazon.echo.todo.EchoTodoResponseItem;
 import com.javasteam.util.Configurator;
 
 /**
@@ -29,9 +33,10 @@ public class TodoItemPoller extends PollerBase {
    */
   public TodoItemPoller( final Configurator configurator, final EchoUserSession echoUserSession ) {
     super( configurator, echoUserSession );
+    configure();
   }
     
-  private void configure() {
+  public void configure() {
     super.baseConfigure();
 
     int i = 0;
@@ -48,8 +53,6 @@ public class TodoItemPoller extends PollerBase {
         halt = true;
       }
     } while( !halt );
-
-    getEchoUserSession().startTodoItemPoller();
   }
   
   
@@ -169,7 +172,7 @@ public class TodoItemPoller extends PollerBase {
     }
   }
 
-  protected void doProcess() throws AmazonAPIAccessException {
+  public void doProcess() throws AmazonAPIAccessException {
     List<EchoTodoItemRetrieved> todos = getEchoUserSession().getEchoBase().getTodoItems( getItemRetrievalCount(), getEchoUser() );
     
     log.info( "getting todos for user: " + getEchoUser().getUsername() );
@@ -190,8 +193,6 @@ public class TodoItemPoller extends PollerBase {
    */
   @Override
   public void run() {
-    this.configure();
-    
     super.run();
   }
 }

@@ -1,7 +1,7 @@
 package com.javasteam.amazon.echo;
 
-import com.javasteam.amazon.echo.object.EchoTodoItem;
-import com.javasteam.amazon.echo.object.EchoTodoItemImpl;
+import com.javasteam.amazon.echo.todo.EchoTodoItem;
+import com.javasteam.amazon.echo.todo.EchoTodoItemImpl;
 
 import junit.framework.TestCase;
 

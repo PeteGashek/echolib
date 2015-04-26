@@ -1,4 +1,4 @@
-package com.javasteam.amazon.echo.object;
+package com.javasteam.amazon.echo.todo;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 

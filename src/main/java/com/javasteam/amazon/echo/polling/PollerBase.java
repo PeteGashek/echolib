@@ -1,9 +1,13 @@
-package com.javasteam.amazon.echo;
+package com.javasteam.amazon.echo.polling;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Preconditions;
+import com.javasteam.amazon.echo.AmazonAPIAccessException;
+import com.javasteam.amazon.echo.AmazonLoginException;
+import com.javasteam.amazon.echo.EchoUser;
+import com.javasteam.amazon.echo.EchoUserSession;
 import com.javasteam.util.Configurator;
 
 public abstract class PollerBase extends Thread {
@@ -130,7 +134,7 @@ public abstract class PollerBase extends Thread {
     //this.interrupt();
   }
   
-  protected abstract void doProcess() throws AmazonAPIAccessException;
+  public abstract void doProcess() throws AmazonAPIAccessException;
   
   /* (non-Javadoc)
    * @see java.lang.Thread#run()

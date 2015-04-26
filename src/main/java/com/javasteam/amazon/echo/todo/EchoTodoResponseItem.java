@@ -1,6 +1,6 @@
-package com.javasteam.amazon.echo;
+package com.javasteam.amazon.echo.todo;
 
-import com.javasteam.amazon.echo.object.EchoTodoItem;
+import com.javasteam.amazon.echo.EchoResponseItem;
 
 public class EchoTodoResponseItem extends EchoResponseItem {
   
@@ -10,7 +10,6 @@ public class EchoTodoResponseItem extends EchoResponseItem {
 
   @Override
   public String getText() {
-    // TODO Auto-generated method stub
     return ((EchoTodoItem) this.getEchoResponseObject() ).getText();
   }
 

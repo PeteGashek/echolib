@@ -17,7 +17,7 @@ import com.javasteam.amazon.echo.EchoBase;
 import com.javasteam.amazon.echo.EchoResponseItem;
 import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
-import com.javasteam.amazon.echo.object.EchoTodoItemRetrieved;
+import com.javasteam.amazon.echo.todo.EchoTodoItemRetrieved;
 
 public class Builtin {
   private final static Log log = LogFactory.getLog( Builtin.class.getName() );

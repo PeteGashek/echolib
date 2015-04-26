@@ -5,8 +5,9 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javasteam.amazon.echo.object.EchoActivityItem;
-import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
+import com.javasteam.amazon.echo.activity.ActivityResponse;
+import com.javasteam.amazon.echo.activity.EchoActivityItem;
+import com.javasteam.amazon.echo.activity.EchoActivityItemImpl;
 
 public class ActivityTest {
   private static final ObjectMapper mapper                     = new ObjectMapper();

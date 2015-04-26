@@ -1,4 +1,4 @@
-package com.javasteam.amazon.echo;
+package com.javasteam.amazon.echo.polling;
 
 import java.util.Date;
 import java.util.List;
@@ -8,7 +8,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Preconditions;
-import com.javasteam.amazon.echo.object.EchoActivityItemImpl;
+import com.javasteam.amazon.echo.AmazonAPIAccessException;
+import com.javasteam.amazon.echo.EchoResponseItem;
+import com.javasteam.amazon.echo.EchoUserSession;
+import com.javasteam.amazon.echo.activity.EchoActivityItemImpl;
+import com.javasteam.amazon.echo.activity.EchoActivityResponseItem;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerBuilder;
 import com.javasteam.amazon.echo.plugin.util.EchoCommandHandlerDefinitionPropertyParser;
@@ -29,6 +33,7 @@ public class ActivityItemPoller extends PollerBase {
    */
   public ActivityItemPoller( final Configurator configurator, final EchoUserSession echoUserSession ) {
     super( configurator, echoUserSession );
+    configure();
   }
   
   private long getActivityPollingStartTime() {
@@ -60,7 +65,7 @@ public class ActivityItemPoller extends PollerBase {
     return retval;
   }
   
-  private void configure() {
+  public void configure() {
     super.baseConfigure();
 
     int i = 0;
@@ -79,8 +84,6 @@ public class ActivityItemPoller extends PollerBase {
         halt = true;
       }
     } while( !halt );
-
-    getEchoUserSession().startActivityItemPoller();
   }
 
   
@@ -127,7 +130,7 @@ public class ActivityItemPoller extends PollerBase {
     }
   }
   
-  protected void doProcess() throws AmazonAPIAccessException {
+  public void doProcess() throws AmazonAPIAccessException {
     long startTime = this.getActivityPollingStartTime();
     List<EchoActivityItemImpl> activities = getEchoUserSession().getEchoBase().getActivityItems( getItemRetrievalCount()
                                                                                                , getEchoUserSession().getEchoUser()
@@ -158,7 +161,6 @@ public class ActivityItemPoller extends PollerBase {
    */
   @Override
   public void run() {
-    this.configure();
     super.run();
   }
 }

@@ -1,4 +1,4 @@
-package com.javasteam.amazon.echo.object;
+package com.javasteam.amazon.echo.activity;
 
 
 import java.io.IOException;
@@ -11,8 +11,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
-import com.javasteam.amazon.echo.activity.ActivityDescription;
-import com.javasteam.amazon.echo.activity.SourceDeviceId;
+import com.javasteam.amazon.echo.activity.core.ActivityDescription;
+import com.javasteam.amazon.echo.activity.core.SourceDeviceId;
 
 
 /**

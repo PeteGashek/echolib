@@ -1,12 +1,12 @@
-package com.javasteam.amazon.echo.object;
+package com.javasteam.amazon.echo.activity;
 
 import java.io.IOException;
 import java.util.Calendar;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.javasteam.amazon.echo.activity.ActivityDescription;
-import com.javasteam.amazon.echo.activity.SourceDeviceId;
+import com.javasteam.amazon.echo.activity.core.ActivityDescription;
+import com.javasteam.amazon.echo.activity.core.SourceDeviceId;
 
 public interface EchoActivityItem {
 
