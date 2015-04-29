@@ -2,6 +2,9 @@ package com.javasteam.amazon.echo.plugin;
 
 import java.io.IOException;
 
+import java.util.HashMap;
+import java.util.ArrayList;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
@@ -21,6 +24,8 @@ import com.javasteam.amazon.echo.todo.EchoTodoItemRetrieved;
 
 public class Builtin {
   private final static Log log = LogFactory.getLog( Builtin.class.getName() );
+
+  private final static HashMap<String,HashMap<String,ArrayList<String[]>>> commandQueue = new HashMap<String,HashMap<String,ArrayList<String[]>>>();
   
   public Builtin() {
   }
@@ -69,6 +74,24 @@ public class Builtin {
     }
     
     return commandLine;
+  }
+
+  public boolean queueAction( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
+    Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
+    Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
+
+    boolean retval = false;
+    log.info(  "Queueing: " + commands[ 0 ]);
+
+    String username = echoUserSession.getUsername().toLowerCase();
+
+    HashMap<String,ArrayList<String[]>> deviceQueue = null; 
+    //if( Builtin.commandQueue.contains( username )) {
+    //}
+    //else {
+    //}
+   
+    return retval;  
   }
   
   public boolean executeExternal( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
