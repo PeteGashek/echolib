@@ -106,10 +106,16 @@ public class ActivityItemPoller extends PollerBase {
         if( matchAny || lowercase.startsWith( listener.getKey().toLowerCase() )) {
           int              length       = matchAny ? 0 : listener.getKey().length();
           String           remainder    = activityCommand.substring( length );
-          EchoResponseItem responseItem = new EchoActivityResponseItem( listener.getKey(), remainder, activityItem );
           
-          log.info( "Activity '" + activityItem.getActivityDescription().getSummary() + "' processing with listener " + listener.getKey() );
-          handled = handled | listener.handle( responseItem, this.getEchoUserSession() );
+          // TODO... we're only queueing the remainder..... not commands.
+          if( queueItem( listener, remainder )) {
+            handled = handled | true;
+          }
+          else {
+            EchoResponseItem responseItem = new EchoActivityResponseItem( listener.getKey(), remainder, activityItem );
+            log.info( "Activity '" + activityItem.getActivityDescription().getSummary() + "' processing with listener " + listener.getKey() );
+            handled = handled | listener.handle( responseItem, this.getEchoUserSession() );
+          }
         }
       }
     }

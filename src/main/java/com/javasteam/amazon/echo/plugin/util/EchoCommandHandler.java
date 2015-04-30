@@ -23,6 +23,9 @@ public interface EchoCommandHandler {
   public void     setKey( String key );
   public String   getKey();
   
+  public void     setQueue( String queue );
+  public String   getQueue();
+  
   public void     setCommands( String[] commands );
   public String[] getCommands();
   

@@ -9,6 +9,7 @@ public class EchoCommandHandlerDefinition {
   private String   theClassname  = null;
   private String   theMethodName = null;
   private String   key           = null;
+  private String   queue         = null;
   private String[] commandArray  = null;
 
   public EchoCommandHandlerDefinition() {
@@ -36,6 +37,14 @@ public class EchoCommandHandlerDefinition {
 
   public void setKey( final String key ) {
     this.key = key;
+  }
+
+  public String getQueue() {
+    return queue;
+  }
+
+  public void setQueue( final String queue ) {
+    this.queue = queue;
   }
 
   public String[] getCommandArray() {

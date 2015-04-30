@@ -95,7 +95,6 @@ public class TodoItemPoller extends PollerBase {
     return retval;
   }
   
-  
   private boolean sendTodoNotifications( final EchoTodoItemRetrieved todoItem ) {
     boolean handled = false;
     
@@ -103,14 +102,21 @@ public class TodoItemPoller extends PollerBase {
       if( todoItemCanBeProcessed( todoItem )) {
         if( todoItem.getText().toLowerCase().startsWith( listener.getKey().toLowerCase() )) {
           String           remainder    = todoItem.getText().substring( listener.getKey().length() );
-          EchoResponseItem responseItem = new EchoTodoResponseItem( listener.getKey()
-                                                                  , remainder
-                                                                  , todoItem
-                                                                  );
           
           
-          log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
-          handled = handled | listener.handle( responseItem, this.getEchoUserSession() );
+          // TODO... we're only queueing the remainder..... not commands.
+          if( queueItem( listener, remainder )) {
+            handled = handled | true;
+          }
+          else {
+            EchoResponseItem responseItem = new EchoTodoResponseItem( listener.getKey()
+                                                                    , remainder
+                                                                    , todoItem
+                                                                    );
+            
+            log.info( "Handling '" + todoItem.getText() + "' with listener " + listener.getKey() );
+            handled = handled | listener.handle( responseItem, this.getEchoUserSession() );
+          }
         }
       }
     }

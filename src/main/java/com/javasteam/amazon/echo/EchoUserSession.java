@@ -390,7 +390,11 @@ public class EchoUserSession implements EchoUser {
    * @param args
    */
   public static void main( final String[] args ) {
-    Configurator    configurator    = new PropertyFileConfigurator( "echo.properties" );
+    String filename = "echo.properties";
+    if( args.length == 1 ) {
+      filename = args[ 0 ];
+    }
+    Configurator    configurator    = new PropertyFileConfigurator( filename );
     EchoUserSession echoUserSession = new EchoUserSession( configurator );
     echoUserSession.startPollers();
   }

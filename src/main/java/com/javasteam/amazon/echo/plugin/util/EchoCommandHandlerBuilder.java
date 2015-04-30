@@ -30,6 +30,7 @@ public class EchoCommandHandlerBuilder extends EchoCommandHandlerDefinition {
     Class<?> theClass = Class.forName( this.getTheClassname() );
     retval.setExecutor( theClass.newInstance() );
     retval.setKey( this.getKey() );
+    retval.setQueue( this.getQueue() );
     retval.setCommands( this.getCommandArray() );
     retval.setName( this.getTheClassname() );
     retval.setMethod( theClass.getDeclaredMethod( getTheMethodName(), methodSignature ));
@@ -70,6 +71,12 @@ public class EchoCommandHandlerBuilder extends EchoCommandHandlerDefinition {
   public void checkStringForKeyOption( final String theString ) {
     if( theString.toLowerCase().startsWith( "key=" )) {
       setKey( theString.substring( "key=".length() ).trim() );
+    }
+  }
+  
+  public void checkStringForQueueOption( final String theString ) {
+    if( theString.toLowerCase().startsWith( "queue=" )) {
+      setQueue( theString.substring( "queue=".length() ).trim() );
     }
   }
   

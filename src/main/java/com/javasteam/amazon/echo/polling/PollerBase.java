@@ -8,6 +8,8 @@ import com.javasteam.amazon.echo.AmazonAPIAccessException;
 import com.javasteam.amazon.echo.AmazonLoginException;
 import com.javasteam.amazon.echo.EchoUser;
 import com.javasteam.amazon.echo.EchoUserSession;
+import com.javasteam.amazon.echo.plugin.Builtin;
+import com.javasteam.amazon.echo.plugin.util.EchoCommandHandler;
 import com.javasteam.util.Configurator;
 
 public abstract class PollerBase extends Thread {
@@ -132,6 +134,19 @@ public abstract class PollerBase extends Thread {
   public synchronized void shutdown() {
     stopped = true;
     //this.interrupt();
+  }
+  
+  protected boolean queueItem( EchoCommandHandler listener , String text ) {
+    boolean retval = false;
+    
+    if( listener.getQueue() != null  ) {
+      Builtin.queueItem( echoUserSession, listener.getKey(), text );
+      retval = true;
+      
+      //System.out.println( Builtin.dumpQueues() );
+    }
+    
+    return retval;
   }
   
   public abstract void doProcess() throws AmazonAPIAccessException;

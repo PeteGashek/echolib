@@ -20,6 +20,7 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
   
   private String   name     = null;
   private String   key      = null;
+  private String   queue    = null;
   private String[] commands = null;
   
   private Object   executor = null;
@@ -61,6 +62,20 @@ public class EchoCommandHandlerImpl implements EchoCommandHandler {
   }
 
   /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#setQueue(java.lang.String)
+   */
+  public void setQueue( final String queue ) {
+    this.queue = queue;
+  }
+
+  /* (non-Javadoc)
+   * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#getQueue()
+   */
+  public String getQueue() {
+    return queue;
+  }
+
+ /* (non-Javadoc)
    * @see com.javasteam.amazon.echo.plugin.util.TodoItemRetrievedListener#setCommands(java.lang.String[])
    */
   public void setCommands( final String[] commands ) {

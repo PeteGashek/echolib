@@ -25,7 +25,83 @@ import com.javasteam.amazon.echo.todo.EchoTodoItemRetrieved;
 public class Builtin {
   private final static Log log = LogFactory.getLog( Builtin.class.getName() );
 
-  private final static HashMap<String,HashMap<String,ArrayList<String[]>>> commandQueue = new HashMap<String,HashMap<String,ArrayList<String[]>>>();
+  private final static HashMap<String,HashMap<String,ArrayList<String>>> commandQueue = new HashMap<String,HashMap<String,ArrayList<String>>>();
+  
+  public final static void queueItem( EchoUserSession session, String queue, String text ) {
+    HashMap<String,ArrayList<String>> userQueue = null;
+    String                            username  = session.getUsername().toLowerCase();
+    String                            userQueueName = queue.toLowerCase();
+    
+    synchronized( commandQueue ) {
+      if( commandQueue.containsKey( username )) {
+        userQueue = commandQueue.get( username );
+      }
+      else {
+        userQueue = new HashMap<String,ArrayList<String>>();
+        commandQueue.put( username, userQueue );
+      }
+    }
+    
+    if( userQueue != null ) {
+      ArrayList<String> commands = userQueue.get( userQueueName );
+      if( commands == null ) {
+        commands = new ArrayList<String>();
+        userQueue.put( userQueueName, commands );
+      }
+      
+      if( commands != null ) {
+        String textToAdd = text.trim();
+        
+        if( textToAdd.length() > 0 ) {
+          commands.add( textToAdd.trim() );
+        }
+      }
+    }
+  }
+  
+  public final static String fetchQueuedItem( EchoUserSession session, String queue ) {
+    HashMap<String,ArrayList<String>> userQueue     = null;
+    String                            username      = session.getUsername().toLowerCase();
+    String                            userQueueName = queue.toLowerCase();
+    String                            retval        = null;
+    
+    synchronized( commandQueue ) {
+      if( commandQueue.containsKey( username )) {
+        userQueue = commandQueue.get( username );
+  
+        ArrayList<String> commands = userQueue.get( userQueueName );
+        if( commands != null && !commands.isEmpty() ) {
+          retval = commands.get( 0 );
+          commands.remove( 0 );
+        }
+      }
+    }
+    
+    return retval;
+  }
+  
+  public static String dumpQueues( ) {
+    StringBuilder builder = new StringBuilder();
+    
+    if( commandQueue != null && !commandQueue.isEmpty() ) {
+      synchronized( commandQueue ) {
+        for( String key : commandQueue.keySet() ) {
+          builder.append( "User: " ).append( key ).append( '\n' );
+          
+          HashMap<String,ArrayList<String>> userQueue = commandQueue.get( key );
+          for( String device : userQueue.keySet() ) {
+            builder.append( "  Device: " ).append( device ).append( '\n' );
+            
+            for( String command : userQueue.get( device )) {
+              builder.append( "    Command: " ).append( command ).append( '\n' );              
+            }
+          }
+        }
+      }
+    }
+    
+    return builder.toString();
+  }
   
   public Builtin() {
   }
@@ -76,24 +152,6 @@ public class Builtin {
     return commandLine;
   }
 
-  public boolean queueAction( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
-    Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
-    Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
-
-    boolean retval = false;
-    log.info(  "Queueing: " + commands[ 0 ]);
-
-    String username = echoUserSession.getUsername().toLowerCase();
-
-    HashMap<String,ArrayList<String[]>> deviceQueue = null; 
-    //if( Builtin.commandQueue.contains( username )) {
-    //}
-    //else {
-    //}
-   
-    return retval;  
-  }
-  
   public boolean executeExternal( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
     Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );

@@ -35,6 +35,7 @@ public class EchoCommandHandlerDefinitionPropertyParser {
             String trimmedArg = args[ i ].trim();
             
             builder.checkStringForKeyOption( trimmedArg );
+            builder.checkStringForQueueOption( trimmedArg );
             builder.checkStringForCommandOption( trimmedArg );
           }
         }
