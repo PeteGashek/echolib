@@ -140,10 +140,10 @@ public abstract class PollerBase extends Thread {
     boolean retval = false;
     
     if( listener.getQueue() != null  ) {
-      Builtin.queueItem( echoUserSession, listener.getKey(), text );
+      Builtin.queueItem( echoUserSession, listener.getQueue(), text );
       retval = true;
       
-      //System.out.println( Builtin.dumpQueues() );
+      log.debug( "Queue: " + Builtin.dumpQueues() );
     }
     
     return retval;
