@@ -71,7 +71,7 @@ public class Builtin {
     HashMap<String,ArrayList<String>> userQueue     = null;
     String                            username      = name.toLowerCase();
     String                            userQueueName = queue.toLowerCase();
-    String                            retval        = null;
+    String                            retval        = "";
     
     synchronized( commandQueue ) {
       if( commandQueue.containsKey( username )) {
@@ -207,7 +207,11 @@ public class Builtin {
 
     return retval;
   }
-  
+
+  public boolean doNothing( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
+   // do nothing
+  }
+
   public boolean shutdownTodoPoller( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
     Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
