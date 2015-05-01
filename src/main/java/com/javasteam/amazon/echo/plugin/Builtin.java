@@ -209,7 +209,7 @@ public class Builtin {
   }
 
   public boolean doNothing( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
-    return true
+    return true;
   }
 
   public boolean shutdownTodoPoller( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
