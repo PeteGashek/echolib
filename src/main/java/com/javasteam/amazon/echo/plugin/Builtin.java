@@ -27,18 +27,18 @@ public class Builtin {
 
   private final static HashMap<String,HashMap<String,ArrayList<String>>> commandQueue = new HashMap<String,HashMap<String,ArrayList<String>>>();
   
-  public final static void queueItem( EchoUserSession session, String queue, String text ) {
-    HashMap<String,ArrayList<String>> userQueue = null;
-    String                            username  = session.getUsername().toLowerCase();
+  public final static void queueItem( String name, String queue, String text ) {
+    HashMap<String,ArrayList<String>> userQueue     = null;
+    String                            namename      = name.toLowerCase();
     String                            userQueueName = queue.toLowerCase();
     
     synchronized( commandQueue ) {
-      if( commandQueue.containsKey( username )) {
-        userQueue = commandQueue.get( username );
+      if( commandQueue.containsKey( namename )) {
+        userQueue = commandQueue.get( namename );
       }
       else {
         userQueue = new HashMap<String,ArrayList<String>>();
-        commandQueue.put( username, userQueue );
+        commandQueue.put( namename, userQueue );
       }
     }
     
@@ -59,11 +59,19 @@ public class Builtin {
     }
   }
   
-  public final static String fetchQueuedItem( EchoUserSession session, String queue ) {
+  public final static void queueItem( EchoUserSession session, String queue, String text ) {
+    queueItem( session.getUsername().toLowerCase(), queue, text );
+  }
+  
+  public final static void queueItem( String queue, String text ) {
+    queueItem( "global", queue, text );
+  }
+  
+  public final static String fetchQueuedItem( String name, String queue ) {
     HashMap<String,ArrayList<String>> userQueue     = null;
-    String                            username      = session.getUsername().toLowerCase();
+    String                            username      = name.toLowerCase();
     String                            userQueueName = queue.toLowerCase();
-    String                            retval        = null;
+    String                            retval        = "";
     
     synchronized( commandQueue ) {
       if( commandQueue.containsKey( username )) {
@@ -78,6 +86,14 @@ public class Builtin {
     }
     
     return retval;
+  }
+  
+  public final static String fetchQueuedItem( EchoUserSession session, String queue ) {
+    return fetchQueuedItem( session.getUsername(), queue );
+  }
+  
+  public final static String fetchQueuedItem( String queue ) {
+    return fetchQueuedItem( "global", queue );
   }
   
   public static String dumpQueues( ) {
@@ -191,7 +207,11 @@ public class Builtin {
 
     return retval;
   }
-  
+
+  public boolean doNothing( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
+    return true;
+  }
+
   public boolean shutdownTodoPoller( final EchoResponseItem responseItem, final EchoUserSession echoUserSession, final String[] commands ) {
     Preconditions.checkNotNull( responseItem,    "Can't process a null response item" );
     Preconditions.checkNotNull( echoUserSession, "EchoUserSession can not be null" );
